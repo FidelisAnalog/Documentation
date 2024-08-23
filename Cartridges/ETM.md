@@ -8,6 +8,7 @@ nav_order: 1
 # Effective Tip Mass
 
 Asterisk denotes ETM was verfied against manufacturer literature.
+
 | mg | Mfg | Model| Notes |
 |-|-|-|---|
 | 6 | ELAC | STS-200 | (1958, first stereo MM pickup?? 4-6g VTF) |
