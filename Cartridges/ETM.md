@@ -83,15 +83,15 @@ nav_order: 1
 | 0.27* | Ortofon | MC2000 | (Symm contact line) |
 | 0.25 | Yamaha | MC-1X/MC1-1S | (MC) |
 | 0.25* | B&O | MMC1 | (MMC, sapphire tube, nude line contact) |
-| 0.25* | Denon | DL-207 | | | (MC, amorphous boron pipe) |
-| 0.24* | Van den Hul | Colibri | | | (MC) |
-| 0.23 | Pickering | XSV 3000 | | | (improved) |
-| 0.23* | Technics | EPC-P310MC | | | (p-mount, MC, boron pipe) |
-| 0.23* | Technics | EPC-100CMK2 | | | (MM, boron pipe) |
-| 0.22 | B&O | MMC 6000 | | | (MMC, beryllium, 7 µm/2 x 50 µm Pramanik) |
-| 0.220 | Ortofon | Jubilee | | | (MC) |
+| 0.25* | Denon | DL-207 | (MC, amorphous boron pipe) |
+| 0.24* | Van den Hul | Colibri | (MC) |
+| 0.23 | Pickering | XSV 3000 | (improved) |
+| 0.23* | Technics | EPC-P310MC | (p-mount, MC, boron pipe) |
+| 0.23* | Technics | EPC-100CMK2 | (MM, boron pipe) |
+| 0.22 | B&O | MMC 6000 | (MMC, beryllium, 7 µm/2 x 50 µm Pramanik) |
+| 0.220 | Ortofon | Jubilee | (MC) |
 | 0.2 | Elite Electronic Industries/EEI | 747 Prelude, 700 Pacer | | | (MM) |
-| 0.2 | Stanton | 880S/881S/980LZS/981LZS | | | (MI) |
+| 0.2 | Stanton | 880S/881S/980LZS/981LZS | (MI) |
 | 0.2 | Pickering | XLZ 7500S | (MM) |
 | 0.200* | Empire | 2000-Z | (shielded moving iron, stylus 0.2 mil x 0.7 mil diamond) |
 | 0.190* | Shure | Ultra 400 | (MM) |
