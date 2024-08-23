@@ -7,7 +7,8 @@ nav_order: 1
 
 # Effective Tip Mass
 
-| ETM (mg) | Mfg | Model| Notes |
+Asterisk denotes ETM was verfied against manufacturer literature.
+| mg | Mfg | Model| Notes |
 |-|-|-|---|
 | 6 | ELAC | STS-200 | (1958, first stereo MM pickup?? 4-6g VTF) |
 | 6 | GE | VR-II | (1955, mono, variable reluctance, 4-7g VTF) |
