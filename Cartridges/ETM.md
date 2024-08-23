@@ -106,3 +106,4 @@ nav_order: 1
 | 0.098 | *Technics | EPC-100CMK3 | | | (MM, boron pipe) |
 | 0.077 | *Denon | DL1000A | | | (MC, amorphous boron pipe) |
 | 0.059 | Yamaha | MC-2000 | | | (MC, beryllium pipe, special elliptical) |
+| 0.055 | *Technics | EPC-(P)100CMK4 | | | (MM, boron pipe, Micro Ridge) |
