@@ -10,7 +10,7 @@ nav_order: 1
 # Effective Tip Mass
 
 | ETM | Mfg | Model | Type | Verified | Notes |
-|---|---|---|---|---|---|
+|---|---|---|-|-|---|
 | 6.000mg | ELAC | STS-200 | | | (1958, first stereo MM pickup?? 4-6g VTF) |
 | 6.000mg | GE | VR-II | | | (1955, mono, variable reluctance, 4-7g VTF) |
 | 4.500mg | Sonotone | 9T | | | (1960, stereo, ceramic) |
