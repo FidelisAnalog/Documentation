@@ -1,1 +1,1 @@
-Please to go the [documentation site](https://docs.myhu.fi/)
+Please to go the [documentation site](https://docs.myhi.fi/)
