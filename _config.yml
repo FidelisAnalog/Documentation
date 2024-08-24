@@ -4,5 +4,7 @@ theme: just-the-docs
 
 url: https://just-the-docs.github.io
 
+color_scheme: dark
+
 aux_links:
   View on GitHub: https://github.com/FidelisAnalog/Documentation/
