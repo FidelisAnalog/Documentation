@@ -1,7 +1,7 @@
 title: myhi.fi
 description: Documents
 theme: just-the-docs
-logo: "/images/myhifi_color-lockup_white_sm.png"
+logo: "/images/myhifi_color-lockup_white_md.png"
 markdown: kramdown
 
 url: https://just-the-docs.github.io
