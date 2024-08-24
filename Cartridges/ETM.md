@@ -7,6 +7,7 @@ nav_order: 1
 
 # Effective Tip Mass
 
+{: .highlight }
 Asterisk denotes ETM was verfied against manufacturer literature.
 
 | mg | Mfg | Model| Notes |
