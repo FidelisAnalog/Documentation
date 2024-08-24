@@ -2,9 +2,16 @@ title: myhi.fi
 description: Documents
 theme: just-the-docs
 
+markdown: kramdown
+
 url: https://just-the-docs.github.io
 
 #color_scheme: dark
 
 aux_links:
   View on GitHub: https://github.com/FidelisAnalog/Documentation/
+
+mermaid:
+  # Version of mermaid library
+  # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
+  version: "10.2.4"
