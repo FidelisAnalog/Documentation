@@ -5,9 +5,6 @@ nav_order: 2
 ---
 
 
-<object data="CBS Pro Series Test Records.pdf" width="1000" height="1000" type='application/pdf'>
-  <p>Your broswer cannot display this PDF.  Please download it here.</p>
-</object>
 
 <div id="adobe-dc-view"></div>
 <script src="https://acrobatservices.adobe.com/view-sdk/viewer.js"></script>
