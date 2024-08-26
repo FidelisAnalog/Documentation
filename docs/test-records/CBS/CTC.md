@@ -9,16 +9,14 @@ nav_order: 2
   <p>Your broswer cannot display this PDF.  Please download it here.</p>
 </object>
 
-<div id="adobe-dc-view" style="height: 360px; width: 500px;"></div>
-<script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+<div id="adobe-dc-view"></div>
+<script src="https://acrobatservices.adobe.com/view-sdk/viewer.js"></script>
 <script type="text/javascript">
-  document.addEventListener("adobe_dc_view_sdk.ready", function()
-  {
-    var adobeDCView = new AdobeDC.View({clientId: "5aca0821dfc443928ce227808de9010e", divId: "adobe-dc-view"});
-    adobeDCView.previewFile(
-    {
-      content:   {location: {url: "https://documentcloud.adobe.com/view-sdk-demo/PDFs/Bodea Brochure.pdf"}},
-      metaData: {fileName: "Bodea Brochure.pdf"}
-    });
-  });
+	document.addEventListener("adobe_dc_view_sdk.ready", function(){ 
+		var adobeDCView = new AdobeDC.View({clientId: "5aca0821dfc443928ce227808de9010e", divId: "adobe-dc-view"});
+		adobeDCView.previewFile({
+			content:{location: {url: "https://acrobatservices.adobe.com/view-sdk-demo/PDFs/Bodea Brochure.pdf"}},
+			metaData:{fileName: "Bodea Brochure.pdf"}
+		}, {});
+	});
 </script>
