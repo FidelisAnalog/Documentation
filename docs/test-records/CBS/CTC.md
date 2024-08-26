@@ -1,5 +1,5 @@
 ---
-layout: pdf
+layout: default
 title: CBS Technology Center
 parent: Test Records
 nav_order: 2
