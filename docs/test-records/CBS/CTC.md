@@ -4,7 +4,8 @@ parent: Test Records
 nav_order: 2
 ---
 
-
+<object data="{{ site.url }}{{ site.baseurl }}/assets/pdf/CBS Pro Series Test Records.pdf" width="1000" height="1000" type="application/pdf">
+</object>
 
 <div id="adobe-dc-view"></div>
 <script src="https://acrobatservices.adobe.com/view-sdk/viewer.js"></script>
