@@ -9,7 +9,7 @@ nav_order: 2
   <p>Your broswer cannot display this PDF.  Please download it here.</p>
 </object>
 
-<div id="adobe-dc-view"></div>
+<div id="adobe-dc-view" style="height: 360px; width: 500px;"></div>
 <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
 <script type="text/javascript">
   document.addEventListener("adobe_dc_view_sdk.ready", function()
