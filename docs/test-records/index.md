@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Test Records
-has_childen: true
+has_children: true
 nav_order: 3
 ---
 
