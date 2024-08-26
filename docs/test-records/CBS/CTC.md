@@ -4,7 +4,7 @@ parent: Test Records
 nav_order: 2
 ---
 
-<div id="adobe-dc-view" style="width: 100%;"></div>
+<div id="adobe-dc-view" style="height: 1000px; width: 100%;"></div>
 <script src="https://acrobatservices.adobe.com/view-sdk/viewer.js"></script>
 <script type="text/javascript">
 	document.addEventListener("adobe_dc_view_sdk.ready", function(){ 
@@ -12,6 +12,6 @@ nav_order: 2
 		adobeDCView.previewFile({
 			content:{location: {url: "/assets/pdf/CBS Pro Series Test Records.pdf"}},
 			metaData:{fileName: "CBS Pro Series Test Records.pdf"}
-		}, {embedMode: "IN_LINE"});
+		}, {embedMode: "SIZED_CONTAINER"});
 	});
 </script>
