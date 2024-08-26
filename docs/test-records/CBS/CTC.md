@@ -15,6 +15,6 @@ nav_order: 2
 		adobeDCView.previewFile({
 			content:{location: {url: "https://acrobatservices.adobe.com/view-sdk-demo/PDFs/Bodea Brochure.pdf"}},
 			metaData:{fileName: "Bodea Brochure.pdf"}
-		}, {});
+		}, {embedMode: "IN_LINE"});
 	});
 </script>
