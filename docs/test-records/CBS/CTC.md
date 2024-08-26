@@ -11,25 +11,25 @@ nav_order: 2
 
 
 <html>
- 4<head>
- 5 <title>Adobe Document Services PDF Embed API Sample</title>
- 6 <meta charset="utf-8"/>
- 7 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
- 8 <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1"/>
- 9</head>
-10<body style="margin: 0px">
-11 <div id="adobe-dc-view"></div>
-12 <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
-13 <script type="text/javascript">
-14    document.addEventListener("adobe_dc_view_sdk.ready", function()
-15    {
-16        var adobeDCView = new AdobeDC.View({clientId: "5aca0821dfc443928ce227808de9010e", divId: "adobe-dc-view"});
-17        adobeDCView.previewFile(
-18       {
-19          content:   {location: {url: "https://documentcloud.adobe.com/view-sdk-demo/PDFs/Bodea Brochure.pdf"}},
-20          metaData: {fileName: "Bodea Brochure.pdf"}
-21       });
-22    });
-23 </script>
-24</body>
-25</html>
+<head>
+<title>Adobe Document Services PDF Embed API Sample</title>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1"/>
+</head>
+<body style="margin: 0px">
+  <div id="adobe-dc-view"></div>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script type="text/javascript">
+    document.addEventListener("adobe_dc_view_sdk.ready", function()
+    {
+      var adobeDCView = new AdobeDC.View({clientId: "5aca0821dfc443928ce227808de9010e", divId: "adobe-dc-view"});
+      adobeDCView.previewFile(
+      {
+        content:   {location: {url: "https://documentcloud.adobe.com/view-sdk-demo/PDFs/Bodea Brochure.pdf"}},
+        metaData: {fileName: "Bodea Brochure.pdf"}
+      });
+    });
+  </script>
+</body>
+</html>
