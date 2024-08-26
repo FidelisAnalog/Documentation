@@ -12,6 +12,6 @@ nav_order: 2
 		adobeDCView.previewFile({
 			content:{location: {url: "/assets/pdf/CBS Pro Series Test Records.pdf"}},
 			metaData:{fileName: "CBS Pro Series Test Records.pdf"}
-		}, {embedMode: "SIZED_CONTAINER"});
+		}, {});
 	});
 </script>
