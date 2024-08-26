@@ -28,7 +28,7 @@ nav_order: 2
       {
         content:   {location: {url: "https://documentcloud.adobe.com/view-sdk-demo/PDFs/Bodea Brochure.pdf"}},
         metaData: {fileName: "Bodea Brochure.pdf"}
-      });
+      }); {embedMode: "LIGHT_BOX"});
     });
   </script>
 </body>
