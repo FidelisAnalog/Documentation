@@ -1,6 +1,6 @@
 ---
 title: Product Images
-has-children: true
+has_children: true
 ---
 
 # Product Images
