@@ -1,5 +1,5 @@
 ---
-title: Technics
+title: Technics1
 parent: Product Images
 has_children: true
 ---
