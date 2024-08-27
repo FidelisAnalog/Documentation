@@ -1,6 +1,6 @@
 ---
 title: Phono Cartridges
-has-children: true
+has_children: true
 nav_order: 2
 ---
 
