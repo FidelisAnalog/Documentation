@@ -4,7 +4,7 @@ theme: just-the-docs
 logo: "/images/myhifi_lockup_wht.svg"
 markdown: kramdown
 
-url: https://just-the-docs.github.io
+url: https://docs.myhi.fi
 
 color_scheme: dark
 
