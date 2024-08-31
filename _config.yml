@@ -7,7 +7,7 @@ markdown: kramdown
 url: https://docs.myhi.fi
 baseurl: "" # the subpath of your site, e.g. /blog
 
-color_scheme: dark
+color_scheme: myhifi-dark
 
 favicon_ico: "favicon.ico"
 
