@@ -2,6 +2,6 @@
 title: Imagery
 ---
 
-# Product Imagery
+# Imagery
 
 
