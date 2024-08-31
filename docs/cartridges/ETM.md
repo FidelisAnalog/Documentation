@@ -1,5 +1,4 @@
 ---
-layout: default
 title: Effective Tip Mass
 parent: Phono Cartridges
 nav_order: 1
