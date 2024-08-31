@@ -8,15 +8,19 @@ grand_parent: Imagery
 
 
 <br/>
-<div align="center" style="padding: 20px 0;">
-    <img src="/assets/images/Technics/Technics SL-1000MK3D.jpg" alt="Technics SL-1000MK3D.">
-    <p><b></b></p>
+<div align="center" style="padding: 10px 0;">
+    <img src="/assets/images/Technics/Technics SL-1000MKII 1.JPG" alt="Technics SL-1000MKII.">
 </div>
 <br/>
 
 <br/>
-<div align="center" style="padding: 20px 0;">
-    <img src="/assets/images/Technics/Technics EPA-102MK2.jpg" alt="Technics EPA-102MK2.">
-    <p><b></b></p>
+<div align="center" style="padding: 10px 0;">
+    <img src="/assets/images/Technics/Technics SL-1000MKII 2.JPG" alt="Technics SL-1000MKII.">
+</div>
+<br/>
+
+<br/>
+<div align="center" style="padding: 10px 0;">
+    <img src="/assets/images/Technics/Technics SP-10MKII 1.JPG" alt="Technics SL-1000MKII.">
 </div>
 <br/>
