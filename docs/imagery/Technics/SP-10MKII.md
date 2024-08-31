@@ -21,6 +21,6 @@ grand_parent: Imagery
 
 <br/>
 <div align="center" style="padding: 10px 0;">
-    <img src="/assets/images/Technics/Technics SP-10MKII 1.JPG" alt="Technics SL-1000MKII.">
+    <img src="/assets/images/Technics/Technics SP-10MKII 1.JPG" alt="Technics SP-10MKII.">
 </div>
 <br/>
