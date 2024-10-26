@@ -95,6 +95,7 @@ Asterisk denotes ETM was verfied against manufacturer literature.
 | 0.23 | Pickering | XSV 3000 | (improved), MM |
 | 0.23* | Technics | EPC-P310MC | MC, boron pipe, T4P |
 | 0.23* | Technics | EPC-100CMK2 | MM, boron pipe |
+| 0.23* | Pioneer | PC-70MC | MC, beryllium pipe |
 | 0.22 | B&O | MMC 6000 | MMC, beryllium, 7 µm/2 x 50 µm Pramanik |
 | 0.220 | Ortofon | Jubilee | MC |
 | 0.2 | Elite Electronic Industries/EEI | 747 Prelude | MM |
