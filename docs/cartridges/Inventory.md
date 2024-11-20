@@ -142,6 +142,9 @@ These are not for sale - please do not ask.
 | JI-05 | JICO | VN5MR SAS/B | < 2H |
 | JI-06 | JICO | VN5MR SAS/S | NOS |
 | JI-07 | JICO | VN5MR SAS/R | NOS |
+| VI-01 | Victor | MC-L1000 | < 5H |
+| VI-02 | Victor | X-1IIE | |
+| VI-03 | Victor | DT-X1 | NOS |
 
 
 
