@@ -10,7 +10,7 @@ nav_order: 2
 These are not for sale - please do not ask. 
 
 | ICN | Mfg | Model| Notes |
-||||--|
+|-|-|-|-|
 | ADA-1 | Adante | P-76 | NOS |
 | AD-01 | Audio Dynamics Corp | XLM/II Imp | NOS Cart |
 | AD-02 | Audio Dynamics Corp | XLM/II Imp | NOS Stylus |
