@@ -11,6 +11,15 @@ These are not for sale - please do not ask.
 
 | ICN | Mfg | Model| Notes |
 |-|-|-|---|
+| ADA-1 | Adante | P-76 | NOS |
+| AD-01 | Audio Dynamics Corp | XLM/II Imp | NOS Cart |
+| AD-02 | Audio Dynamics Corp | XLM/II Imp | NOS Stylus |
+| AD-03 | Audio Dynamics Corp | XLM/II Imp | NOS Stylus |
+| AD-04 | Audio Dynamics Corp | XLM/II Imp | NOS Stylus |
+| AD-05 | Audio Dynamics Corp | XLM/II Imp | NOS Stylus |
+| AD-06 | Audio Dynamics Corp | XLM/III Imp | NOS Stylus |
+| AD-07 | Audio Dynamics Corp | Astrion | < 50H |
+| AS-01 | Astatic | MF-100 | NOS |
 | AT-01 | Audio Technica | AT-150MLX | NOS |
 | AT-02 | Audio Technica | AT-150MLX | NOS |
 | AT-03 | Audio Technica | AT-150MLX | NOS |
@@ -64,6 +73,52 @@ These are not for sale - please do not ask.
 | AT-51 | Audio Technica | AT-20sLA | |
 | AT-52 | Audio Technica | *208-DEX | ATN155LC NOS |
 | AT-53 | Audio Technica | ATN-15SS | NOS |
+| DE-01 | Denon | DL-1000A | < 1H |
+| DE-02 | Denon | DL-1000A | < 100H |
+| DE-03 | Denon | DL-1000A | Shot |
+| DE-04 | Denon | DL-1000A | Decapitated |
+| DE-05 | Denon | DL-S1 | NOS |
+| DE-06 | Denon | DL-S1 | < 50H |
+| DE-07 | Denon | DL-103FL | NOS |
+| DE-08 | Denon | DL-103SL | NOS |
+| DE-09 | Denon | DL-103LCII | NOS |
+| DE-10 | Denon | DL-103C1 | NOS |
+| DE-11 | Denon | DL-H5LC | NOS |
+| DE-12 | Denon | DL-103M | < 100H |
+| DE-13 | Denon | DL-303 | NOS |
+| DE-14 | Denon | DL-303 | NOS |
+| DE-15 | Denon | DL-304 | |
+| DE-16 | Denon | DL-305| |
+| DE-17 | Denon | DL-207 | |
+| DE-18 | Denon | DL-107B | |
+| DE-19 | Denon | DSN-20 | NOS |
+| DE-20 | Denon | DSN-53 | NOS |
+| DE-21 | Denon | DL-103LCII | |
+| EM-01 | Empire | 4000D/I | |
+| EM-02 | Empire | 4000D/III | |
+| EM-03 | Empire | S4000D/III | |
+| EM-04 | Empire | *237-DET | S2000E/III NOS |
+| GL-01 | Glanz | MFG-610LX | NOS |
+| GL-02 | Glanz | MFG-610LX | NOS |
+| GR-01 | Grace | G8-S2 | NOS |
+| GR-02 | Grace | RS-8L'10 | NOS |
+| GR-03 | Grace | RS-8L'10 | NOS |
+| GR-04 | Grace | RS-8L | NOS |
+| GR-05 | Grace | F-8 | |
+| JI-01 | JICO | VN5MR SAS/Z | NOS |
+| JI-02 | JICO | VN5MR SAS/Z | NOS |
+| JI-03 | JICO | VN5MR SAS/Z | NOS |
+| JI-04 | JICO | VN5MR SAS/Z | NOS |
+| JI-05 | JICO | VN5MR SAS/B | < 2H |
+| JI-06 | JICO | VN5MR SAS/S | NOS |
+| JI-07 | JICO | VN5MR SAS/R | NOS |
+| MA-01 | Micro-Acoustics | R2002 | NOS |
+| MA-02 | Micro-Acoustics | *571-DEX | R630 NOS |
+| MA-03 | Micro-Acoustics | *571-DEV | R3002 NOS |
+| MA-04 | Micro-Acoustics | 3002 | |
+| MA-05 | Micro-Acoustics | 3002 | |
+| MA-06 | Micro-Acoustics | 2002 | |
+| MO-01 | Monster | Genesis 1000 | |
 | SO-01 | Sony | XL-88D | < 10H |
 | SO-02 | Sony | XL-55proII | NOS |
 | SO-03 | Sony | XL-55II | NOS |
@@ -89,27 +144,7 @@ These are not for sale - please do not ask.
 | OR-05 | Ortofon | 2M Blue | < 3H |
 | OR-06 | Ortofon | MC20MKII | |
 | OR-07 | Ortofon | VMS 10E MKII | |
-| DE-01 | Denon | DL-1000A | < 1H |
-| DE-02 | Denon | DL-1000A | < 100H |
-| DE-03 | Denon | DL-1000A | Shot |
-| DE-04 | Denon | DL-1000A | Decapitated |
-| DE-05 | Denon | DL-S1 | NOS |
-| DE-06 | Denon | DL-S1 | < 50H |
-| DE-07 | Denon | DL-103FL | NOS |
-| DE-08 | Denon | DL-103SL | NOS |
-| DE-09 | Denon | DL-103LCII | NOS |
-| DE-10 | Denon | DL-103C1 | NOS |
-| DE-11 | Denon | DL-H5LC | NOS |
-| DE-12 | Denon | DL-103M | < 100H |
-| DE-13 | Denon | DL-303 | NOS |
-| DE-14 | Denon | DL-303 | NOS |
-| DE-15 | Denon | DL-304 | |
-| DE-16 | Denon | DL-305| |
-| DE-17 | Denon | DL-207 | |
-| DE-18 | Denon | DL-107B | |
-| DE-19 | Denon | DSN-20 | NOS |
-| DE-20 | Denon | DSN-53 | NOS |
-| DE-21 | Denon | DL-103LCII | |
+| PI-01 | Pioneer | PC-70MC | NOS |
 | SH-01 | Shure | V15-VMR | |
 | SH-02 | Shure | V15-VMR | |
 | SH-03 | Shure | VST-V | |
@@ -142,41 +177,13 @@ These are not for sale - please do not ask.
 | SH-30 | Shure | N97XE | NOS |
 | SH-31 | Shure | N97XE | NOS |
 | SH-32 | Shure | N97XE | NOS |
-| JI-01 | JICO | VN5MR SAS/Z | NOS |
-| JI-02 | JICO | VN5MR SAS/Z | NOS |
-| JI-03 | JICO | VN5MR SAS/Z | NOS |
-| JI-04 | JICO | VN5MR SAS/Z | NOS |
-| JI-05 | JICO | VN5MR SAS/B | < 2H |
-| JI-06 | JICO | VN5MR SAS/S | NOS |
-| JI-07 | JICO | VN5MR SAS/R | NOS |
-| VI-01 | Victor | MC-L1000 | < 5H |
-| VI-02 | Victor | X-1IIE | |
-| VI-03 | Victor | DT-X1 | NOS |
-| VI-04 | Victor | X-1 | |
-| VI-05 | Nagaoka | DT-Z1 | OEM |
-| AD-01 | Audio Dynamics Corp | XLM/II Imp | NOS Cart |
-| AD-02 | Audio Dynamics Corp | XLM/II Imp | NOS Stylus |
-| AD-03 | Audio Dynamics Corp | XLM/II Imp | NOS Stylus |
-| AD-04 | Audio Dynamics Corp | XLM/II Imp | NOS Stylus |
-| AD-05 | Audio Dynamics Corp | XLM/II Imp | NOS Stylus |
-| AD-06 | Audio Dynamics Corp | XLM/III Imp | NOS Stylus |
-| AD-07 | Audio Dynamics Corp | Astrion | < 50H |
-| GR-01 | Grace | G8-S2 | NOS |
-| GR-02 | Grace | RS-8L'10 | NOS |
-| GR-03 | Grace | RS-8L'10 | NOS |
-| GR-04 | Grace | RS-8L | NOS |
-| GR-05 | Grace | F-8 | |
-| MA-01 | Micro-Acoustics | R2002 | NOS |
-| MA-02 | Micro-Acoustics | *571-DEX | R630 NOS |
-| MA-03 | Micro-Acoustics | *571-DEV | R3002 NOS |
-| MA-04 | Micro-Acoustics | 3002 | |
-| MA-05 | Micro-Acoustics | 3002 | |
-| MA-06 | Micro-Acoustics | 2002 | |
-| EM-01 | Empire | 4000D/I | |
-| EM-02 | Empire | 4000D/III | |
-| EM-03 | Empire | S4000D/III | |
-| EM-04 | Empire | *237-DET | S2000E/III NOS |
-| PI-01 | Pioneer | PC-70MC | NOS |
+| SA-01 | SAE | 1000LT | < 10H |
+| SA-02 | SAE | 1000LT | NOS |
+| SA-03 | SAE | 1000LT | NOS |
+| SA-04 | SAE | 1000LT | NOS |
+| SA-05 | SAE | 1000E | < 10H |
+| SA-06 | SAE | 1000E | NOS |
+| ST-01 | Stanton | 681 | |
 | TE-01 | Technics | EPS-P100ED4 | Nag NOS |
 | TE-02 | Technics | EPS-P100ED4 | Nag NOS |
 | TE-03 | Technics | EPS-P100ED4 | Nag NOS |
@@ -233,18 +240,13 @@ These are not for sale - please do not ask.
 | TE-54 | Technics | EPC-P202C |  |
 | TE-55 | Technics | EPC-P202C |  |
 | TE-56 | Technics | EPC-U205C |  |
-| SA-01 | SAE | 1000LT | < 10H |
-| SA-02 | SAE | 1000LT | NOS |
-| SA-03 | SAE | 1000LT | NOS |
-| SA-04 | SAE | 1000LT | NOS |
-| SA-05 | SAE | 1000E | < 10H |
-| SA-06 | SAE | 1000E | NOS |
-| AS-01 | Astatic | MF-100 | NOS |
-| GL-01 | Glanz | MFG-610LX | NOS |
-| GL-02 | Glanz | MFG-610LX | NOS |
-| ST-01 | Stanton | 681 | |
-| MO-01 | Monster | Genesis 1000 | |
-| ADA-1 | Adante | P-76 | NOS |
+| VI-01 | Victor | MC-L1000 | < 5H |
+| VI-02 | Victor | X-1IIE | |
+| VI-03 | Victor | DT-X1 | NOS |
+| VI-04 | Victor | X-1 | |
+| VI-05 | Nagaoka | DT-Z1 | OEM |
+
+
 
 
 
