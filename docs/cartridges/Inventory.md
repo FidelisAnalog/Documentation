@@ -145,6 +145,19 @@ These are not for sale - please do not ask.
 | VI-01 | Victor | MC-L1000 | < 5H |
 | VI-02 | Victor | X-1IIE | |
 | VI-03 | Victor | DT-X1 | NOS |
+| AD-01 | Audio Dynamics Corp | XLM/II Imp | NOS Cart |
+| AD-02 | Audio Dynamics Corp | XLM/II Imp | NOS Stylus |
+| AD-03 | Audio Dynamics Corp | XLM/II Imp | NOS Stylus |
+| AD-04 | Audio Dynamics Corp | XLM/II Imp | NOS Stylus |
+| AD-05 | Audio Dynamics Corp | XLM/II Imp | NOS Stylus |
+| AD-06 | Audio Dynamics Corp | XLM/III Imp | NOS Stylus |
+| AD-07 | Audio Dynamics Corp | Astrion | < 50H |
+| GR-01 | Grace | G8-S2 | NOS |
+| GR-02 | Grace | RS-8L'10 | NOS |
+| GR-03 | Grace | RS-8L'10 | NOS |
+| GR-04 | Grace | RS-8L | NOS |
+
+
 
 
 
