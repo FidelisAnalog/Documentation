@@ -57,6 +57,9 @@ These are not for sale - please do not ask.
 | AT-44 | Audio Technica | AT-15Sa | |
 | AT-45 | Audio Technica | AT-170ML/OCC | |
 | AT-46 | Audio Technica | AT-33PTG/II | < 1H |
+| AT-47 | Audio Technica | AT-160ML | |
+| AT-48 | Audio Technica | ATN-160ML | |
+| AT-49 | Audio Technica | ATN-160ML | |
 | SO-01 | Sony | XL-88D | < 10H |
 | SO-02 | Sony | XL-55proII | NOS |
 | SO-03 | Sony | XL-55II | NOS |
@@ -70,9 +73,23 @@ These are not for sale - please do not ask.
 | SO-11 | Sony | XL-35 | NOS |
 | SO-12 | Sony | ND-45E | NOS |
 | SO-13 | Sony | XL-55mono | NOS |
-| YA-10 | Yamaha | MC-1000 | |
-| YA-10 | Yamaha | MC-3 | |
-| YA-10 | Yamaha | MC-5 | |
+| YA-01 | Yamaha | MC-1000 | |
+| YA-02 | Yamaha | MC-3 | |
+| YA-03 | Yamaha | MC-5 | |
+| YA-04 | Yamaha | MC-1S | |
 | DV-01 | Dynavector | DRT-XV1s | |
+| OR-01 | Ortofon | OM-10 | NOS |
+| OR-02 | Ortofon | OM-20 | NOS |
+| OR-03 | Ortofon | Super OM-30 | NOS |
+| OR-04 | Ortofon | Super OM-40 | NOS |
+| OR-05 | Ortofon | 2M Blue | < 3H |
+| DE-01 | Denon | DL-1000A | < 1H |
+| DE-02 | Denon | DL-1000A | < 100H |
+| DE-03 | Denon | DL-1000A | Shot |
+| DE-04 | Denon | DL-1000A | Decapitated |
+| DE-05 | Denon | DL-S1 | NOS |
+| DE-06 | Denon | DL-S1 | < 50H |
+
+
 
 
