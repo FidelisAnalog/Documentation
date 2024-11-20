@@ -242,6 +242,13 @@ These are not for sale - please do not ask.
 | TE-54 | Technics | EPC-P202C |  |
 | TE-55 | Technics | EPC-P202C |  |
 | TE-56 | Technics | EPC-U205C |  |
+| TE-57 | Technics | EPC-450C-II-P | NOS  |
+| TE-58 | Technics | EPC-450C-II |  |
+| TE-59 | Technics | EPS-46STQD | NOS |
+| TE-60 | Technics | EPS-46STQD | NOS |
+| TE-61 | Technics | EPS-46STQD | NOS |
+| TE-62 | Technics | *672-DQ | EPS-451QD NOS |
+| TE-63 | Technics | 2818DQ | EPS-451QD NOS |
 | VI-01 | Victor | MC-L1000 | < 5H |
 | VI-02 | Victor | X-1IIE | |
 | VI-03 | Victor | DT-X1 | NOS |
