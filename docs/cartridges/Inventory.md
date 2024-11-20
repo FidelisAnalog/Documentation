@@ -43,17 +43,20 @@ These are not for sale - please do not ask.
 | AT-30 | Audio Technica | AT-VM95C | < 1H |
 | AT-31 | Audio Technica | AT-VM95C | < 1H |
 | AT-32 | Audio Technica | AT-VM95ML | < 1H |
-| AT-33 | Audio Technica | AT-VM95SH | NOS |
-| AT-34 | Audio Technica | AT-VMN95E | NOS |
-| AT-35 | Audio Technica | AT-VMN95EN | NOS |
+| AT-33 | Audio Technica | AT-VM95SH | New |
+| AT-34 | Audio Technica | AT-VMN95E | New |
+| AT-35 | Audio Technica | AT-VMN95EN | New |
 | AT-36 | Audio Technica | AT-VM760SLC| 
 | AT-37 | Audio Technica | AT-VM740ML |
 | AT-38 | Audio Technica | AT-VM540ML |
 | AT-39 | Audio Technica | AT-OC9XML | < 2H |
-| AT-40 | Audio Technica | AT-VMN10CB | NOS |
-| AT-41 | Audio Technica | AT-VMN20EB | NOS |
-| AT-42 | Audio Technica | AT-VMN30EN | NOS |
-| AT-43 | Audio Technica | AT-VMN50SH | NOS |
+| AT-40 | Audio Technica | AT-VMN10CB | New |
+| AT-41 | Audio Technica | AT-VMN20EB | New |
+| AT-42 | Audio Technica | AT-VMN30EN | New |
+| AT-43 | Audio Technica | AT-VMN50SH | New |
+| AT-44 | Audio Technica | AT-15Sa | |
+| AT-45 | Audio Technica | AT-170ML/OCC | |
+| AT-46 | Audio Technica | AT-33PTG/II | < 1H |
 | SO-01 | Sony | XL-88D | < 10H |
 | SO-02 | Sony | XL-55proII | NOS |
 | SO-03 | Sony | XL-55II | NOS |
@@ -67,5 +70,9 @@ These are not for sale - please do not ask.
 | SO-11 | Sony | XL-35 | NOS |
 | SO-12 | Sony | ND-45E | NOS |
 | SO-13 | Sony | XL-55mono | NOS |
+| YA-10 | Yamaha | MC-1000 | |
+| YA-10 | Yamaha | MC-3 | |
+| YA-10 | Yamaha | MC-5 | |
+| DV-01 | Dynavector | DRT-XV1s | |
 
 
