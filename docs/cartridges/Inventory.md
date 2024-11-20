@@ -135,6 +135,14 @@ These are not for sale - please do not ask.
 | SH-30 | Shure | N97XE | NOS |
 | SH-31 | Shure | N97XE | NOS |
 | SH-32 | Shure | N97XE | NOS |
+| JI-01 | JICO | VN5MR SAS/Z | NOS |
+| JI-02 | JICO | VN5MR SAS/Z | NOS |
+| JI-03 | JICO | VN5MR SAS/Z | NOS |
+| JI-04 | JICO | VN5MR SAS/Z | NOS |
+| JI-05 | JICO | VN5MR SAS/B | < 2H |
+| JI-06 | JICO | VN5MR SAS/S | NOS |
+| JI-07 | JICO | VN5MR SAS/R | NOS |
+
 
 
 
