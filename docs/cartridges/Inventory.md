@@ -119,6 +119,8 @@ These are not for sale - please do not ask.
 | MA-05 | Micro-Acoustics | 3002 | |
 | MA-06 | Micro-Acoustics | 2002 | |
 | MO-01 | Monster | Genesis 1000 | |
+| NA-01 | Nagaoka | MP-500 | < 100H |
+| NA-02 | Nagaoka | JT-80BK | New |
 | SO-01 | Sony | XL-88D | < 10H |
 | SO-02 | Sony | XL-55proII | NOS |
 | SO-03 | Sony | XL-55II | NOS |
