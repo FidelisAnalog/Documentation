@@ -103,6 +103,26 @@ These are not for sale - please do not ask.
 | DE-18 | Denon | DL-107B | |
 | DE-19 | Denon | DSN-20 | NOS |
 | DE-20 | Denon | DSN-53 | NOS |
+| SH-01 | Shure | V15-VMR | |
+| SH-02 | Shure | V15-VMR | |
+| SH-03 | Shure | VST-V | |
+| SH-04 | Shure | VST-V | |
+| SH-05 | Shure | Ultra 500 | |
+| SH-06 | Shure | VNSE5MR | NOS |
+| SH-07 | Shure | ULTRA500S | NOS |
+| SH-08 | Shure | VN5MR | NOS |
+| SH-09 | Shure | VN5MR | NOS |
+| SH-10 | Shure | VN5MR | NOS |
+| SH-11 | Shure | VN5MR | NOS |
+| SH-12 | Shure | VN5MR | NOS |
+| SH-13 | Shure | VN5MR | NOS |
+| SH-14 | Shure | VN5MR | NOS |
+| SH-15 | Shure | VN5MR | NOS |
+| SH-16 | Shure | VN5MR | NOS |
+| SH-17 | Shure | VN5MR | NOS |
+| SH-18 | Shure | VN5MR | NOS |
+| SH-19 | Shure | VN5MR | NOS |
+| SH-20 | Shure | VN5MR | NOS |
 
 
 
