@@ -108,9 +108,9 @@ These are not for sale - please do not ask.
 | SH-03 | Shure | VST-V | |
 | SH-04 | Shure | VST-V | |
 | SH-05 | Shure | Ultra 500 | |
-| SH-06 | Shure | Ultra 500 | |
-| SH-07 | Shure | VNSE5MR | NOS |
-| SH-08 | Shure | ULTRA500S | NOS |
+| SH-06 | Shure | VNSE5MR | NOS |
+| SH-07 | Shure | ULTRA500S | NOS |
+| SH-08 | Shure | VN5MR | NOS |
 | SH-09 | Shure | VN5MR | NOS |
 | SH-10 | Shure | VN5MR | NOS |
 | SH-11 | Shure | VN5MR | NOS |
@@ -123,9 +123,9 @@ These are not for sale - please do not ask.
 | SH-18 | Shure | VN5MR | NOS |
 | SH-19 | Shure | VN5MR | NOS |
 | SH-20 | Shure | VN5MR | NOS |
-| SH-21 | Shure | VN5MR | NOS |
-| SH-22 | Shure | M97xE | NOS |
-| SH-23 | Shure | M97xE | < 1H |
+| SH-21 | Shure | M97xE | NOS |
+| SH-22 | Shure | M97xE | < 1H |
+| SH-23 | Shure | N97XE | NOS |
 | SH-24 | Shure | N97XE | NOS |
 | SH-25 | Shure | N97XE | NOS |
 | SH-26 | Shure | N97XE | NOS |
@@ -135,7 +135,6 @@ These are not for sale - please do not ask.
 | SH-30 | Shure | N97XE | NOS |
 | SH-31 | Shure | N97XE | NOS |
 | SH-32 | Shure | N97XE | NOS |
-| SH-33 | Shure | N97XE | NOS |
 
 
 
