@@ -200,8 +200,11 @@ These are not for sale - please do not ask.
 | TE-32 | Technics | EPS-22ES | < 1H |
 | TE-33 | Technics | EPS-205EX | NOS |
 | TE-34 | Technics | EPS-205EX | NOS |
-
-
+| TE-35 | Technics | EPC-100CMK4 | NOS |
+| TE-36 | Technics | EPC-P100CMK4 | |
+| TE-37 | Technics | EPC-P100CMK4 | |
+| TE-38 | Technics | EPC-100CMK3 | |
+| TE-39 | Technics | EPC-100C | NOS |
 
 
 
