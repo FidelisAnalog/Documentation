@@ -89,6 +89,22 @@ These are not for sale - please do not ask.
 | DE-04 | Denon | DL-1000A | Decapitated |
 | DE-05 | Denon | DL-S1 | NOS |
 | DE-06 | Denon | DL-S1 | < 50H |
+| DE-07 | Denon | DL-103FL | NOS |
+| DE-08 | Denon | DL-103SL | NOS |
+| DE-09 | Denon | DL-103LCII | NOS |
+| DE-10 | Denon | DL-103C1 | NOS |
+| DE-11 | Denon | DL-H5LC | NOS |
+| DE-12 | Denon | DL-103M | < 100H |
+| DE-13 | Denon | DL-303 | NOS |
+| DE-14 | Denon | DL-303 | NOS |
+| DE-15 | Denon | DL-304 | |
+| DE-16 | Denon | DL-305| |
+| DE-17 | Denon | DL-207 | |
+| DE-18 | Denon | DL-107B | |
+| DE-19 | Denon | DSN-20 | NOS |
+| DE-20 | Denon | DSN-53 | NOS |
+
+
 
 
 
