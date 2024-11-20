@@ -123,6 +123,18 @@ These are not for sale - please do not ask.
 | SH-18 | Shure | VN5MR | NOS |
 | SH-19 | Shure | VN5MR | NOS |
 | SH-20 | Shure | VN5MR | NOS |
+| SH-21 | Shure | M97xE | NOS |
+| SH-22 | Shure | M97xE | < 1H |
+| SH-23 | Shure | N97XE | NOS |
+| SH-24 | Shure | N97XE | NOS |
+| SH-25 | Shure | N97XE | NOS |
+| SH-26 | Shure | N97XE | NOS |
+| SH-27 | Shure | N97XE | NOS |
+| SH-28 | Shure | N97XE | NOS |
+| SH-29 | Shure | N97XE | NOS |
+| SH-30 | Shure | N97XE | NOS |
+| SH-31 | Shure | N97XE | NOS |
+| SH-32 | Shure | N97XE | NOS |
 
 
 
