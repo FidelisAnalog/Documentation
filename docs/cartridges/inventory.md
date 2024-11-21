@@ -84,8 +84,8 @@ These are not for sale - please do not ask.
 | AT-45 | Audio Technica | AT-170ML/OCC | |
 | AT-46 | Audio Technica | AT-33PTG/II | < 1H |
 | AT-47 | Audio Technica | AT-160ML | |
-| AT-48 | Audio Technica | ATN-160ML | |
-| AT-49 | Audio Technica | ATN-160ML | |
+| AT-48 | Audio Technica | ATN-160ML | NOS |
+| AT-49 | Audio Technica | ATN-160ML | NOS |
 | AT-50 | Audio Technica | AT-7V | |
 | AT-51 | Audio Technica | AT-20sLA | |
 | AT-52 | Audio Technica | *208-DEX | ATN155LC NOS |
