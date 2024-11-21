@@ -155,6 +155,13 @@ These are not for sale - please do not ask.
 | JI-06 | JICO | VN5MR SAS/S | NOS |
 | JI-07 | JICO | VN5MR SAS/R | NOS |
 
+## Kenwood/Trio
+
+| ICN | Mfg | Model| Notes |
+|:-|:-|:-|:-|
+| KE-01 | Kenwood | Supreme 20 | Complete |
+
+
 ## Micro-Acoustic
 
 | ICN | Mfg | Model| Notes |
