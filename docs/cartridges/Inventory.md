@@ -139,10 +139,10 @@ These are not for sale - please do not ask.
 | YA-03 | Yamaha | MC-5 | |
 | YA-04 | Yamaha | MC-1S | |
 | DV-01 | Dynavector | DRT-XV1s | |
-| OR-01 | Ortofon | OM-10 | NOS |
-| OR-02 | Ortofon | OM-20 | NOS |
-| OR-03 | Ortofon | Super OM-30 | NOS |
-| OR-04 | Ortofon | Super OM-40 | NOS |
+| OR-01 | Ortofon | OM-10 | New |
+| OR-02 | Ortofon | OM-20 | New |
+| OR-03 | Ortofon | Super OM-30 | New |
+| OR-04 | Ortofon | Super OM-40 | New |
 | OR-05 | Ortofon | 2M Blue | < 3H |
 | OR-06 | Ortofon | MC20MKII | |
 | OR-07 | Ortofon | VMS 10E MKII | |
