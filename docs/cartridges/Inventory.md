@@ -360,7 +360,7 @@ These are not for sale - please do not ask.
 | VI-02 | Victor | X-1IIE | |
 | VI-03 | Victor | DT-X1 | NOS |
 | VI-04 | Victor | X-1 | |
-| VI-05 | Nagaoka | DT-Z1 | OEM |
+| VI-05 | Nagaoka | DT-Z1 | OEM NOS |
 
 
 
