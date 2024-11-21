@@ -91,6 +91,8 @@ These are not for sale - please do not ask.
 | AT-52 | Audio Technica | *208-DEX | ATN155LC NOS |
 | AT-53 | Audio Technica | ATN-15SS | NOS |
 
+## Denon
+
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | DE-01 | Denon | DL-1000A | < 1H |
@@ -115,6 +117,8 @@ These are not for sale - please do not ask.
 | DE-20 | Denon | DSN-53 | NOS |
 | DE-21 | Denon | DL-103LCII | |
 
+## Empire
+
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | EM-01 | Empire | 4000D/I | |
@@ -122,10 +126,14 @@ These are not for sale - please do not ask.
 | EM-03 | Empire | S4000D/III | |
 | EM-04 | Empire | *237-DET | S2000E/III NOS |
 
+## Glanz
+
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | GL-01 | Glanz | MFG-610LX | NOS |
 | GL-02 | Glanz | MFG-610LX | NOS |
+
+## Grace
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
@@ -134,6 +142,8 @@ These are not for sale - please do not ask.
 | GR-03 | Grace | RS-8L'10 | NOS |
 | GR-04 | Grace | RS-8L | NOS |
 | GR-05 | Grace | F-8 | |
+
+## JICO
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
@@ -145,6 +155,8 @@ These are not for sale - please do not ask.
 | JI-06 | JICO | VN5MR SAS/S | NOS |
 | JI-07 | JICO | VN5MR SAS/R | NOS |
 
+## Micro-Acoustic
+
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | MA-01 | Micro-Acoustics | R2002 | NOS |
@@ -154,14 +166,20 @@ These are not for sale - please do not ask.
 | MA-05 | Micro-Acoustics | 3002 | |
 | MA-06 | Micro-Acoustics | 2002 | |
 
+## Monster
+
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | MO-01 | Monster | Genesis 1000 | |
+
+## Nagaoka/Jeweltone
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | NA-01 | Nagaoka | MP-500 | < 100H |
 | NA-02 | Nagaoka | JT-80BK | New |
+
+## Sony
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
@@ -179,6 +197,8 @@ These are not for sale - please do not ask.
 | SO-12 | Sony | ND-45E | NOS |
 | SO-13 | Sony | XL-55mono | NOS |
 
+## Yamaha
+
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | YA-01 | Yamaha | MC-1000 | |
@@ -186,9 +206,13 @@ These are not for sale - please do not ask.
 | YA-03 | Yamaha | MC-5 | |
 | YA-04 | Yamaha | MC-1S | |
 
+## Dynavector
+
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | DV-01 | Dynavector | DRT-XV1s | |
+
+## Ortofon
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
@@ -200,9 +224,13 @@ These are not for sale - please do not ask.
 | OR-06 | Ortofon | MC20MKII | |
 | OR-07 | Ortofon | VMS 10E MKII | |
 
+## Pioneer
+
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | PI-01 | Pioneer | PC-70MC | NOS |
+
+## Shure
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
@@ -239,6 +267,8 @@ These are not for sale - please do not ask.
 | SH-31 | Shure | N97XE | NOS |
 | SH-32 | Shure | N97XE | NOS |
 
+## SAE
+
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | SA-01 | SAE | 1000LT | < 10H |
@@ -248,9 +278,13 @@ These are not for sale - please do not ask.
 | SA-05 | SAE | 1000E | < 10H |
 | SA-06 | SAE | 1000E | NOS |
 
+## Stanton
+
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | ST-01 | Stanton | 681 | |
+
+## Technics/Panasonic
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
@@ -317,6 +351,8 @@ These are not for sale - please do not ask.
 | TE-61 | Technics | EPS-46STQD | NOS |
 | TE-62 | Technics | *672-DQ | EPS-451QD NOS |
 | TE-63 | Technics | 2818DQ | EPS-451QD NOS |
+
+##Victor
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
