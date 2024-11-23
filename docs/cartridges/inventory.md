@@ -14,9 +14,6 @@ These are not for sale - please do not ask.
     Table of contents
   </summary>
   {: .text-delta }
-1. Adante
-2. Audio Dynamics Corp
-3. Astatic
 {:toc}
 </details>
 
