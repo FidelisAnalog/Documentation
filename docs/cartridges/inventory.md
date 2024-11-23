@@ -9,6 +9,18 @@ nav_order: 2
 {: .highlight }
 These are not for sale - please do not ask. 
 
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. Adante
+2. Audio Dynamics Corp
+3. Astatic
+{:toc}
+</details>
+
+
 ## Adante
 
 | ICN | Mfg | Model| Notes |
