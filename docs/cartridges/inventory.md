@@ -101,6 +101,8 @@ These are not for sale - please do not ask.
 | AT-51 | Audio Technica | AT-20sLA | |
 | AT-52 | Audio Technica | *208-DEX | ATN155LC NOS |
 | AT-53 | Audio Technica | ATN-15SS | NOS |
+| AT-54 | Audio Technica | AT-ML150/OCC | NOS |
+| AT-55 | Audio Technica | ATN-ML180 | NOS |
 
 ## Denon
 
@@ -214,6 +216,7 @@ These are not for sale - please do not ask.
 | SO-11 | Sony | XL-35 | NOS |
 | SO-12 | Sony | ND-45E | NOS |
 | SO-13 | Sony | XL-55mono | NOS |
+| SO-14 | Sony | XL-50 | |
 
 ## Yamaha
 
