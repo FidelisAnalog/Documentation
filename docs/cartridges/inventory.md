@@ -5,6 +5,7 @@ nav_order: 2
 ---
 
 # Inventory
+{: .no_toc }
 
 {: .highlight }
 These are not for sale - please do not ask. 
