@@ -260,19 +260,19 @@ These are not for sale - please do not ask.
 | SH-03 | Shure | VST-V | |
 | SH-04 | Shure | VST-V | |
 | SH-05 | Shure | Ultra 500 | |
-| SH-06 | Shure | VNSE5MR | NOS |
-| SH-07 | Shure | ULTRA500S | NOS |
-| SH-08 | Shure | VN5MR | NOS |
-| SH-09 | Shure | VN5MR | NOS |
-| SH-10 | Shure | VN5MR | NOS |
-| SH-11 | Shure | VN5MR | NOS |
-| SH-12 | Shure | VN5MR | NOS |
-| SH-13 | Shure | VN5MR | NOS |
-| SH-14 | Shure | VN5MR | NOS |
-| SH-15 | Shure | VN5MR | NOS |
-| SH-16 | Shure | VN5MR | NOS |
-| SH-17 | Shure | VN5MR | NOS |
-| SH-18 | Shure | VN5MR | NOS |
+| SH-06/005049 | Shure | VNSE5MR | NOS |
+| SH-07/50677 | Shure | ULTRA500S | NOS |
+| SH-08/139848 | Shure | VN5MR | NOS |
+| SH-09/152316 | Shure | VN5MR | NOS |
+| SH-10/004710 | Shure | VN5MR | NOS |
+| SH-11/151368 | Shure | VN5MR | NOS |
+| SH-12/103307 | Shure | VN5MR | NOS |
+| SH-13/151133 | Shure | VN5MR | NOS |
+| SH-14/151406 | Shure | VN5MR | NOS |
+| SH-15/123348 | Shure | VN5MR | NOS |
+| SH-16/103441 | Shure | VN5MR | NOS |
+| SH-17/152588 | Shure | VN5MR | NOS |
+| SH-18/152336 | Shure | VN5MR | NOS |
 | SH-19 | Shure | VN5MR | NOS |
 | SH-20 | Shure | VN5MR | NOS |
 | SH-21 | Shure | M97xE | NOS |
