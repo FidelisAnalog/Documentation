@@ -108,7 +108,7 @@ These are not for sale - please do not ask.
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
-| DE-01 | Denon | DL-1000A | < 1H |
+| DE-01/2472 | Denon | DL-1000A | < 1H |
 | DE-02 | Denon | DL-1000A | < 100H |
 | DE-03 | Denon | DL-1000A | Shot |
 | DE-04 | Denon | DL-1000A | Decapitated |
