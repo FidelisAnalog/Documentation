@@ -273,8 +273,8 @@ These are not for sale - please do not ask.
 | SH-16/103441 | Shure | VN5MR | NOS |
 | SH-17/152588 | Shure | VN5MR | NOS |
 | SH-18/152336 | Shure | VN5MR | NOS |
-| SH-19 | Shure | VN5MR | NOS |
-| SH-20 | Shure | VN5MR | NOS |
+| SH-19/NA | Shure | VN5MR | NOS |
+| SH-20/NA | Shure | VN5MR | NOS |
 | SH-21 | Shure | M97xE | NOS |
 | SH-22 | Shure | M97xE | < 1H |
 | SH-23 | Shure | N97XE | NOS |
