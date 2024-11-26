@@ -203,19 +203,19 @@ These are not for sale - please do not ask.
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
-| SO-01 | Sony | XL-88D | < 10H |
-| SO-02 | Sony | XL-55proII | NOS |
-| SO-03 | Sony | XL-55II | NOS |
-| SO-04 | Sony | XL-55pro | NOS |
+| SO-01/8053 | Sony | XL-88D | < 10H |
+| SO-02/5245 | Sony | XL-55proII | NOS |
+| SO-03/20536 | Sony | XL-55II | NOS |
+| SO-04/7788 | Sony | XL-55pro | NOS |
 | SO-05 | Sony | XL-55 | NOS |
 | SO-06 | Sony | XL-44L | NOS |
-| SO-07 | Sony | XL-44 | NOS |
+| SO-07/1770 | Sony | XL-44 | NOS |
 | SO-08 | Sony | XL-33 | NOS |
 | SO-09 | Sony | XL-50 | NOS |
 | SO-10 | Sony | XL-MC1 | NOS |
 | SO-11 | Sony | XL-35 | NOS |
 | SO-12 | Sony | ND-45E | NOS |
-| SO-13 | Sony | XL-55mono | NOS |
+| SO-13/8100 | Sony | XL-55mono | NOS |
 | SO-14 | Sony | XL-50 | |
 
 ## Yamaha
