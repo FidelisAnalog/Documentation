@@ -213,7 +213,7 @@ These are not for sale - please do not ask.
 | SO-08 | Sony | XL-33 | NOS |
 | SO-09 | Sony | XL-50 | NOS |
 | SO-10 | Sony | XL-MC1 | NOS |
-| SO-11 | Sony | XL-35 | NOS |
+| SO-11/27291 | Sony | XL-35 | NOS |
 | SO-12 | Sony | ND-45E | NOS |
 | SO-13/8100 | Sony | XL-55mono | NOS |
 | SO-14 | Sony | XL-50 | |
