@@ -130,6 +130,12 @@ These are not for sale - please do not ask.
 | DE-20 | Denon | DSN-53 | NOS |
 | DE-21 | Denon | DL-103LCII | |
 
+## Dynavector
+
+| ICN | Mfg | Model| Notes |
+|:-|:-|:-|:-|
+| DV-01 | Dynavector | DRT-XV1s | |
+
 ## Empire
 
 | ICN | Mfg | Model| Notes |
@@ -199,40 +205,6 @@ These are not for sale - please do not ask.
 | NA-01 | Nagaoka | MP-500 | < 100H |
 | NA-02 | Nagaoka | JT-80BK | New |
 
-## Sony
-
-| ICN | Mfg | Model| Notes |
-|:-|:-|:-|:-|
-| SO-01/8053 | Sony | XL-88D | < 10H |
-| SO-02/5245 | Sony | XL-55proII | NOS |
-| SO-03/20536 | Sony | XL-55II | NOS |
-| SO-04/7788 | Sony | XL-55pro | NOS |
-| SO-05 | Sony | XL-55 | NOS |
-| SO-06 | Sony | XL-44L | NOS |
-| SO-07/1770 | Sony | XL-44 | NOS |
-| SO-08 | Sony | XL-33 | NOS |
-| SO-09 | Sony | XL-50 | NOS |
-| SO-10 | Sony | XL-MC1 | NOS |
-| SO-11/27291 | Sony | XL-35 | NOS |
-| SO-12 | Sony | ND-45E | NOS |
-| SO-13/8100 | Sony | XL-55mono | NOS |
-| SO-14 | Sony | XL-50 | |
-
-## Yamaha
-
-| ICN | Mfg | Model| Notes |
-|:-|:-|:-|:-|
-| YA-01 | Yamaha | MC-1000 | |
-| YA-02 | Yamaha | MC-3 | |
-| YA-03 | Yamaha | MC-5 | |
-| YA-04 | Yamaha | MC-1S | |
-
-## Dynavector
-
-| ICN | Mfg | Model| Notes |
-|:-|:-|:-|:-|
-| DV-01 | Dynavector | DRT-XV1s | |
-
 ## Ortofon
 
 | ICN | Mfg | Model| Notes |
@@ -250,6 +222,17 @@ These are not for sale - please do not ask.
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | PI-01 | Pioneer | PC-70MC | NOS |
+
+## SAE
+
+| ICN | Mfg | Model| Notes |
+|:-|:-|:-|:-|
+| SA-01 | SAE | 1000LT | < 10H |
+| SA-02 | SAE | 1000LT | NOS |
+| SA-03 | SAE | 1000LT | NOS |
+| SA-04 | SAE | 1000LT | NOS |
+| SA-05 | SAE | 1000E | < 10H |
+| SA-06 | SAE | 1000E | NOS |
 
 ## Shure
 
@@ -288,16 +271,24 @@ These are not for sale - please do not ask.
 | SH-31 | Shure | N97XE | NOS |
 | SH-32 | Shure | N97XE | NOS |
 
-## SAE
+## Sony
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
-| SA-01 | SAE | 1000LT | < 10H |
-| SA-02 | SAE | 1000LT | NOS |
-| SA-03 | SAE | 1000LT | NOS |
-| SA-04 | SAE | 1000LT | NOS |
-| SA-05 | SAE | 1000E | < 10H |
-| SA-06 | SAE | 1000E | NOS |
+| SO-01/8053 | Sony | XL-88D | < 10H |
+| SO-02/5245 | Sony | XL-55proII | NOS |
+| SO-03/20536 | Sony | XL-55II | NOS |
+| SO-04/7788 | Sony | XL-55pro | NOS |
+| SO-05 | Sony | XL-55 | NOS |
+| SO-06 | Sony | XL-44L | NOS |
+| SO-07/1770 | Sony | XL-44 | NOS |
+| SO-08 | Sony | XL-33 | NOS |
+| SO-09 | Sony | XL-50 | NOS |
+| SO-10 | Sony | XL-MC1 | NOS |
+| SO-11/27291 | Sony | XL-35 | NOS |
+| SO-12 | Sony | ND-45E | NOS |
+| SO-13/8100 | Sony | XL-55mono | NOS |
+| SO-14 | Sony | XL-50 | |
 
 ## Stanton
 
@@ -383,6 +374,14 @@ These are not for sale - please do not ask.
 | VI-04 | Victor | X-1 | |
 | VI-05 | Nagaoka | DT-Z1 | OEM NOS |
 
+## Yamaha
+
+| ICN | Mfg | Model| Notes |
+|:-|:-|:-|:-|
+| YA-01 | Yamaha | MC-1000 | |
+| YA-02 | Yamaha | MC-3 | |
+| YA-03 | Yamaha | MC-5 | |
+| YA-04 | Yamaha | MC-1S | |
 
 
 
