@@ -108,6 +108,8 @@ These are not for sale - please do not ask.
 | AT-58 | Audio Technica | ATN-150MLX | NOS on AT-05 |
 | AT-59 | Audio Technica | ATN-150MLX | on AT-01 501H |
 | AT-60 | Audio Technica | ATN-150MLX | on AT-02 SH-100B|
+| AT-61 | Audio Technica | AT-440MLb | |
+| AT-62 | Audio Technica | ATN-440MLb | on AT-61 501H |
 
 ## Denon
 
