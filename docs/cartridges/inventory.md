@@ -203,7 +203,7 @@ These are not for sale - please do not ask.
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
-| MO-01 | Monster | Genesis 1000 | |
+| MO-01/12348 | Monster | Genesis 1000 | |
 
 ## Nagaoka/Jeweltone
 
