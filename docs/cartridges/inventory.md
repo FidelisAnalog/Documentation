@@ -370,6 +370,7 @@ These are not for sale - please do not ask.
 | TE-61 | Technics | EPS-46STQD | NOS |
 | TE-62 | Technics | *672-DQ | EPS-451QD NOS |
 | TE-63 | Technics | 2818DQ | EPS-451QD NOS |
+| TE-64/012671 | Technics | EPC-205CMK4 |  |
 
 ## Victor
 
