@@ -385,9 +385,9 @@ These are not for sale - please do not ask.
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
-| YA-01 | Yamaha | MC-1000 | |
-| YA-02 | Yamaha | MC-3 | |
-| YA-03 | Yamaha | MC-5 | |
+| YA-01/01754 | Yamaha | MC-1000 | |
+| YA-02/08211 | Yamaha | MC-3 | NOS |
+| YA-03/36953 | Yamaha | MC-5 | NOS |
 | YA-04 | Yamaha | MC-1S | |
 
 
