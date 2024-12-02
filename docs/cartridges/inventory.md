@@ -331,13 +331,13 @@ These are not for sale - please do not ask.
 | TE-22 | Technics | EPS-205ED3 | NOS |
 | TE-23 | Technics | EPS-P205ED3 | NOS |
 | TE-24 | Technics | EPS-202ED | NOS |
-| TE-25 | Technics | EPS-202ED | NOS |
+| TE-25 | Technics | EPS-202ED | |
 | TE-26 | Technics | EPS-202ED | NOS |
 | TE-27 | Technics | EPS-202ED | NOS |
 | TE-28 | Technics | EPS-202ED | NOS |
 | TE-29 | Technics | EPS-202ED | NOS |
-| TE-30 | Technics | EPS-202ED | NOS |
-| TE-31 | Technics | EPS-202ED | < 5H |
+| TE-30 | Technics | EPS-202ED | < 5H |
+| TE-31 | Technics |  | |
 | TE-32 | Technics | EPS-22ES | < 1H |
 | TE-33 | Technics | EPS-205EX | NOS |
 | TE-34 | Technics | EPS-205EX | NOS |
