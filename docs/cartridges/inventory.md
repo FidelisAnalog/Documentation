@@ -337,25 +337,25 @@ These are not for sale - please do not ask.
 | TE-28 | Technics | EPS-202ED | NOS |
 | TE-29 | Technics | EPS-202ED | NOS |
 | TE-30 | Technics | EPS-202ED | < 5H |
-| TE-31 | Technics |  | |
+| TE-31 | Technics | EPS-205EX | |
 | TE-32 | Technics | EPS-22ES | NOS |
 | TE-33 | Technics | EPS-205EX | NOS |
 | TE-34 | Technics | EPS-205EX | NOS |
 | TE-35/17496 | Technics | EPC-100CMK4 | NOS |
 | TE-36 | Technics | EPC-P100CMK4 | |
 | TE-37 | Technics | EPC-P100CMK4 | |
-| TE-38 | Technics | EPC-100CMK3 | |
+| TE-38/05891 | Technics | EPC-100CMK3 | |
 | TE-39 | Technics | EPC-100C | NOS |
 | TE-40/133834 | Technics | EPC-205CMK3 |  |
 | TE-41/431 | Technics | EPC-P205CMK3 |  |
 | TE-42 | Technics | EPC-205CMK3 |  |
 | TE-43/020539 | Technics | EPC-205CMK3 | NOS |
-| TE-44 | Technics | EPS-310MC |  |
+| TE-44 | Technics | EPS-310MC | broken cant |
 | TE-45 | Technics | EPC-310MC |  |
 | TE-46/692 | Technics | EPC-P310MC2 | broken cant |
-| TE-47 | Technics | EPC-P310MC2 |  |
+| TE-47/693 | Technics | EPC-P310MC2 |  |
 | TE-48/1K0157 | Technics | EPS-305MCMK2 | NOS |
-| TE-49 | Technics | EPS-305MCMK2 |  |
+| TE-49/890123 | Technics | EPS-305MCMK2 | w/ FR |
 | TE-50 | Technics | EPC-305MCMK2 |  |
 | TE-51 | Technics | EPC-205CIIL |  |
 | TE-52 | Technics | EPC-P205CMK4 |  |
