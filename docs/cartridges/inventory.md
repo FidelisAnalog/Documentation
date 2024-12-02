@@ -327,9 +327,9 @@ These are not for sale - please do not ask.
 | TE-18 | Technics | EPS-205ED4 | NOS |
 | TE-19 | Technics | EPS-205ED3 | NOS |
 | TE-20 | Technics | EPS-205ED3 | NOS |
-| TE-21 | Technics | EPS-205ED3 | NOS |
+| TE-21 | Technics | EPS-205ED3 | |
 | TE-22 | Technics | EPS-205ED3 | NOS |
-| TE-23 | Technics | EPS-P205ED3 | NOS |
+| TE-23 | Technics | EPS-P205ED3 | bad sus |
 | TE-24 | Technics | EPS-202ED | NOS |
 | TE-25 | Technics | EPS-202ED | |
 | TE-26 | Technics | EPS-202ED | NOS |
@@ -338,7 +338,7 @@ These are not for sale - please do not ask.
 | TE-29 | Technics | EPS-202ED | NOS |
 | TE-30 | Technics | EPS-202ED | < 5H |
 | TE-31 | Technics |  | |
-| TE-32 | Technics | EPS-22ES | < 1H |
+| TE-32 | Technics | EPS-22ES | NOS |
 | TE-33 | Technics | EPS-205EX | NOS |
 | TE-34 | Technics | EPS-205EX | NOS |
 | TE-35/17496 | Technics | EPC-100CMK4 | NOS |
