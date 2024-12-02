@@ -388,7 +388,7 @@ These are not for sale - please do not ask.
 | YA-01/01754 | Yamaha | MC-1000 | |
 | YA-02/08211 | Yamaha | MC-3 | NOS |
 | YA-03/36953 | Yamaha | MC-5 | NOS |
-| YA-04 | Yamaha | MC-1S | |
+| YA-04/03521 | Yamaha | MC-1S | |
 | YA-05/03567 | Yamaha | MC-1X | no stylus |
 
 
