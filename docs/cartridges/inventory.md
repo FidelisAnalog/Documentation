@@ -317,7 +317,7 @@ These are not for sale - please do not ask.
 | TE-08 | Technics | EPS-P100ED4 | Nag NOS |
 | TE-09 | Technics | EPS-P100ED4 | Nag NOS |
 | TE-10 | Technics | EPS-P100ED4 | Nag NOS |
-| TE-11 | Technics | EPS-P100ED4 | Nag NOS |
+| TE-11 | Technics | EPS-P100ED4 | Nag |
 | TE-12 | Technics | EPS-P100ED4 | < 5H |
 | TE-13 | Technics | EPS-100ED4 | NOS |
 | TE-14 | Technics | EPS-P205ED4 | < 2H |
