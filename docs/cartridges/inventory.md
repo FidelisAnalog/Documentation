@@ -117,8 +117,8 @@ These are not for sale - please do not ask.
 |:-|:-|:-|:-|
 | DE-01/2472 | Denon | DL-1000A | < 1H |
 | DE-02 | Denon | DL-1000A | < 100H |
-| DE-03 | Denon | DL-1000A | Shot |
-| DE-04 | Denon | DL-1000A | Decapitated |
+| DE-03/7307 | Denon | DL-1000A | Shot |
+| DE-04/1290 | Denon | DL-1000A | Decapitated |
 | DE-05/0106 | Denon | DL-S1 | NOS |
 | DE-06/5477 | Denon | DL-S1 | < 50H |
 | DE-07/1237 | Denon | DL-103FL | NOS |
@@ -375,8 +375,8 @@ These are not for sale - please do not ask.
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
-| VI-01 | Victor | MC-L1000 | < 5H |
-| VI-02 | Victor | X-1IIE | |
+| VI-01/07203168 | Victor | MC-L1000 | < 5H |
+| VI-02/16100600 | Victor | X-1IIE | |
 | VI-03 | Victor | DT-X1 | NOS |
 | VI-04 | Victor | X-1 | |
 | VI-05 | Nagaoka | DT-Z1 | OEM NOS |
