@@ -103,6 +103,11 @@ These are not for sale - please do not ask.
 | AT-53 | Audio Technica | ATN-15SS | NOS |
 | AT-54 | Audio Technica | AT-ML150/OCC | NOS |
 | AT-55 | Audio Technica | ATN-ML180 | NOS |
+| AT-56 | Audio Technica | ATN-150MLX | NOS on AT-03 |
+| AT-57 | Audio Technica | ATN-150MLX | NOS on AT-04 |
+| AT-58 | Audio Technica | ATN-150MLX | NOS on AT-05 |
+| AT-59 | Audio Technica | ATN-150MLX | on AT-01 501H |
+| AT-60 | Audio Technica | ATN-150MLX | on AT-02 SH-100B|
 
 ## Denon
 
