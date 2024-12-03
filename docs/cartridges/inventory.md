@@ -195,9 +195,9 @@ These are not for sale - please do not ask.
 | MA-01 | Micro-Acoustics | R2002 | NOS |
 | MA-02 | Micro-Acoustics | *571-DEX | R630 NOS |
 | MA-03 | Micro-Acoustics | *571-DEV | R3002 NOS |
-| MA-04 | Micro-Acoustics | 3002 | |
-| MA-05 | Micro-Acoustics | 3002 | |
-| MA-06 | Micro-Acoustics | 2002 | |
+| MA-04/14317 | Micro-Acoustics | 3002 | |
+| MA-05/12966 | Micro-Acoustics | 3002 | |
+| MA-06/315598 | Micro-Acoustics | 2002 | |
 
 ## Monster
 
