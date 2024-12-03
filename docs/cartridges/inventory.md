@@ -123,10 +123,10 @@ These are not for sale - please do not ask.
 | DE-06/5477 | Denon | DL-S1 | < 50H |
 | DE-07/1237 | Denon | DL-103FL | NOS |
 | DE-08/3234 | Denon | DL-103SL | NOS |
-| DE-09 | Denon | DL-103LCII | NOS |
-| DE-10 | Denon | DL-103C1 | NOS |
+| DE-09/2625 | Denon | DL-103LCII | FR |
+| DE-10/2464 | Denon | DL-103C1 | FR |
 | DE-11 | Denon | DL-H5LC | NOS |
-| DE-12 | Denon | DL-103M | < 100H |
+| DE-12/5598 | Denon | DL-103M | < 100H FR |
 | DE-13/6385 | Denon | DL-303 | NOS |
 | DE-14/8448 | Denon | DL-303 | NOS |
 | DE-15 | Denon | DL-304 | |
