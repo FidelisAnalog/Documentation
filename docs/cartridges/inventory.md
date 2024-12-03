@@ -228,7 +228,7 @@ These are not for sale - please do not ask.
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
-| PI-01 | Pioneer | PC-70MC | NOS |
+| PI-01/3099 | Pioneer | PC-70MC | NOS |
 
 ## SAE
 
