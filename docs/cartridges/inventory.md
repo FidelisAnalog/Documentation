@@ -221,7 +221,7 @@ These are not for sale - please do not ask.
 | OR-03 | Ortofon | Super OM-30 | New |
 | OR-04 | Ortofon | Super OM-40 | New |
 | OR-05 | Ortofon | 2M Blue | < 3H |
-| OR-06 | Ortofon | MC20MKII | |
+| OR-06/938483 | Ortofon | MC20MKII | |
 | OR-07 | Ortofon | VMS 10E MKII | |
 
 ## Pioneer
