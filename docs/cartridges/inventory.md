@@ -94,7 +94,7 @@ These are not for sale - please do not ask.
 | AT-44 | Audio Technica | AT-15Sa | |
 | AT-45 | Audio Technica | AT-170ML/OCC | |
 | AT-46 | Audio Technica | AT-33PTG/II | < 1H |
-| AT-47 | Audio Technica | AT-160ML | |
+| AT-47 | Audio Technica | AT-160ML/G | |
 | AT-48 | Audio Technica | ATN-160ML | NOS |
 | AT-49 | Audio Technica | ATN-160ML | NOS |
 | AT-50 | Audio Technica | AT-7V | |
@@ -129,9 +129,9 @@ These are not for sale - please do not ask.
 | DE-12/5598 | Denon | DL-103M | < 100H FR |
 | DE-13/6385 | Denon | DL-303 | NOS |
 | DE-14/8448 | Denon | DL-303 | NOS |
-| DE-15 | Denon | DL-304 | |
-| DE-16 | Denon | DL-305| |
-| DE-17 | Denon | DL-207 | |
+| DE-15/9099 | Denon | DL-103LCII | |
+| DE-16/7149 | Denon | DL-305| |
+| DE-17/6422 | Denon | DL-207 | |
 | DE-18 | Denon | DL-107B | |
 | DE-19 | Denon | DSN-20 | NOS |
 | DE-20 | Denon | DSN-53 | NOS |
@@ -210,7 +210,7 @@ These are not for sale - please do not ask.
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | NA-01 | Nagaoka | MP-500 | < 100H |
-| NA-02 | Nagaoka | JT-80BK | New |
+| NA-02/210101J | Nagaoka | JT-80BK | New |
 
 ## Ortofon
 
@@ -356,7 +356,7 @@ These are not for sale - please do not ask.
 | TE-47/693 | Technics | EPC-P310MC2 |  |
 | TE-48/1K0157 | Technics | EPS-305MCMK2 | NOS |
 | TE-49/890123 | Technics | EPS-305MCMK2 | w/ FR |
-| TE-50 | Technics | EPC-305MCMK2 |  |
+| TE-50/210152 | Technics | EPC-305MCMK2 |  |
 | TE-51 | Technics | EPC-205CIIL |  |
 | TE-52 | Technics | EPC-P205CMK4 |  |
 | TE-53 | Technics | EPC-U205CMK3 |  |
