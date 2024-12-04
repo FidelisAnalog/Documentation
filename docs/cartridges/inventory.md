@@ -80,9 +80,9 @@ These are not for sale - please do not ask.
 | AT-30 | Audio Technica | AT-VM95C | < 1H |
 | AT-31 | Audio Technica | AT-VM95C | < 1H |
 | AT-32 | Audio Technica | AT-VM95ML | < 1H |
-| AT-33 | Audio Technica | AT-VM95SH | New |
-| AT-34 | Audio Technica | AT-VMN95E | New |
-| AT-35 | Audio Technica | AT-VMN95EN | New |
+| AT-33 | Audio Technica | AT-VM95SH | < 1H |
+| AT-34 | Audio Technica | AT-VMN95E | < 1H |
+| AT-35 | Audio Technica | AT-VMN95EN | < 1H |
 | AT-36 | Audio Technica | AT-VM760SLC| 
 | AT-37 | Audio Technica | AT-VM740ML |
 | AT-38 | Audio Technica | AT-VM540ML |
