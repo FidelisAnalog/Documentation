@@ -198,6 +198,8 @@ These are not for sale - please do not ask.
 | MA-04/14317 | Micro-Acoustics | 3002 | |
 | MA-05/12966 | Micro-Acoustics | 3002 | |
 | MA-06/315598 | Micro-Acoustics | 2002 | |
+| MA-07/03049 | Micro-Acoustics | 3002 | |
+| MA-08/8-21027 | Micro-Acoustics | 282 | |
 
 ## Monster
 
