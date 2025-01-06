@@ -94,6 +94,7 @@ Asterisk denotes ETM was verfied against manufacturer literature.
 | 0.25 | Yamaha | MC-1X/MC1-1S | MC, beryllium tapered pipe, special elliptical |
 | 0.25* | B&O | MMC1 | MMC, sapphire tube, nude line contact |
 | 0.25* | Denon | DL-207 | MC, amorphous boron pipe |
+| 0.25* | Ortofon | MC 5000 | MC, sapphire, 5/100µm replicant 100 |
 | 0.24* | Van den Hul | Colibri | MC |
 | 0.23 | Pickering | XSV 3000 | (improved), MM |
 | 0.23* | Technics | EPC-P310MC | MC, boron pipe, T4P |
