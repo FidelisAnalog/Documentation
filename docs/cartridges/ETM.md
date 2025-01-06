@@ -19,6 +19,7 @@ Asterisk denotes ETM was verfied against manufacturer literature.
 | 1.2 | Shure | V15 | MM |
 | 1 | Ortofon | SPU | All classic and mono models |
 | 0.97 | Shure | "bi-radial" | MM, alu, 0.4 x 0.7 |
+| 0.85* | Nagatron | 350 S | MI, alu "UT-58", 0.5 spherical | 
 | 0.8* | Technics | EPC-270C-II | |
 | 0.8* | Ortofon | VMS 3 MKII | MI, alu, 8/18µm |
 | 0.8 | Philips | GP400, 401 | MM |
@@ -26,9 +27,11 @@ Asterisk denotes ETM was verfied against manufacturer literature.
 | 0.7 | Ortofon | X5-MC | HOMC, alu, nude FG 70 (5/70µm) |
 | 0.65* | Ortofon | VMS 5 E MKII | VMS, alu, elliptical |
 | 0.65* | Ortofon | VMS 10 E MKII | VMS, ali, elliptical |
+| 0.65* | Nagatron | 350 E | MI, alu "UT-58", 0.3 x 0.7 nude elliptical | 
 | 0.6 | Nagaoka | JT-555 | MM, pseudo "carbon fiber", nude shibata |
 | 0.6 | Philips | GP412 | MM |
 | 0.6* | Ortofon | Concorde STD | MM, alu, elliptical |
+| 0.60* | Nagatron | 350 CE | MI, tapered carbon-fiber, 0.3 x 0.7 nude elliptical | 
 | 0.5* | Audio Technica | VM35-EL | MM, apered alu, nude elliptical |
 | 0.5* | B&O | MMC5 | (MMC, tapered alu, titanium bonded elliptical |
 | 0.5 | B&O | MMC 3000 | MMC, alu, conical |
