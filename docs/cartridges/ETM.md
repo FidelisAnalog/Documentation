@@ -126,5 +126,5 @@ Asterisk denotes ETM was verfied against manufacturer literature.
 | 0.098* | Technics | EPC-(P)305MCMK2 | MC, tapered boron pipe, 0.2 x 07 |
 | 0.098* | Technics | EPC-100CMK3 | MM, boron pipe |
 | 0.077* | Denon | DL1000A | MC, amorphous boron pipe |
-| 0.059 | Yamaha | MC-2000 | MC, beryllium pipe, special elliptical |
+| 0.059* | Yamaha | MC-2000 | MC, beryllium pipe, special elliptical |
 | 0.055* | Technics | EPC-(P)100CMK4 | MM, tapered boron pipe, MR |
