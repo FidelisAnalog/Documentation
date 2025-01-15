@@ -2,7 +2,7 @@
 title: Effective Tip Mass
 parent: Phono Cartridges
 nav_order: 1
-last_modified_date: 2025-01-06
+last_modified_date: 2025-01-15
 ---
 
 # Effective Tip Mass
