@@ -281,6 +281,12 @@ These are not for sale - please do not ask.
 | SH-31 | Shure | N97XE | NOS |
 | SH-32 | Shure | N97XE | NOS |
 
+## Signet
+
+| ICN | Mfg | Model| Notes |
+|:-|:-|:-|:-|
+| SI-01 | Signet | TK10ML | < 10H |
+
 ## Sony
 
 | ICN | Mfg | Model| Notes |
