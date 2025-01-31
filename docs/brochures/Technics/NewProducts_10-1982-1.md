@@ -2,7 +2,7 @@
 layout: default
 title: New Products 10-1982 (EPC-100CMK4)
 parent: Technics
-nav_order: 1
+nav_order: 5
 ---
 
 <div id="adobe-dc-view" style="height: 80vh;">

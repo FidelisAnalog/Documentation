@@ -2,7 +2,7 @@
 layout: default
 title: New Products 10-1982 (SL-1000MK3D)
 parent: Technics
-nav_order: 2
+nav_order: 6
 ---
 
 <div id="adobe-dc-view" style="height: 80vh;">
