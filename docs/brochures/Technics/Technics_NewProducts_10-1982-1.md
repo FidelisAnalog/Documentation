@@ -2,6 +2,7 @@
 layout: default
 title: New Products 10-1982 (EPC-100CMK4)
 parent: Technics
+ancestor: Brochures
 nav_order: 5
 ---
 

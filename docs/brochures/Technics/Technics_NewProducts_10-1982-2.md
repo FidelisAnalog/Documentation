@@ -1,8 +1,9 @@
 ---
 layout: default
-title: New Products 10-1980 (EPC-100CMK3)
+title: New Products 10-1982 (SL-1000MK3D)
 parent: Technics
-nav_order: 3
+ancestor: Brochures
+nav_order: 6
 ---
 
 <div id="adobe-dc-view" style="height: 80vh;">
@@ -11,8 +12,8 @@ nav_order: 3
 		document.addEventListener("adobe_dc_view_sdk.ready", function(){ 
 			var adobeDCView = new AdobeDC.View({clientId: "5aca0821dfc443928ce227808de9010e", divId: "adobe-dc-view"});
 			adobeDCView.previewFile({
-				content:{location: {url: "/assets/pdfs/Technics_NP10-1980.pdf"}},
-				metaData:{fileName: "Technics_NP10-1980.pdf"}
+				content:{location: {url: "/assets/pdfs/Technics_NP10-1982_2.pdf"}},
+				metaData:{fileName: "Technics_NP10-1982_2.pdf"}
 			}, {defaultViewMode: "FIT_WIDTH", showAnnotationTools: false});
 		});
 	</script>
