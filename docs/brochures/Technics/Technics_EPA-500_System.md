@@ -2,7 +2,7 @@
 layout: default
 title: Technics EPA-500 System
 parent: Technics
-grand-parent: Brochures
+ancestor: Brochures
 nav_order: 9
 ---
 
