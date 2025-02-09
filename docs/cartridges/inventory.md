@@ -2,7 +2,7 @@
 title: Inventory
 parent: Phono Cartridges
 nav_order: 2
-last_modified_date: 2025-01-30
+last_modified_date: 2025-02-09
 ---
 
 # Inventory
@@ -214,6 +214,10 @@ These are not for sale - please do not ask.
 |:-|:-|:-|:-|
 | NA-01 | Nagaoka | MP-500 | < 100H |
 | NA-02/210101J | Nagaoka | JT-80BK | New |
+| NA-03 | Nagaoka | MP-300 | New |
+| NA-04 | Nagaoka | MP-200 | New |
+| NA-05 | Nagaoka | MP-150 | New |
+| NA-06 | Nagaoka | MP-110 | New |
 
 ## Ortofon
 
