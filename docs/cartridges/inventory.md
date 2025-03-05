@@ -142,6 +142,7 @@ These are not for sale - please do not ask.
 | DE-23/6011 | Denon | DL-207 | NOS |
 | DE-24/6384 | Denon | DL-301 | |
 | DE-25/8922 | Denon | DL-301II | NOS |
+| DE-26/6010 | Denon | DL-55II | |
 
 ## Dynavector
 
