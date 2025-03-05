@@ -2,7 +2,7 @@
 title: Inventory
 parent: Phono Cartridges
 nav_order: 2
-last_modified_date: 2025-02-09
+last_modified_date: 2025-03-05
 ---
 
 # Inventory
@@ -111,6 +111,7 @@ These are not for sale - please do not ask.
 | AT-60 | Audio Technica | ATN-150MLX | on AT-02 SH-100B|
 | AT-61 | Audio Technica | AT-440MLb | |
 | AT-62 | Audio Technica | ATN-440MLb | on AT-61 501H |
+| AT-63 | Audio Technica | ATN-160ML | NOS |
 
 ## Denon
 
@@ -137,6 +138,10 @@ These are not for sale - please do not ask.
 | DE-19 | Denon | DSN-20 | NOS |
 | DE-20 | Denon | DSN-53 | NOS |
 | DE-21 | Denon | DL-103LCII | |
+| DE-22/8971 | Denon | DL-305 | NOS |
+| DE-23/6011 | Denon | DL-207 | NOS |
+| DE-24/6384 | Denon | DL-301 | |
+| DE-25/8922 | Denon | DL-301II | NOS |
 
 ## Dynavector
 
@@ -218,6 +223,8 @@ These are not for sale - please do not ask.
 | NA-04 | Nagaoka | MP-200 | New |
 | NA-05 | Nagaoka | MP-150 | New |
 | NA-06 | Nagaoka | MP-110 | New |
+| NA-07 | Nagaoka | JN-P300 | New |
+| NA-08 | Nagaoka | JN-P500 | New |
 
 ## Ortofon
 
@@ -284,6 +291,8 @@ These are not for sale - please do not ask.
 | SH-30 | Shure | N97XE | NOS |
 | SH-31 | Shure | N97XE | NOS |
 | SH-32 | Shure | N97XE | NOS |
+| SH-33/151440 | Shure | VN5MR | NOS |
+| SH-34 | Shure | V15VxMR |  |
 
 ## Signet
 
