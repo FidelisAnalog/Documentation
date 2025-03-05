@@ -231,13 +231,14 @@ These are not for sale - please do not ask.
 
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
-| OR-01 | Ortofon | OM-10 | New |
-| OR-02 | Ortofon | OM-20 | New |
-| OR-03 | Ortofon | Super OM-30 | New |
-| OR-04 | Ortofon | Super OM-40 | New |
+| OR-01 | Ortofon | OM-10 | < 1H |
+| OR-02 | Ortofon | OM-20 | < 1H |
+| OR-03 | Ortofon | Super OM-30 | < 1H |
+| OR-04 | Ortofon | Super OM-40 | < 1H |
 | OR-05 | Ortofon | 2M Blue | < 3H |
 | OR-06/938483 | Ortofon | MC20MKII | |
 | OR-07 | Ortofon | VMS 10E MKII | |
+| OR-08/030353 | Ortofon | MC20MKII | Poor |
 
 ## Pioneer
 
@@ -245,7 +246,7 @@ These are not for sale - please do not ask.
 |:-|:-|:-|:-|
 | PI-01/3099 | Pioneer | PC-70MC | NOS |
 | PI-02/TXH3119 | Pioneer | PS-1000/II |  |
-| PI-03/0395 | Pioneer | PC-1000 MKII | NOS |
+| PI-03/0395 | Pioneer | PC-1000 MKII | |
 
 ## SAE
 
