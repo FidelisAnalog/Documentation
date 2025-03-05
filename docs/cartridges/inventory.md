@@ -244,6 +244,8 @@ These are not for sale - please do not ask.
 | ICN | Mfg | Model| Notes |
 |:-|:-|:-|:-|
 | PI-01/3099 | Pioneer | PC-70MC | NOS |
+| PI-02/TXH3119 | Pioneer | PS-1000/II |  |
+| PI-03/0395 | Pioneer | PC-1000 MKII | NOS |
 
 ## SAE
 
