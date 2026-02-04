@@ -128,12 +128,17 @@
   }
 
   function SignalPanel(props) {
-    var s = props.signal, i = props.index, onChange = props.onChange;
+    var s = props.signal, i = props.index, onChange = props.onChange, onReset = props.onReset;
     var fl = s.freq >= 1000 ? (s.freq / 1000).toFixed(s.freq % 1000 === 0 ? 0 : 1) + " kHz" : s.freq + " Hz";
     return h("div", { className: "sd-panel" },
       h("div", { style: { display: "flex", alignItems: "center", gap: 8 } },
         h("div", { style: { width: 8, height: 8, borderRadius: "50%", background: s.color, boxShadow: "0 0 6px " + s.color + "60", flexShrink: 0 } }),
         h("span", { style: { fontSize: 12, fontWeight: 600, color: s.color, letterSpacing: "0.04em" } }, s.label),
+        h("button", {
+          onClick: function () { onReset(i); },
+          className: "sd-btn sd-btn-reset",
+          title: "Reset to defaults",
+        }, "\u21BA"),
         h("span", { style: { marginLeft: "auto", fontSize: 10, color: C.dim } }, fl)
       ),
       h(WaveformCanvas, { signals: [s], height: 56 }),
@@ -264,6 +269,14 @@
       });
     };
 
+    var handleReset = function (idx) {
+      setSignals(function (prev) {
+        var next = prev.slice();
+        next[idx] = Object.assign({}, next[idx], { freq: DEFAULTS[idx].freq, amp: DEFAULTS[idx].amp });
+        return next;
+      });
+    };
+
     return h("div", null,
 
       // === STICKY COMPOSITE ===
@@ -322,7 +335,7 @@
 
         // Panels - single column
         signals.map(function (sig, i) {
-          return h(SignalPanel, { key: i, signal: sig, index: i, onChange: handleChange });
+          return h(SignalPanel, { key: i, signal: sig, index: i, onChange: handleChange, onReset: handleReset });
         }),
 
         // Explanation
