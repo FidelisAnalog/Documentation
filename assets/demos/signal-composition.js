@@ -20,6 +20,8 @@
     { freq: 1540, amp: 0.3, label: "Signal C", color: C.sig3 },
   ];
 
+  var MASTER_VOL = 0.25;
+
   function drawGrid(ctx, w, ht) {
     var div = 10, sub = 5, i, x, y;
     ctx.strokeStyle = C.grid; ctx.lineWidth = 1;
@@ -142,11 +144,100 @@
     );
   }
 
+  // Play button SVG icons
+  function PlayIcon() {
+    return h("svg", { width: 14, height: 14, viewBox: "0 0 24 24", fill: "currentColor", style: { display: "block" } },
+      h("polygon", { points: "6,3 20,12 6,21" })
+    );
+  }
+  function StopIcon() {
+    return h("svg", { width: 14, height: 14, viewBox: "0 0 24 24", fill: "currentColor", style: { display: "block" } },
+      h("rect", { x: 5, y: 5, width: 14, height: 14, rx: 1.5 })
+    );
+  }
+
   function App() {
     var st = useState(DEFAULTS.map(function (d) { return Object.assign({}, d, { visible: true }); }));
     var signals = st[0], setSignals = st[1];
     var tr = useState(true);
     var showTraces = tr[0], setShowTraces = tr[1];
+    var pl = useState(false);
+    var playing = pl[0], setPlaying = pl[1];
+
+    // Audio engine ref - persists across renders
+    var audioRef = useRef(null);
+
+    // Initialize audio context and oscillators on first play
+    function initAudio(sigs) {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var master = ctx.createGain();
+      master.gain.value = 0;
+      master.connect(ctx.destination);
+
+      var oscillators = [];
+      var gains = [];
+
+      sigs.forEach(function (sig) {
+        var osc = ctx.createOscillator();
+        osc.type = "sine";
+        osc.frequency.value = sig.freq;
+
+        var gain = ctx.createGain();
+        gain.gain.value = sig.visible ? sig.amp : 0;
+
+        osc.connect(gain);
+        gain.connect(master);
+        osc.start();
+
+        oscillators.push(osc);
+        gains.push(gain);
+      });
+
+      audioRef.current = { ctx: ctx, oscillators: oscillators, gains: gains, master: master };
+    }
+
+    function togglePlay() {
+      if (!audioRef.current) {
+        initAudio(signals);
+      }
+      var a = audioRef.current;
+      // Resume context if suspended (browser autoplay policy)
+      if (a.ctx.state === "suspended") {
+        a.ctx.resume();
+      }
+      if (!playing) {
+        // Fade in
+        a.master.gain.cancelScheduledValues(a.ctx.currentTime);
+        a.master.gain.setTargetAtTime(MASTER_VOL, a.ctx.currentTime, 0.03);
+        setPlaying(true);
+      } else {
+        // Fade out
+        a.master.gain.cancelScheduledValues(a.ctx.currentTime);
+        a.master.gain.setTargetAtTime(0, a.ctx.currentTime, 0.03);
+        setPlaying(false);
+      }
+    }
+
+    // Sync oscillator params with signal state in real time
+    useEffect(function () {
+      var a = audioRef.current;
+      if (!a) return;
+      var t = a.ctx.currentTime;
+      signals.forEach(function (sig, i) {
+        a.oscillators[i].frequency.setTargetAtTime(sig.freq, t, 0.02);
+        a.gains[i].gain.setTargetAtTime(sig.visible ? sig.amp : 0, t, 0.02);
+      });
+    }, [signals]);
+
+    // Cleanup on unmount
+    useEffect(function () {
+      return function () {
+        if (audioRef.current) {
+          audioRef.current.ctx.close();
+          audioRef.current = null;
+        }
+      };
+    }, []);
 
     var handleChange = function (idx, key, val) {
       setSignals(function (prev) {
@@ -174,9 +265,26 @@
 
         // Header + controls
         h("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10, flexWrap: "wrap", gap: 8 } },
-          h("div", { style: { display: "flex", alignItems: "baseline", gap: 10 } },
+          h("div", { style: { display: "flex", alignItems: "center", gap: 10 } },
             h("h1", { style: { fontFamily: "'IBM Plex Sans', sans-serif", fontSize: 17, fontWeight: 400, color: "#fff", margin: 0 } }, "Composite Signal"),
-            h("span", { style: { fontSize: 10, color: C.dim, fontFamily: "'IBM Plex Sans', sans-serif" } }, "A + B + C")
+            h("span", { style: { fontSize: 10, color: C.dim, fontFamily: "'IBM Plex Sans', sans-serif" } }, "A + B + C"),
+
+            // Play/Stop button
+            h("button", {
+              onClick: togglePlay,
+              title: playing ? "Stop audio" : "Play composite signal",
+              style: Object.assign({}, btnBase, {
+                background: playing ? "rgba(255,255,255,0.12)" : "transparent",
+                border: "1px solid " + (playing ? "rgba(255,255,255,0.25)" : C.border),
+                padding: "4px 10px",
+                gap: 5,
+                color: playing ? "#fff" : C.dim,
+                marginLeft: 4,
+              })
+            },
+              playing ? h(StopIcon) : h(PlayIcon),
+              h("span", { style: { fontSize: 10 } }, playing ? "Stop" : "Play")
+            )
           ),
           h("div", { style: { display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" } },
             h("button", {
