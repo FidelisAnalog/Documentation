@@ -170,20 +170,8 @@
     // Initialize audio context and oscillators on first play
     function initAudio(sigs) {
       var ctx = new (window.AudioContext || window.webkitAudioContext)();
-
       var master = ctx.createGain();
       master.gain.value = 0;
-
-      // Route through an <audio> element so iOS uses the media channel
-      // instead of the ringer channel (bypasses silent switch)
-      var streamDest = ctx.createMediaStreamDestination();
-      master.connect(streamDest);
-      var audioEl = document.createElement("audio");
-      audioEl.srcObject = streamDest.stream;
-      audioEl.play();
-
-      // Also connect to default destination for browsers where
-      // MediaStreamDestination doesn't produce output through <audio>
       master.connect(ctx.destination);
 
       var oscillators = [];
@@ -220,14 +208,12 @@
       if (!playing) {
         // Fade in
         a.master.gain.cancelScheduledValues(a.ctx.currentTime);
-        a.master.gain.setValueAtTime(a.master.gain.value, a.ctx.currentTime);
-        a.master.gain.linearRampToValueAtTime(MASTER_VOL, a.ctx.currentTime + 0.05);
+        a.master.gain.setTargetAtTime(MASTER_VOL, a.ctx.currentTime, 0.03);
         setPlaying(true);
       } else {
         // Fade out
         a.master.gain.cancelScheduledValues(a.ctx.currentTime);
-        a.master.gain.setValueAtTime(a.master.gain.value, a.ctx.currentTime);
-        a.master.gain.linearRampToValueAtTime(0, a.ctx.currentTime + 0.05);
+        a.master.gain.setTargetAtTime(0, a.ctx.currentTime, 0.03);
         setPlaying(false);
       }
     }
