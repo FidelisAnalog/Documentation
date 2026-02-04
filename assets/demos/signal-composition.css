@@ -136,7 +136,8 @@
   align-items: center;
   gap: 5px;
   border-radius: 5px;
-  padding: 5px 10px;
+  padding: 0 10px;
+  height: 26px;
   font-size: 11px;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.2);
@@ -161,7 +162,8 @@
     font-size: 14px;
   }
   #signal-demo .sd-btn {
-    padding: 7px 11px;
+    padding: 0 11px;
+    height: 32px;
     font-size: 12px;
     border-color: rgba(255,255,255,0.28);
     color: rgba(255,255,255,0.65);
