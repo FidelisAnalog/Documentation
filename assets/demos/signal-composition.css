@@ -1,0 +1,128 @@
+/* Signal Composition Demo - scoped to #signal-demo */
+
+#signal-demo {
+  font-family: 'IBM Plex Mono', 'SF Mono', monospace;
+  color: rgba(255,255,255,0.7);
+  background: #0b0e14;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 1.5em 0;
+}
+
+#signal-demo *, #signal-demo *::before, #signal-demo *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#signal-demo h1,
+#signal-demo p,
+#signal-demo span,
+#signal-demo button,
+#signal-demo div {
+  font-family: inherit;
+  color: inherit;
+  line-height: normal;
+}
+
+/* Sticky composite zone */
+#signal-demo .sd-composite {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #0b0e14;
+  padding: 16px 20px 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+/* Source signals zone */
+#signal-demo .sd-sources {
+  padding: 0 20px 20px;
+}
+
+/* Signal panels */
+#signal-demo .sd-panel {
+  background: #0f1319;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+/* Composite panel inner */
+#signal-demo .sd-composite-inner {
+  background: #0f1319;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+/* Range inputs */
+#signal-demo input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.1);
+  outline: none;
+  flex: 1;
+  cursor: pointer;
+}
+
+#signal-demo input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: currentColor;
+  cursor: pointer;
+  border: 2px solid rgba(0,0,0,0.3);
+}
+
+#signal-demo input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: currentColor;
+  cursor: pointer;
+  border: 2px solid rgba(0,0,0,0.3);
+}
+
+/* Buttons */
+#signal-demo button {
+  font-family: 'IBM Plex Mono', monospace;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+#signal-demo button:hover {
+  filter: brightness(1.15);
+}
+
+/* Explanation block */
+#signal-demo .sd-explanation {
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  margin-top: 12px;
+}
+
+#signal-demo .sd-explanation p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.35);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+/* Canvas containers */
+#signal-demo canvas {
+  display: block;
+  border-radius: 6px;
+}
