@@ -269,40 +269,36 @@
       // === STICKY COMPOSITE ===
       h("div", { className: "sd-composite" },
 
-        // Header row: title + play
+        // Single header row: title left, controls right (wraps to two rows on mobile)
         h("div", { className: "sd-header-row" },
           h("h1", { className: "sd-title" }, "Composite Signal"),
-
-          // Play/Stop button
-          h("button", {
-            onClick: togglePlay,
-            className: "sd-btn" + (playing ? " sd-btn-on" : ""),
-            title: playing ? "Stop audio" : "Play composite signal",
-          },
-            playing ? h(StopIcon) : h(PlayIcon),
-            h("span", null, playing ? "Stop" : "Play")
-          )
-        ),
-
-        // Controls row: sources toggle + A B C toggles
-        h("div", { className: "sd-controls-row" },
-          h("button", {
-            onClick: function () { setShowTraces(!showTraces); },
-            className: "sd-btn" + (showTraces ? " sd-btn-on" : ""),
-          }, (showTraces ? "\u2611" : "\u2610") + " Sources"),
-          signals.map(function (sig, i) {
-            return h("button", {
-              key: i, onClick: function () { toggleVis(i); },
-              className: "sd-btn",
-              style: {
-                background: sig.visible ? sig.color + "20" : undefined,
-                borderColor: sig.visible ? sig.color + "70" : undefined,
-              }
+          h("div", { className: "sd-controls" },
+            h("button", {
+              onClick: function () { setShowTraces(!showTraces); },
+              className: "sd-btn" + (showTraces ? " sd-btn-on" : ""),
+            }, (showTraces ? "\u2611" : "\u2610") + " Sources"),
+            signals.map(function (sig, i) {
+              return h("button", {
+                key: i, onClick: function () { toggleVis(i); },
+                className: "sd-btn",
+                style: {
+                  background: sig.visible ? sig.color + "20" : undefined,
+                  borderColor: sig.visible ? sig.color + "70" : undefined,
+                }
+              },
+                h("div", { style: { width: 7, height: 7, borderRadius: "50%", background: sig.visible ? sig.color : "transparent", border: "1.5px solid " + (sig.visible ? sig.color : "rgba(255,255,255,0.3)") } }),
+                h("span", { style: { color: sig.visible ? sig.color : undefined } }, sig.label.split(" ")[1])
+              );
+            }),
+            h("button", {
+              onClick: togglePlay,
+              className: "sd-btn" + (playing ? " sd-btn-on" : ""),
+              title: playing ? "Stop audio" : "Play composite signal",
             },
-              h("div", { style: { width: 7, height: 7, borderRadius: "50%", background: sig.visible ? sig.color : "transparent", border: "1.5px solid " + (sig.visible ? sig.color : "rgba(255,255,255,0.3)") } }),
-              h("span", { style: { color: sig.visible ? sig.color : undefined } }, sig.label.split(" ")[1])
-            );
-          })
+              playing ? h(StopIcon) : h(PlayIcon),
+              h("span", null, playing ? "Stop" : "Play")
+            )
+          )
         ),
 
         // Waveform

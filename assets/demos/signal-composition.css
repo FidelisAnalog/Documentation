@@ -103,12 +103,14 @@
   filter: brightness(1.15);
 }
 
-/* Header row */
+/* Header row - single row on desktop, wraps on mobile */
 #signal-demo .sd-header-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 #signal-demo .sd-title {
@@ -120,12 +122,11 @@
   white-space: nowrap;
 }
 
-/* Controls row */
-#signal-demo .sd-controls-row {
+/* Controls group - all buttons in a row, pushed right */
+#signal-demo .sd-controls {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 10px;
   flex-wrap: wrap;
 }
 
@@ -148,7 +149,7 @@
   color: #fff;
 }
 
-/* Mobile: larger tap targets, tighter layout */
+/* Mobile */
 @media (max-width: 480px) {
   #signal-demo .sd-composite {
     padding: 12px 14px 10px;
@@ -162,15 +163,11 @@
   #signal-demo .sd-btn {
     padding: 7px 11px;
     font-size: 12px;
-    gap: 5px;
     border-color: rgba(255,255,255,0.28);
     color: rgba(255,255,255,0.65);
   }
   #signal-demo .sd-btn.sd-btn-on {
     border-color: rgba(255,255,255,0.45);
-  }
-  #signal-demo .sd-controls-row {
-    gap: 5px;
   }
 }
 
