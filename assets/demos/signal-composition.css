@@ -103,6 +103,77 @@
   filter: brightness(1.15);
 }
 
+/* Header row */
+#signal-demo .sd-header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+#signal-demo .sd-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #fff;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Controls row */
+#signal-demo .sd-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+/* Shared button base */
+#signal-demo .sd-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 11px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.55);
+}
+
+#signal-demo .sd-btn.sd-btn-on {
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.35);
+  color: #fff;
+}
+
+/* Mobile: larger tap targets, tighter layout */
+@media (max-width: 480px) {
+  #signal-demo .sd-composite {
+    padding: 12px 14px 10px;
+  }
+  #signal-demo .sd-sources {
+    padding: 0 14px 14px;
+  }
+  #signal-demo .sd-title {
+    font-size: 14px;
+  }
+  #signal-demo .sd-btn {
+    padding: 7px 11px;
+    font-size: 12px;
+    gap: 5px;
+    border-color: rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.65);
+  }
+  #signal-demo .sd-btn.sd-btn-on {
+    border-color: rgba(255,255,255,0.45);
+  }
+  #signal-demo .sd-controls-row {
+    gap: 5px;
+  }
+}
+
 /* Explanation block */
 #signal-demo .sd-explanation {
   padding: 10px 14px;

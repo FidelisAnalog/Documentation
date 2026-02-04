@@ -174,17 +174,11 @@
       var master = ctx.createGain();
       master.gain.value = 0;
 
-      // Route through an <audio> element so iOS uses the media channel
-      // instead of the ringer channel (bypasses silent switch)
       var streamDest = ctx.createMediaStreamDestination();
       master.connect(streamDest);
       var audioEl = document.createElement("audio");
       audioEl.srcObject = streamDest.stream;
       audioEl.play();
-
-      // Also connect to default destination for browsers where
-      // MediaStreamDestination doesn't produce output through <audio>
-      master.connect(ctx.destination);
 
       var oscillators = [];
       var gains = [];
@@ -270,51 +264,45 @@
       });
     };
 
-    var btnBase = { borderRadius: 5, cursor: "pointer", display: "flex", alignItems: "center" };
-
     return h("div", null,
 
       // === STICKY COMPOSITE ===
       h("div", { className: "sd-composite" },
 
-        // Header + controls
-        h("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10, flexWrap: "wrap", gap: 8 } },
-          h("div", { style: { display: "flex", alignItems: "center", gap: 10 } },
-            h("h1", { style: { fontFamily: "'IBM Plex Sans', sans-serif", fontSize: 17, fontWeight: 400, color: "#fff", margin: 0 } }, "Composite Signal"),
-            h("span", { style: { fontSize: 10, color: C.dim, fontFamily: "'IBM Plex Sans', sans-serif" } }, "A + B + C"),
+        // Header row: title + play
+        h("div", { className: "sd-header-row" },
+          h("h1", { className: "sd-title" }, "Composite Signal"),
 
-            // Play/Stop button
-            h("button", {
-              onClick: togglePlay,
-              title: playing ? "Stop audio" : "Play composite signal",
-              style: Object.assign({}, btnBase, {
-                background: playing ? "rgba(255,255,255,0.12)" : "transparent",
-                border: "1px solid " + (playing ? "rgba(255,255,255,0.25)" : C.border),
-                padding: "4px 10px",
-                gap: 5,
-                color: playing ? "#fff" : C.dim,
-                marginLeft: 4,
-              })
-            },
-              playing ? h(StopIcon) : h(PlayIcon),
-              h("span", { style: { fontSize: 10 } }, playing ? "Stop" : "Play")
-            )
-          ),
-          h("div", { style: { display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" } },
-            h("button", {
-              onClick: function () { setShowTraces(!showTraces); },
-              style: Object.assign({}, btnBase, { background: showTraces ? "rgba(255,255,255,0.08)" : "transparent", border: "1px solid " + (showTraces ? "rgba(255,255,255,0.2)" : C.border), padding: "4px 9px", fontSize: 10, color: showTraces ? C.text : C.dim, gap: 4 })
-            }, (showTraces ? "\u2611" : "\u2610") + " Sources"),
-            signals.map(function (sig, i) {
-              return h("button", {
-                key: i, onClick: function () { toggleVis(i); },
-                style: Object.assign({}, btnBase, { background: sig.visible ? sig.color + "18" : "transparent", border: "1px solid " + (sig.visible ? sig.color + "50" : C.border), padding: "4px 7px", gap: 4 })
-              },
-                h("div", { style: { width: 7, height: 7, borderRadius: "50%", background: sig.visible ? sig.color : "transparent", border: "1.5px solid " + sig.color } }),
-                h("span", { style: { fontSize: 10, color: sig.visible ? sig.color : C.dim } }, sig.label.split(" ")[1])
-              );
-            })
+          // Play/Stop button
+          h("button", {
+            onClick: togglePlay,
+            className: "sd-btn" + (playing ? " sd-btn-on" : ""),
+            title: playing ? "Stop audio" : "Play composite signal",
+          },
+            playing ? h(StopIcon) : h(PlayIcon),
+            h("span", null, playing ? "Stop" : "Play")
           )
+        ),
+
+        // Controls row: sources toggle + A B C toggles
+        h("div", { className: "sd-controls-row" },
+          h("button", {
+            onClick: function () { setShowTraces(!showTraces); },
+            className: "sd-btn" + (showTraces ? " sd-btn-on" : ""),
+          }, (showTraces ? "\u2611" : "\u2610") + " Sources"),
+          signals.map(function (sig, i) {
+            return h("button", {
+              key: i, onClick: function () { toggleVis(i); },
+              className: "sd-btn",
+              style: {
+                background: sig.visible ? sig.color + "20" : undefined,
+                borderColor: sig.visible ? sig.color + "70" : undefined,
+              }
+            },
+              h("div", { style: { width: 7, height: 7, borderRadius: "50%", background: sig.visible ? sig.color : "transparent", border: "1.5px solid " + (sig.visible ? sig.color : "rgba(255,255,255,0.3)") } }),
+              h("span", { style: { color: sig.visible ? sig.color : undefined } }, sig.label.split(" ")[1])
+            );
+          })
         ),
 
         // Waveform
