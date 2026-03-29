@@ -1,7 +1,7 @@
 ---
-title: Tables/Calculators
-nav_order: 4
+title: Tools
+nav_order: 2
 has_children: true
 ---
 
-# Tables/Calculators
+# Tools
