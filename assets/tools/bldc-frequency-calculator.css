@@ -140,6 +140,7 @@
   align-items: center;
   gap: 12px;
   flex: 1;
+  flex-wrap: wrap;
 }
 
 #bldc-calc .bc-toggle-group {
@@ -306,10 +307,6 @@
   #bldc-calc .bc-slider::-webkit-slider-thumb {
     width: 22px;
     height: 22px;
-  }
-
-  #bldc-calc .bc-rpm-controls {
-    flex-wrap: wrap;
   }
 
   #bldc-calc .bc-panel-header {
