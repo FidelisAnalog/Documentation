@@ -75,14 +75,11 @@
       // Hysteresis motors have negligible torque ripple
       // No torque ripple entries - handled in UI with a message
     } else if (motorType === "reluctance") {
-      // Reluctance torque ripple: rotor teeth interacting with stator excitation
-      // Fundamental ripple at poles × mechanical frequency (tooth passing),
-      // modulated by phase count
-      var baseMultiplier = phases;
-      for (var i = 1; i <= 4; i++) {
+      // Reluctance torque ripple: at drive/line frequency and harmonics
+      for (var i = 1; i <= 8; i++) {
         torqueRipple.push({
-          multiplier: i * baseMultiplier,
-          frequency: i * baseMultiplier * elecFreq,
+          multiplier: i,
+          frequency: i * elecFreq,
           source: "reluctance",
         });
       }
