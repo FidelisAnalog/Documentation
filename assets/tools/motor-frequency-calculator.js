@@ -442,7 +442,7 @@
           onChange: setDriveType,
         }) : null,
 
-        h(ToggleGroup, {
+        motorType === "bldc" ? h(ToggleGroup, {
           label: "Motor",
           options: [
             { value: false, label: "Cored" },
@@ -450,7 +450,7 @@
           ],
           value: coreless,
           onChange: setCoreless,
-        })
+        }) : null
       ),
 
       // === OUTPUT PANELS ===
