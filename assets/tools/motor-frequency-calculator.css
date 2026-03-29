@@ -130,6 +130,7 @@
 #bldc-calc .bc-toggle-group {
   display: flex;
   gap: 6px;
+  flex-wrap: wrap;
 }
 
 /* RPM row with custom input */
