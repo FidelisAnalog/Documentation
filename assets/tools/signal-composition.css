@@ -28,7 +28,6 @@
 #signal-demo .sd-composite {
   position: sticky;
   top: 0;
-  z-index: 10;
   background: #0b0e14;
   padding: 16px 20px 12px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.5);
