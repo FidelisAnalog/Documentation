@@ -340,7 +340,7 @@
     return h("div", null,
 
       // === TITLE ===
-      h("h1", { className: "bc-title" }, "BLDC Motor Frequency Calculator"),
+      h("h2", { className: "bc-title" }, "BLDC Motor Frequency Calculator"),
 
       // === INPUT SECTION ===
       h("div", { className: "bc-inputs" },
