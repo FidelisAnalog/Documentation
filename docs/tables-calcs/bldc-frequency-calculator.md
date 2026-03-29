@@ -1,5 +1,5 @@
 ---
-title: BLDC Frequency Calculator
+title: Motor Frequency Calculator
 parent: Tools
 nav_order: 1
 ---

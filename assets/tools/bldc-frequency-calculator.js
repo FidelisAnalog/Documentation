@@ -40,6 +40,7 @@
     var rpm = params.rpm;
     var phases = params.phases;
     var driveType = params.driveType;
+    var motorType = params.motorType;
 
     var mechFreq = rpm / 60;
     var polePairs = poles / 2;
@@ -66,11 +67,14 @@
       frequency: lcmVal * mechFreq,
     };
 
-    // Torque ripple - based on phase count and drive type
+    // Torque ripple - based on phase count, drive type, and motor type
     var torqueRipple = [];
-    var baseMultiplier = phases; // 2× for 2-phase, 3× for 3-phase
 
-    // Full-wave: phase-count harmonics
+    // For AC synchronous single-phase, base multiplier is 2 (power pulsates at 2× electrical)
+    // For all other cases, base multiplier equals the phase count
+    var baseMultiplier = (motorType === "ac" && phases === 1) ? 2 : phases;
+
+    // Phase-count harmonics (full-wave for both AC and BLDC)
     for (var i = 1; i <= 4; i++) {
       torqueRipple.push({
         multiplier: i * baseMultiplier,
@@ -79,8 +83,8 @@
       });
     }
 
-    // Half-wave adds even electrical harmonics
-    if (driveType === "half") {
+    // Half-wave adds even electrical harmonics (BLDC only)
+    if (motorType === "bldc" && driveType === "half") {
       var evenHarmonics = [2, 4, 6, 8];
       evenHarmonics.forEach(function (m) {
         // Check if not already covered by phase harmonics
@@ -302,6 +306,9 @@
     var driveState = useState("full");
     var driveType = driveState[0], setDriveType = driveState[1];
 
+    var motorTypeState = useState("bldc");
+    var motorType = motorTypeState[0], setMotorType = motorTypeState[1];
+
     var corelessState = useState(false);
     var coreless = corelessState[0], setCoreless = corelessState[1];
 
@@ -334,13 +341,14 @@
         rpm: rpm,
         phases: phases,
         driveType: driveType,
+        motorType: motorType,
       });
-    }, [poles, slots, rpm, phases, driveType]);
+    }, [poles, slots, rpm, phases, driveType, motorType]);
 
     return h("div", null,
 
       // === TITLE ===
-      h("h2", { className: "bc-title" }, "BLDC Motor Frequency Calculator"),
+      h("h2", { className: "bc-title" }, "Motor Frequency Calculator"),
 
       // === INPUT SECTION ===
       h("div", { className: "bc-inputs" },
@@ -399,16 +407,32 @@
         ),
 
         h(ToggleGroup, {
-          label: "Phases",
+          label: "Type",
           options: [
-            { value: 2, label: "2-phase" },
-            { value: 3, label: "3-phase" },
+            { value: "bldc", label: "BLDC" },
+            { value: "ac", label: "AC Sync" },
           ],
+          value: motorType,
+          onChange: setMotorType,
+        }),
+
+        h(ToggleGroup, {
+          label: "Phases",
+          options: motorType === "ac"
+            ? [
+                { value: 1, label: "1-phase" },
+                { value: 2, label: "2-phase" },
+                { value: 3, label: "3-phase" },
+              ]
+            : [
+                { value: 2, label: "2-phase" },
+                { value: 3, label: "3-phase" },
+              ],
           value: phases,
           onChange: setPhases,
         }),
 
-        h(ToggleGroup, {
+        motorType === "bldc" ? h(ToggleGroup, {
           label: "Drive",
           options: [
             { value: "full", label: "Full-wave" },
@@ -416,7 +440,7 @@
           ],
           value: driveType,
           onChange: setDriveType,
-        }),
+        }) : null,
 
         h(ToggleGroup, {
           label: "Motor",
