@@ -354,6 +354,16 @@
       h("div", { className: "bc-inputs" },
         h("div", { className: "bc-inputs-title" }, "Motor Parameters"),
 
+        h(ToggleGroup, {
+          label: "Type",
+          options: [
+            { value: "bldc", label: "BLDC" },
+            { value: "ac", label: "AC Sync" },
+          ],
+          value: motorType,
+          onChange: setMotorType,
+        }),
+
         h(InputNumber, {
           label: "Poles",
           value: poles,
@@ -405,16 +415,6 @@
             })
           )
         ),
-
-        h(ToggleGroup, {
-          label: "Type",
-          options: [
-            { value: "bldc", label: "BLDC" },
-            { value: "ac", label: "AC Sync" },
-          ],
-          value: motorType,
-          onChange: setMotorType,
-        }),
 
         h(ToggleGroup, {
           label: "Phases",
