@@ -1,7 +1,7 @@
 ---
 title: RIAA EQ
-parent: Tables/Calculators
-nav_order: 1
+parent: Tools
+nav_order: 2
 ---
 
 # RIAA EQ
