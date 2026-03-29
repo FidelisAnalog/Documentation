@@ -127,6 +127,21 @@
   margin-bottom: 10px;
 }
 
+/* RPM row */
+#bldc-calc .bc-rpm-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+#bldc-calc .bc-rpm-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
 #bldc-calc .bc-toggle-group {
   display: flex;
   gap: 6px;
@@ -291,6 +306,10 @@
   #bldc-calc .bc-slider::-webkit-slider-thumb {
     width: 22px;
     height: 22px;
+  }
+
+  #bldc-calc .bc-rpm-controls {
+    flex-wrap: wrap;
   }
 
   #bldc-calc .bc-panel-header {
