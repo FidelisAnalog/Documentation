@@ -14,7 +14,7 @@ favicon_ico: "favicon.ico"
 defaults:
   -
     scope:
-      path: "docs" # an empty string here means all files in the project
+      path: "" # an empty string here means all files in the project
       type: "pages"
     values:
       layout: "default"
@@ -81,7 +81,9 @@ callouts:
 # ga_tracking: UA-2709176-10,G-5FG1HLH3XQ
 # ga_tracking_anonymize_ip: true # Use GDPR compliant Google Analytics settings (true/nil by default)
 
-#plugins:
+plugins:
+  - jekyll-redirect-from
+
 #  - jekyll-seo-tag
 #  - jekyll-github-metadata
 #  - jekyll-include-cache
