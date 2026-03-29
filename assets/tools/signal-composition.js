@@ -284,7 +284,7 @@
 
         // Single header row: title left, controls right (wraps to two rows on mobile)
         h("div", { className: "sd-header-row" },
-          h("h1", { className: "sd-title" }, "Composite Signal"),
+          h("h2", { className: "sd-title" }, "Composite Signal"),
           h("div", { className: "sd-controls" },
             h("button", {
               onClick: function () { setShowTraces(!showTraces); },
