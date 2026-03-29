@@ -364,18 +364,39 @@
           onChange: setSlots,
         }),
 
-        h(ToggleGroup, {
-          label: "RPM",
-          options: [
-            { value: 16.667, label: "16⅔" },
-            { value: 22.5, label: "22½" },
-            { value: 33.333, label: "33⅓" },
-            { value: 45, label: "45" },
-            { value: 78, label: "78" },
-          ],
-          value: rpm,
-          onChange: setRpm,
-        }),
+        h("div", { className: "bc-rpm-row" },
+          h("label", { className: "bc-input-label" }, "RPM"),
+          h("div", { className: "bc-rpm-controls" },
+            h("div", { className: "bc-toggle-group" },
+              [
+                { value: 16.667, label: "16⅔" },
+                { value: 22.5, label: "22½" },
+                { value: 33.333, label: "33⅓" },
+                { value: 45, label: "45" },
+                { value: 78, label: "78" },
+              ].map(function (opt) {
+                var isActive = opt.value === rpm;
+                return h("button", {
+                  key: opt.value,
+                  className: "bc-toggle-btn" + (isActive ? " bc-toggle-active" : ""),
+                  onClick: function () { setRpm(opt.value); },
+                }, opt.label);
+              })
+            ),
+            h("input", {
+              type: "number",
+              min: 0.1,
+              max: 10000,
+              step: 0.001,
+              value: rpm,
+              onChange: function (e) {
+                var val = parseFloat(e.target.value);
+                if (!isNaN(val)) setRpm(val);
+              },
+              className: "bc-number-input",
+            })
+          )
+        ),
 
         h(ToggleGroup, {
           label: "Phases",
