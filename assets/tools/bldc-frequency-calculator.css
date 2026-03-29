@@ -54,7 +54,7 @@
 #bldc-calc .bc-input-label {
   font-size: 11px;
   color: rgba(255,255,255,0.5);
-  width: 70px;
+  width: 75px;
   flex-shrink: 0;
 }
 
@@ -130,7 +130,21 @@
 #bldc-calc .bc-toggle-group {
   display: flex;
   gap: 6px;
-  flex: 1;
+}
+
+/* RPM row with custom input */
+#bldc-calc .bc-rpm-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+#bldc-calc .bc-rpm-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 #bldc-calc .bc-toggle-btn {
@@ -273,10 +287,6 @@
 
   #bldc-calc .bc-inputs {
     padding: 12px 14px;
-  }
-
-  #bldc-calc .bc-input-label {
-    width: 60px;
   }
 
   #bldc-calc .bc-input-value {
