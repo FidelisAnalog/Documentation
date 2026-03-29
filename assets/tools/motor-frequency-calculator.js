@@ -45,69 +45,88 @@
     var mechFreq = rpm / 60;
     var polePairs = poles / 2;
     var elecFreq = polePairs * mechFreq;
-    var lcmVal = lcm(poles, slots);
+    var hasSlots = motorType !== "hysteresis";
+    var lcmVal = hasSlots ? lcm(poles, slots) : poles;
 
     // Fundamentals
     var fundamentals = {
       mechanical: mechFreq,
       electrical: elecFreq,
       polePairs: polePairs,
-      lcm: lcmVal,
+      lcm: hasSlots ? lcmVal : null,
     };
 
     // Geometry
     var geometry = {
       polePitch: 360 / poles,
-      slotPitch: 360 / slots,
-      coggingPitch: 360 / lcmVal,
+      slotPitch: hasSlots ? 360 / slots : null,
+      coggingPitch: hasSlots ? 360 / lcmVal : null,
     };
 
     // Cogging
     var cogging = {
-      frequency: lcmVal * mechFreq,
+      frequency: hasSlots ? lcmVal * mechFreq : null,
     };
 
     // Torque ripple - based on phase count, drive type, and motor type
     var torqueRipple = [];
 
-    // For AC synchronous single-phase, base multiplier is 2 (power pulsates at 2× electrical)
-    // For all other cases, base multiplier equals the phase count
-    var baseMultiplier = (motorType === "ac" && phases === 1) ? 2 : phases;
+    if (motorType === "hysteresis") {
+      // Hysteresis motors have negligible torque ripple
+      // No torque ripple entries - handled in UI with a message
+    } else if (motorType === "reluctance") {
+      // Reluctance torque ripple: rotor teeth interacting with stator excitation
+      // Fundamental ripple at poles × mechanical frequency (tooth passing),
+      // modulated by phase count
+      var baseMultiplier = phases;
+      for (var i = 1; i <= 4; i++) {
+        torqueRipple.push({
+          multiplier: i * baseMultiplier,
+          frequency: i * baseMultiplier * elecFreq,
+          source: "reluctance",
+        });
+      }
+    } else {
+      // BLDC and AC Sync
+      // For AC synchronous single-phase, base multiplier is 2 (power pulsates at 2× electrical)
+      // For all other cases, base multiplier equals the phase count
+      var baseMultiplier = (motorType === "ac" && phases === 1) ? 2 : phases;
 
-    // Phase-count harmonics (full-wave for both AC and BLDC)
-    for (var i = 1; i <= 4; i++) {
-      torqueRipple.push({
-        multiplier: i * baseMultiplier,
-        frequency: i * baseMultiplier * elecFreq,
-        source: "full-wave",
-      });
-    }
+      // Phase-count harmonics (full-wave for both AC and BLDC)
+      for (var i = 1; i <= 4; i++) {
+        torqueRipple.push({
+          multiplier: i * baseMultiplier,
+          frequency: i * baseMultiplier * elecFreq,
+          source: "full-wave",
+        });
+      }
 
-    // Half-wave adds even electrical harmonics (BLDC only)
-    if (motorType === "bldc" && driveType === "half") {
-      var evenHarmonics = [2, 4, 6, 8];
-      evenHarmonics.forEach(function (m) {
-        // Check if not already covered by phase harmonics
-        var exists = torqueRipple.some(function (t) { return t.multiplier === m; });
-        if (!exists) {
-          torqueRipple.push({
-            multiplier: m,
-            frequency: m * elecFreq,
-            source: "half-wave",
-          });
-        }
-      });
-      // Sort by multiplier
-      torqueRipple.sort(function (a, b) { return a.multiplier - b.multiplier; });
+      // Half-wave adds even electrical harmonics (BLDC only)
+      if (motorType === "bldc" && driveType === "half") {
+        var evenHarmonics = [2, 4, 6, 8];
+        evenHarmonics.forEach(function (m) {
+          var exists = torqueRipple.some(function (t) { return t.multiplier === m; });
+          if (!exists) {
+            torqueRipple.push({
+              multiplier: m,
+              frequency: m * elecFreq,
+              source: "half-wave",
+            });
+          }
+        });
+        torqueRipple.sort(function (a, b) { return a.multiplier - b.multiplier; });
+      }
     }
 
     // Slot/Coil harmonics - up to 55 Hz or 10×, whichever is more useful
     var slotHarmonics = [];
-    var slotFundamental = slots * mechFreq;
-    for (var i = 1; i <= 10; i++) {
-      var freq = i * slotFundamental;
-      if (freq <= 100 || i <= 4) { // Show at least 4, or up to 100 Hz
-        slotHarmonics.push({ multiplier: i, frequency: freq });
+    if (hasSlots) {
+      var slotFundamental = slots * mechFreq;
+      for (var i = 1; i <= 10; i++) {
+        var freq = i * slotFundamental;
+        if (freq <= 100 || i <= 4) {
+          slotHarmonics.push({ multiplier: i, frequency: freq });
+        }
       }
     }
 
@@ -359,6 +378,8 @@
           options: [
             { value: "bldc", label: "BLDC" },
             { value: "ac", label: "AC Sync" },
+            { value: "hysteresis", label: "Hysteresis" },
+            { value: "reluctance", label: "Reluctance" },
           ],
           value: motorType,
           onChange: setMotorType,
@@ -368,19 +389,19 @@
           label: "Poles",
           value: poles,
           min: 2,
-          max: 200,
+          max: 1000,
           step: 2,
           onChange: setPoles,
         }),
 
-        h(InputNumber, {
+        motorType !== "hysteresis" ? h(InputNumber, {
           label: "Slots/Coils",
           value: slots,
           min: 3,
-          max: 200,
+          max: 1000,
           step: 1,
           onChange: setSlots,
-        }),
+        }) : null,
 
         h("div", { className: "bc-rpm-row" },
           h("label", { className: "bc-input-label" }, "RPM"),
@@ -418,13 +439,18 @@
 
         h(ToggleGroup, {
           label: "Phases",
-          options: motorType === "ac"
+          options: motorType === "bldc"
             ? [
-                { value: 1, label: "1-phase" },
                 { value: 2, label: "2-phase" },
                 { value: 3, label: "3-phase" },
               ]
+            : motorType === "hysteresis"
+            ? [
+                { value: 1, label: "1-phase" },
+                { value: 3, label: "3-phase" },
+              ]
             : [
+                { value: 1, label: "1-phase" },
                 { value: 2, label: "2-phase" },
                 { value: 3, label: "3-phase" },
               ],
@@ -466,7 +492,7 @@
           h(InfoRow, { label: "Mechanical freq", value: formatFreq(data.fundamentals.mechanical) }),
           h(InfoRow, { label: "Electrical freq", value: formatFreq(data.fundamentals.electrical) }),
           h(InfoRow, { label: "Pole pairs", value: data.fundamentals.polePairs }),
-          h(InfoRow, { label: "LCM(poles, slots)", value: data.fundamentals.lcm })
+          data.fundamentals.lcm !== null ? h(InfoRow, { label: "LCM(poles, slots)", value: data.fundamentals.lcm }) : null
         ),
 
         // Geometry
@@ -477,12 +503,12 @@
           onToggle: function() { togglePanel("geometry"); }
         },
           h(InfoRow, { label: "Pole pitch", value: formatDegrees(data.geometry.polePitch) }),
-          h(InfoRow, { label: "Slot pitch", value: formatDegrees(data.geometry.slotPitch) }),
-          h(InfoRow, { label: "Cogging pitch", value: formatDegrees(data.geometry.coggingPitch) })
+          data.geometry.slotPitch !== null ? h(InfoRow, { label: "Slot pitch", value: formatDegrees(data.geometry.slotPitch) }) : null,
+          data.geometry.coggingPitch !== null ? h(InfoRow, { label: "Cogging pitch", value: formatDegrees(data.geometry.coggingPitch) }) : null
         ),
 
-        // Cogging (hide if coreless)
-        !coreless ? h(Panel, {
+        // Cogging (hide if coreless or hysteresis)
+        !coreless && data.cogging.frequency !== null ? h(Panel, {
           title: "Cogging",
           color: C.cogging,
           collapsed: collapsed.cogging,
@@ -502,19 +528,24 @@
           collapsed: collapsed.torque,
           onToggle: function() { togglePanel("torque"); }
         },
-          data.torqueRipple.map(function (t, i) {
-            return h(FreqRow, {
-              key: i,
-              label: t.multiplier + "× electrical",
-              frequency: t.frequency,
-              note: t.source === "half-wave" ? "(half-wave)" : null,
-              color: C.torque,
-            });
-          })
+          motorType === "hysteresis"
+            ? h("div", { className: "bc-info-row" },
+                h("span", { className: "bc-info-label", style: { color: C.torque } }, "Negligible"),
+                h("span", { className: "bc-info-value", style: { color: C.dim } }, "Smooth rotor \u2014 no discrete torque pulses")
+              )
+            : data.torqueRipple.map(function (t, i) {
+                return h(FreqRow, {
+                  key: i,
+                  label: t.multiplier + "× electrical",
+                  frequency: t.frequency,
+                  note: t.source === "half-wave" ? "(half-wave)" : null,
+                  color: C.torque,
+                });
+              })
         ),
 
-        // Slot/Coil Harmonics
-        h(Panel, {
+        // Slot/Coil Harmonics (hide for hysteresis)
+        motorType !== "hysteresis" ? h(Panel, {
           title: "Slot/Coil Harmonics",
           color: C.slot,
           collapsed: collapsed.slot,
@@ -528,7 +559,7 @@
               color: C.slot,
             });
           })
-        ),
+        ) : null,
 
         // Pole Harmonics
         h(Panel, {
