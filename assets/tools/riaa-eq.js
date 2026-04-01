@@ -60,9 +60,9 @@
   // ============================================================
   // COMPUTE TABLE — always all columns
   // ============================================================
-  // Component normalizations: each tracks the RIAA curve in its dominant region
-  var TURNOVER_NORM = NORM;              // matches RIAA in the bass
-  var SHELF_NORM = NORM / (T2 / T1);    // matches RIAA in the treble
+  // Component normalizations: each 0 dB at 1 kHz, sum in dB = full RIAA
+  var TURNOVER_NORM = riaaTurnover(1000);
+  var SHELF_NORM = riaaShelf(1000);
 
   function computeTable(inverse) {
     var sign = inverse ? -1 : 1;
