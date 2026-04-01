@@ -113,6 +113,28 @@
     }
   }, { passive: true });
 
+  // Trackpad horizontal scroll (two-finger swipe on desktop)
+  var wheelAccum = 0;
+  var wheelTimeout = null;
+
+  overlay.addEventListener("wheel", function (e) {
+    if (currentIndex === -1) return;
+    e.preventDefault();
+
+    wheelAccum += e.deltaX;
+
+    if (wheelTimeout) clearTimeout(wheelTimeout);
+    wheelTimeout = setTimeout(function () { wheelAccum = 0; }, 200);
+
+    if (wheelAccum > 80) {
+      wheelAccum = 0;
+      next();
+    } else if (wheelAccum < -80) {
+      wheelAccum = 0;
+      prev();
+    }
+  }, { passive: false });
+
   // Keyboard navigation
   document.addEventListener("keydown", function (e) {
     if (currentIndex === -1) return;
