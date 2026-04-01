@@ -35,14 +35,6 @@ function embedPDF(container) {
   pdfjsLib.getDocument(url).promise.then(function (pdf) {
     container.removeChild(loading);
 
-    // Download link at top
-    var dl = document.createElement("a");
-    dl.href = url;
-    dl.download = "";
-    dl.textContent = "Download PDF (" + pdf.numPages + " pages)";
-    dl.style.cssText = "display:inline-block;margin-bottom:12px;font-size:13px;color:#00e5ff;text-decoration:none;";
-    container.appendChild(dl);
-
     // Check for #page=N in URL
     var targetPage = null;
     var hashMatch = window.location.hash.match(/^#page=(\d+)/);
@@ -64,6 +56,14 @@ function embedPDF(container) {
         canvas.style.cssText = "width:100%;height:" + cssHeight + "px;display:block;margin-bottom:2px;background:#f5f5f5;";
         container.appendChild(canvas);
       }
+
+      // Download link at end
+      var dl = document.createElement("a");
+      dl.href = url;
+      dl.download = "";
+      dl.textContent = "Download PDF";
+      dl.style.cssText = "display:inline-block;margin-top:8px;font-size:13px;color:#00e5ff;text-decoration:none;";
+      container.appendChild(dl);
 
       // Render target page first if specified, then scroll instantly
       if (targetPage) {
