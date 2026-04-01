@@ -1,4 +1,5 @@
 ---
+layout: imagery
 title: XL-88D
 parent: Sony
 grand_parent: Imagery

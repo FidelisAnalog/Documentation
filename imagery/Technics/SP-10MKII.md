@@ -1,4 +1,5 @@
 ---
+layout: imagery
 title: SP-10MKII / SL-1000MKII
 parent: Technics
 grand_parent: Imagery
