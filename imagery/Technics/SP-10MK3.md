@@ -1,4 +1,5 @@
 ---
+layout: imagery
 title: SP-10MK3 / SL-1000MK3
 parent: Technics
 grand_parent: Imagery
