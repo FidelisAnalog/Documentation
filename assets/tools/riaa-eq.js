@@ -65,8 +65,8 @@
     return TABLE_FREQS.map(function (f) {
       return {
         freq: f,
-        turnover: sign * toDb(riaaTurnover(f) / NORM),
-        shelf: sign * toDb(riaaShelf(f) / NORM),
+        turnover: sign * toDb(riaaTurnover(f)),
+        shelf: sign * toDb(riaaShelf(f)),
         full: sign * toDb(riaaFull(f) / NORM),
       };
     });
@@ -87,40 +87,41 @@
     var sign = inverse ? -1 : 1;
     var traces = [];
 
-    if (curve === "turnover" || curve === "both") {
+    if (curve === "turnover") {
+      // Raw turnover (0 dB at high freq, boosts bass) + dotted full RIAA reference
       traces.push({
         x: freqs,
-        y: freqs.map(function (f) { return sign * toDb(riaaTurnover(f) / NORM); }),
+        y: freqs.map(function (f) { return sign * toDb(riaaTurnover(f)); }),
         name: "Turnover",
         line: { color: "#ffc400", width: 2 },
       });
-    }
-
-    if (curve === "shelf" || curve === "both") {
-      traces.push({
-        x: freqs,
-        y: freqs.map(function (f) { return sign * toDb(riaaShelf(f) / NORM); }),
-        name: "Shelf",
-        line: { color: "#a855f7", width: 2 },
-      });
-    }
-
-    if (curve === "both") {
-      traces.push({
-        x: freqs,
-        y: freqs.map(function (f) { return sign * toDb(riaaFull(f) / NORM); }),
-        name: inverse ? "Inverse (sum)" : "RIAA (sum)",
-        line: { color: "#00e5ff", width: 2, dash: "dot" },
-      });
-    }
-
-    if (curve === "turnover" || curve === "shelf") {
-      // Also show the full curve as reference
       traces.push({
         x: freqs,
         y: freqs.map(function (f) { return sign * toDb(riaaFull(f) / NORM); }),
         name: inverse ? "Inverse" : "RIAA",
         line: { color: "rgba(0,229,255,0.3)", width: 1, dash: "dot" },
+      });
+    } else if (curve === "shelf") {
+      // Raw shelf (0 dB at low freq, rolls off treble) + dotted full RIAA reference
+      traces.push({
+        x: freqs,
+        y: freqs.map(function (f) { return sign * toDb(riaaShelf(f)); }),
+        name: "Shelf",
+        line: { color: "#a855f7", width: 2 },
+      });
+      traces.push({
+        x: freqs,
+        y: freqs.map(function (f) { return sign * toDb(riaaFull(f) / NORM); }),
+        name: inverse ? "Inverse" : "RIAA",
+        line: { color: "rgba(0,229,255,0.3)", width: 1, dash: "dot" },
+      });
+    } else if (curve === "both") {
+      // Full RIAA curve only, solid cyan
+      traces.push({
+        x: freqs,
+        y: freqs.map(function (f) { return sign * toDb(riaaFull(f) / NORM); }),
+        name: inverse ? "Inverse RIAA" : "RIAA",
+        line: { color: "#00e5ff", width: 2 },
       });
     }
 
