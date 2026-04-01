@@ -16,8 +16,6 @@
   // ============================================================
   // TRANSFER FUNCTIONS
   // ============================================================
-
-  // Full RIAA playback: H(s) = (1 + s*T2) / ((1 + s*T1)(1 + s*T3))
   function riaaFull(f) {
     var w = 2 * Math.PI * f;
     var num = Math.sqrt(1 + (w * T2) * (w * T2));
@@ -26,7 +24,6 @@
     return num / (den1 * den2);
   }
 
-  // Turnover only: H(s) = (1 + s*T2) / (1 + s*T1)
   function riaaTurnover(f) {
     var w = 2 * Math.PI * f;
     var num = Math.sqrt(1 + (w * T2) * (w * T2));
@@ -34,13 +31,11 @@
     return num / den;
   }
 
-  // Shelf only: H(s) = 1 / (1 + s*T3)
   function riaaShelf(f) {
     var w = 2 * Math.PI * f;
     return 1 / Math.sqrt(1 + (w * T3) * (w * T3));
   }
 
-  // Normalization: full RIAA at 1 kHz
   var NORM = riaaFull(1000);
 
   function toDb(linear) {
@@ -63,35 +58,24 @@
   ];
 
   // ============================================================
-  // COMPUTE VALUES FOR A MODE
+  // COMPUTE TABLE — always all columns
   // ============================================================
-  function computeTable(mode) {
+  function computeTable(inverse) {
+    var sign = inverse ? -1 : 1;
     return TABLE_FREQS.map(function (f) {
-      var result = {};
-      result.freq = f;
-
-      if (mode === "riaa") {
-        result.dB = toDb(riaaFull(f) / NORM);
-      } else if (mode === "inverse") {
-        result.dB = toDb(NORM / riaaFull(f));
-      } else if (mode === "turnover") {
-        result.dB = toDb(riaaTurnover(f) / NORM);
-      } else if (mode === "shelf") {
-        result.dB = toDb(riaaShelf(f) / NORM);
-      } else if (mode === "both") {
-        result.turnover = toDb(riaaTurnover(f) / NORM);
-        result.shelf = toDb(riaaShelf(f) / NORM);
-        result.dB = toDb(riaaFull(f) / NORM);
-      }
-      return result;
+      return {
+        freq: f,
+        turnover: sign * toDb(riaaTurnover(f) / NORM),
+        shelf: sign * toDb(riaaShelf(f) / NORM),
+        full: sign * toDb(riaaFull(f) / NORM),
+      };
     });
   }
 
   // ============================================================
   // GENERATE PLOT DATA
   // ============================================================
-  function generatePlotData(mode) {
-    // Log-spaced frequencies from 10 Hz to 50 kHz
+  function generatePlotData(curve, inverse) {
     var freqs = [];
     var start = Math.log10(10);
     var end = Math.log10(50000);
@@ -100,54 +84,43 @@
       freqs.push(Math.pow(10, start + (end - start) * i / steps));
     }
 
+    var sign = inverse ? -1 : 1;
     var traces = [];
 
-    if (mode === "riaa") {
+    if (curve === "turnover" || curve === "both") {
       traces.push({
         x: freqs,
-        y: freqs.map(function (f) { return toDb(riaaFull(f) / NORM); }),
-        name: "RIAA",
-        line: { color: "#00e5ff", width: 2 },
-      });
-    } else if (mode === "inverse") {
-      traces.push({
-        x: freqs,
-        y: freqs.map(function (f) { return toDb(NORM / riaaFull(f)); }),
-        name: "Inverse RIAA",
-        line: { color: "#ff2d7b", width: 2 },
-      });
-    } else if (mode === "turnover") {
-      traces.push({
-        x: freqs,
-        y: freqs.map(function (f) { return toDb(riaaTurnover(f) / NORM); }),
+        y: freqs.map(function (f) { return sign * toDb(riaaTurnover(f) / NORM); }),
         name: "Turnover",
         line: { color: "#ffc400", width: 2 },
       });
-    } else if (mode === "shelf") {
+    }
+
+    if (curve === "shelf" || curve === "both") {
       traces.push({
         x: freqs,
-        y: freqs.map(function (f) { return toDb(riaaShelf(f) / NORM); }),
+        y: freqs.map(function (f) { return sign * toDb(riaaShelf(f) / NORM); }),
         name: "Shelf",
         line: { color: "#a855f7", width: 2 },
       });
-    } else if (mode === "both") {
+    }
+
+    if (curve === "both") {
       traces.push({
         x: freqs,
-        y: freqs.map(function (f) { return toDb(riaaTurnover(f) / NORM); }),
-        name: "Turnover",
-        line: { color: "#ffc400", width: 2 },
-      });
-      traces.push({
-        x: freqs,
-        y: freqs.map(function (f) { return toDb(riaaShelf(f) / NORM); }),
-        name: "Shelf",
-        line: { color: "#a855f7", width: 2 },
-      });
-      traces.push({
-        x: freqs,
-        y: freqs.map(function (f) { return toDb(riaaFull(f) / NORM); }),
-        name: "RIAA (sum)",
+        y: freqs.map(function (f) { return sign * toDb(riaaFull(f) / NORM); }),
+        name: inverse ? "Inverse (sum)" : "RIAA (sum)",
         line: { color: "#00e5ff", width: 2, dash: "dot" },
+      });
+    }
+
+    if (curve === "turnover" || curve === "shelf") {
+      // Also show the full curve as reference
+      traces.push({
+        x: freqs,
+        y: freqs.map(function (f) { return sign * toDb(riaaFull(f) / NORM); }),
+        name: inverse ? "Inverse" : "RIAA",
+        line: { color: "rgba(0,229,255,0.3)", width: 1, dash: "dot" },
       });
     }
 
@@ -155,7 +128,7 @@
   }
 
   // ============================================================
-  // PLOT LAYOUT — fixed axes for all modes
+  // PLOT LAYOUT — fixed axes
   // ============================================================
   var plotLayout = {
     paper_bgcolor: "#0b0e14",
@@ -214,6 +187,25 @@
   }
 
   // ============================================================
+  // CSV DOWNLOAD
+  // ============================================================
+  function downloadCsv(tableData, inverse) {
+    var label = inverse ? "Inverse" : "RIAA";
+    var header = "Hz,Turnover (dB),Shelf (dB)," + label + " (dB)\n";
+    var rows = tableData.map(function (row) {
+      return row.freq + "," + row.turnover.toFixed(2) + "," + row.shelf.toFixed(2) + "," + row.full.toFixed(2);
+    });
+    var csv = header + rows.join("\n");
+    var blob = new Blob([csv], { type: "text/csv" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = (inverse ? "inverse-riaa" : "riaa") + "-eq.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ============================================================
   // TOGGLE GROUP COMPONENT
   // ============================================================
   function ToggleGroup(props) {
@@ -236,46 +228,56 @@
   // MAIN APP
   // ============================================================
   function App() {
-    var modeState = useState("riaa");
-    var mode = modeState[0], setMode = modeState[1];
+    var curveState = useState("both");
+    var curve = curveState[0], setCurve = curveState[1];
+
+    var dirState = useState("riaa");
+    var direction = dirState[0], setDirection = dirState[1];
+
     var plotRef = useRef(null);
 
     var tableOpenState = useState(false);
     var tableOpen = tableOpenState[0], setTableOpen = tableOpenState[1];
 
+    var inverse = direction === "inverse";
+
     var tableData = useMemo(function () {
-      return computeTable(mode);
-    }, [mode]);
+      return computeTable(inverse);
+    }, [inverse]);
 
     var plotData = useMemo(function () {
-      return generatePlotData(mode);
-    }, [mode]);
+      return generatePlotData(curve, inverse);
+    }, [curve, inverse]);
 
-    // Render plot
     useEffect(function () {
       if (plotRef.current && window.Plotly) {
         Plotly.react(plotRef.current, plotData, plotLayout, plotConfig);
       }
     }, [plotData]);
 
-    var isBoth = mode === "both";
-
     return h("div", null,
       h("h2", { className: "riaa-title" }, "RIAA Equalization"),
 
-      // Mode selector
       h("div", { className: "riaa-inputs" },
         h(ToggleGroup, {
-          label: "Curve",
+          label: "Direction",
           options: [
             { value: "riaa", label: "RIAA" },
             { value: "inverse", label: "Inverse" },
+          ],
+          value: direction,
+          onChange: setDirection,
+        }),
+
+        h(ToggleGroup, {
+          label: "Curve",
+          options: [
             { value: "turnover", label: "Turnover" },
             { value: "shelf", label: "Shelf" },
             { value: "both", label: "Both" },
           ],
-          value: mode,
-          onChange: setMode,
+          value: curve,
+          onChange: setCurve,
         })
       ),
 
@@ -294,33 +296,39 @@
           h("span", { className: "riaa-table-title" }, "Table of Values"),
           h("span", { className: "riaa-table-chevron" }, tableOpen ? "\u25BC" : "\u25B6")
         ),
-        tableOpen ? h("table", { className: "riaa-table" },
-          h("thead", null,
-            h("tr", null,
-              h("th", null, "Hz"),
-              isBoth ? h("th", null, "Turnover") : null,
-              isBoth ? h("th", null, "Shelf") : null,
-              h("th", null, isBoth ? "RIAA" : "dB")
+        tableOpen ? h("div", null,
+          h("table", { className: "riaa-table" },
+            h("thead", null,
+              h("tr", null,
+                h("th", null, "Hz"),
+                h("th", null, "Turnover"),
+                h("th", null, "Shelf"),
+                h("th", null, inverse ? "Inverse" : "RIAA")
+              )
+            ),
+            h("tbody", null,
+              tableData.map(function (row) {
+                var isRef = row.freq === 1000;
+                var cls = isRef ? "riaa-ref-row" : "";
+                return h("tr", { key: row.freq, className: cls },
+                  h("td", { className: "riaa-freq-cell" }, formatFreq(row.freq)),
+                  h("td", null, formatDb(row.turnover)),
+                  h("td", null, formatDb(row.shelf)),
+                  h("td", null, formatDb(row.full))
+                );
+              })
             )
           ),
-          h("tbody", null,
-            tableData.map(function (row) {
-              var isRef = row.freq === 1000;
-              var cls = isRef ? "riaa-ref-row" : "";
-              return h("tr", { key: row.freq, className: cls },
-                h("td", { className: "riaa-freq-cell" }, formatFreq(row.freq)),
-                isBoth ? h("td", null, formatDb(row.turnover)) : null,
-                isBoth ? h("td", null, formatDb(row.shelf)) : null,
-                h("td", null, formatDb(row.dB))
-              );
-            })
-          )
+          h("a", {
+            className: "riaa-csv-link",
+            href: "#",
+            onClick: function (e) { e.preventDefault(); downloadCsv(tableData, inverse); },
+          }, "Download CSV")
         ) : null
       )
     );
   }
 
-  // Mount
   var root = document.getElementById("riaa-eq");
   if (root) {
     ReactDOM.createRoot(root).render(h(App));
