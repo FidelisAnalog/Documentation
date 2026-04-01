@@ -70,7 +70,7 @@ function embedPDF(container) {
 
         var canvas = document.createElement("canvas");
         canvas.id = "pdf-page-" + (i + 1);
-        canvas.style.cssText = "width:100%;height:auto;display:block;margin-bottom:2px;background:#f5f5f5;aspect-ratio:" + unscaledViewport.width + "/" + unscaledViewport.height + ";";
+        canvas.style.cssText = "width:100%;height:auto;display:block;margin-bottom:2px;background:#1a1a1a;aspect-ratio:" + unscaledViewport.width + "/" + unscaledViewport.height + ";";
         container.appendChild(canvas);
       }
 
