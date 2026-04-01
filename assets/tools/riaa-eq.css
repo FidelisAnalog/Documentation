@@ -1,0 +1,159 @@
+/* RIAA EQ Tool - scoped to #riaa-eq */
+
+#riaa-eq {
+  font-family: 'IBM Plex Mono', 'SF Mono', monospace;
+  color: rgba(255,255,255,0.7);
+  background: #0b0e14;
+  border-radius: 10px;
+  margin: 1.5em 0;
+  padding: 16px 20px;
+}
+
+#riaa-eq *, #riaa-eq *::before, #riaa-eq *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#riaa-eq .riaa-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #fff;
+  margin: 0 0 16px 0;
+}
+
+/* Input section */
+#riaa-eq .riaa-inputs {
+  background: #0f1319;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+#riaa-eq .riaa-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#riaa-eq .riaa-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  width: 50px;
+  flex-shrink: 0;
+}
+
+#riaa-eq .riaa-toggle-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+#riaa-eq .riaa-toggle-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+#riaa-eq .riaa-toggle-btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.3);
+}
+
+#riaa-eq .riaa-toggle-btn.riaa-toggle-active {
+  background: rgba(0,229,255,0.15);
+  border-color: rgba(0,229,255,0.5);
+  color: #00e5ff;
+}
+
+/* Plot */
+#riaa-eq .riaa-plot {
+  width: 100%;
+  height: 400px;
+  margin-bottom: 16px;
+}
+
+/* Table */
+#riaa-eq .riaa-table-wrap {
+  background: #0f1319;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#riaa-eq .riaa-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+#riaa-eq .riaa-table th {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  text-align: right;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+#riaa-eq .riaa-table th:first-child {
+  text-align: left;
+}
+
+#riaa-eq .riaa-table td {
+  padding: 6px 14px;
+  text-align: right;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.8);
+}
+
+#riaa-eq .riaa-table td:first-child {
+  text-align: left;
+  color: rgba(255,255,255,0.5);
+}
+
+#riaa-eq .riaa-freq-cell {
+  font-size: 11px;
+}
+
+#riaa-eq .riaa-table tr:last-child td {
+  border-bottom: none;
+}
+
+#riaa-eq .riaa-ref-row td {
+  color: #00e5ff;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  #riaa-eq {
+    padding: 12px 14px;
+  }
+
+  #riaa-eq .riaa-inputs {
+    padding: 12px 14px;
+  }
+
+  #riaa-eq .riaa-plot {
+    height: 300px;
+  }
+
+  #riaa-eq .riaa-table td,
+  #riaa-eq .riaa-table th {
+    padding: 6px 8px;
+  }
+
+  #riaa-eq .riaa-toggle-btn {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+}
