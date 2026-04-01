@@ -23,16 +23,21 @@ function embedPDF(container) {
     dl.style.cssText = "display:inline-block;margin-bottom:12px;font-size:13px;color:#00e5ff;text-decoration:none;";
     container.appendChild(dl);
 
+    // Check for #page=N in URL
+    var targetPage = null;
+    var hashMatch = window.location.hash.match(/^#page=(\d+)/);
+    if (hashMatch) {
+      targetPage = parseInt(hashMatch[1], 10);
+    }
+
     // Render each page to a canvas
     var renderPage = function (pageNum) {
       pdf.getPage(pageNum).then(function (page) {
         var containerWidth = container.clientWidth;
         var unscaledViewport = page.getViewport({ scale: 1 });
         var scale = containerWidth / unscaledViewport.width;
-        // Use 2x scale for sharp rendering on retina, clamped to CSS size
         var renderScale = scale * (window.devicePixelRatio || 1);
         var viewport = page.getViewport({ scale: renderScale });
-        var cssViewport = page.getViewport({ scale: scale });
 
         var canvas = document.createElement("canvas");
         canvas.width = viewport.width;
@@ -42,28 +47,20 @@ function embedPDF(container) {
         container.appendChild(canvas);
 
         var ctx = canvas.getContext("2d");
-        page.render({ canvasContext: ctx, viewport: viewport });
+        page.render({ canvasContext: ctx, viewport: viewport }).promise.then(function () {
+          // Scroll to target page once it's rendered
+          if (targetPage === pageNum) {
+            canvas.scrollIntoView({ behavior: "smooth" });
+          }
 
-        if (pageNum < pdf.numPages) {
-          renderPage(pageNum + 1);
-        }
+          if (pageNum < pdf.numPages) {
+            renderPage(pageNum + 1);
+          }
+        });
       });
     };
 
     renderPage(1);
-
-    // Handle #page=N scrolling after all pages rendered
-    var hashMatch = window.location.hash.match(/^#page=(\d+)/);
-    if (hashMatch) {
-      var targetPage = parseInt(hashMatch[1], 10);
-      // Wait for pages to render, then scroll
-      setTimeout(function () {
-        var target = document.getElementById("pdf-page-" + targetPage);
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 1000);
-    }
   }).catch(function (err) {
     container.removeChild(loading);
     var errMsg = document.createElement("div");
