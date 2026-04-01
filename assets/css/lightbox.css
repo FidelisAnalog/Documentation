@@ -17,6 +17,8 @@
   max-height: 92vh;
   object-fit: contain;
   cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .lightbox-counter {
@@ -27,4 +29,52 @@
   color: rgba(255, 255, 255, 0.5);
   font-size: 13px;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 32px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+}
+
+.lightbox-close:hover {
+  color: #fff;
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 48px;
+  cursor: pointer;
+  padding: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.lightbox-nav:hover {
+  color: #fff;
+}
+
+.lightbox-prev {
+  left: 8px;
+}
+
+.lightbox-next {
+  right: 8px;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .lightbox-nav {
+    display: none !important;
+  }
 }
