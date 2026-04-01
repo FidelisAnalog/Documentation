@@ -60,16 +60,16 @@
   // ============================================================
   // COMPUTE TABLE — always all columns
   // ============================================================
-  // Shelf normalization: matches RIAA curve at high frequencies
-  // where the shelf dominates. Accounts for turnover's asymptotic value (T2/T1).
-  var SHELF_NORM = NORM / (T2 / T1);
+  // Component normalizations: each 0 dB at 1 kHz
+  var TURNOVER_NORM = riaaTurnover(1000);
+  var SHELF_NORM = riaaShelf(1000);
 
   function computeTable(inverse) {
     var sign = inverse ? -1 : 1;
     return TABLE_FREQS.map(function (f) {
       return {
         freq: f,
-        turnover: sign * toDb(riaaTurnover(f) / NORM),
+        turnover: sign * toDb(riaaTurnover(f) / TURNOVER_NORM),
         shelf: sign * toDb(riaaShelf(f) / SHELF_NORM),
         full: sign * toDb(riaaFull(f) / NORM),
       };
@@ -95,7 +95,7 @@
       // Turnover normalized to full RIAA at 1 kHz + dotted full RIAA reference
       traces.push({
         x: freqs,
-        y: freqs.map(function (f) { return sign * toDb(riaaTurnover(f) / NORM); }),
+        y: freqs.map(function (f) { return sign * toDb(riaaTurnover(f) / TURNOVER_NORM); }),
         name: "Turnover",
         line: { color: "#ffc400", width: 2 },
       });
