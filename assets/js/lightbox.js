@@ -114,24 +114,23 @@
   }, { passive: true });
 
   // Trackpad horizontal scroll (two-finger swipe on desktop)
-  var wheelAccum = 0;
-  var wheelTimeout = null;
+  var wheelLocked = false;
+  var wheelUnlockTimer = null;
 
   overlay.addEventListener("wheel", function (e) {
     if (currentIndex === -1) return;
     e.preventDefault();
 
-    wheelAccum += e.deltaX;
+    if (wheelLocked) return;
 
-    if (wheelTimeout) clearTimeout(wheelTimeout);
-    wheelTimeout = setTimeout(function () { wheelAccum = 0; }, 200);
+    if (Math.abs(e.deltaX) > 30 && Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      wheelLocked = true;
+      if (e.deltaX > 0) next();
+      else prev();
 
-    if (wheelAccum > 80) {
-      wheelAccum = 0;
-      next();
-    } else if (wheelAccum < -80) {
-      wheelAccum = 0;
-      prev();
+      // Stay locked until wheel events stop for 500ms
+      if (wheelUnlockTimer) clearTimeout(wheelUnlockTimer);
+      wheelUnlockTimer = setTimeout(function () { wheelLocked = false; }, 500);
     }
   }, { passive: false });
 
