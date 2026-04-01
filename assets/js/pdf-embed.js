@@ -11,7 +11,6 @@ function renderPageToCanvas(pdf, pageNum, container) {
     var renderScale = scale * (window.devicePixelRatio || 1);
     var viewport = page.getViewport({ scale: renderScale });
 
-    // Find the placeholder and replace it
     var placeholder = document.getElementById("pdf-page-" + pageNum);
     placeholder.width = viewport.width;
     placeholder.height = viewport.height;
@@ -42,17 +41,39 @@ function embedPDF(container) {
       targetPage = Math.min(Math.max(parseInt(hashMatch[1], 10), 1), pdf.numPages);
     }
 
-    // Get first page to determine aspect ratio for placeholders
-    pdf.getPage(1).then(function (firstPage) {
-      var unscaledViewport = firstPage.getViewport({ scale: 1 });
-      var containerWidth = container.clientWidth;
-      var scale = containerWidth / unscaledViewport.width;
-      var cssHeight = Math.ceil(unscaledViewport.height * scale);
+    var mixedSizes = container.hasAttribute("data-pdf-mixed-sizes");
 
-      // Create all canvas placeholders up front with correct dimensions
+    // Measure pages for placeholder sizes
+    var measurePromise;
+    if (mixedSizes) {
+      // Measure every page individually
+      var pagePromises = [];
       for (var i = 1; i <= pdf.numPages; i++) {
+        pagePromises.push(pdf.getPage(i));
+      }
+      measurePromise = Promise.all(pagePromises);
+    } else {
+      // Use first page dimensions for all placeholders
+      measurePromise = pdf.getPage(1).then(function (firstPage) {
+        var arr = [];
+        for (var i = 0; i < pdf.numPages; i++) {
+          arr.push(firstPage);
+        }
+        return arr;
+      });
+    }
+
+    measurePromise.then(function (pages) {
+      var containerWidth = container.clientWidth;
+
+      // Create placeholders
+      for (var i = 0; i < pages.length; i++) {
+        var unscaledViewport = pages[i].getViewport({ scale: 1 });
+        var scale = containerWidth / unscaledViewport.width;
+        var cssHeight = Math.ceil(unscaledViewport.height * scale);
+
         var canvas = document.createElement("canvas");
-        canvas.id = "pdf-page-" + i;
+        canvas.id = "pdf-page-" + (i + 1);
         canvas.style.cssText = "width:100%;height:" + cssHeight + "px;display:block;margin-bottom:2px;background:#f5f5f5;";
         container.appendChild(canvas);
       }
@@ -69,12 +90,9 @@ function embedPDF(container) {
       if (targetPage) {
         renderPageToCanvas(pdf, targetPage, container).then(function (canvas) {
           canvas.scrollIntoView({ behavior: "instant" });
-
-          // Render remaining pages in order
           renderRemaining(pdf, container, targetPage);
         });
       } else {
-        // No target — render sequentially from page 1
         renderSequential(pdf, container, 1);
       }
     });
@@ -95,7 +113,6 @@ function renderSequential(pdf, container, pageNum) {
 }
 
 function renderRemaining(pdf, container, skip) {
-  // Render all pages except the one already rendered, in order
   var pages = [];
   for (var i = 1; i <= pdf.numPages; i++) {
     if (i !== skip) pages.push(i);
