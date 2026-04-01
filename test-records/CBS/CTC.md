@@ -9,4 +9,4 @@ redirect_from:
 
 <div class="pdf-embed" data-pdf-url="{{ '/assets/pdfs/CBS Pro Series Test Records.pdf' | relative_url }}"></div>
 
-<script type="module" src="{{ '/assets/tools/pdf-embed.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/pdf-embed.js' | relative_url }}"></script>
