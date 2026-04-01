@@ -64,17 +64,13 @@ function embedPDF(container) {
     }
 
     measurePromise.then(function (pages) {
-      var containerWidth = container.clientWidth;
-
-      // Create placeholders
+      // Create placeholders with aspect-ratio for responsive sizing
       for (var i = 0; i < pages.length; i++) {
         var unscaledViewport = pages[i].getViewport({ scale: 1 });
-        var scale = containerWidth / unscaledViewport.width;
-        var cssHeight = Math.ceil(unscaledViewport.height * scale);
 
         var canvas = document.createElement("canvas");
         canvas.id = "pdf-page-" + (i + 1);
-        canvas.style.cssText = "width:100%;height:" + cssHeight + "px;display:block;margin-bottom:2px;background:#f5f5f5;";
+        canvas.style.cssText = "width:100%;height:auto;display:block;margin-bottom:2px;background:#f5f5f5;aspect-ratio:" + unscaledViewport.width + "/" + unscaledViewport.height + ";";
         container.appendChild(canvas);
       }
 
