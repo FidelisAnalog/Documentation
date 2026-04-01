@@ -7,10 +7,12 @@ redirect_from:
   - "/docs/tables-calcs/riaa-eq.html"
 ---
 
-# RIAA EQ
+<link rel="stylesheet" href="{{ '/assets/tools/riaa-eq.css' | relative_url }}">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
 
-<a href="https://docs.google.com/spreadsheets/d/1VYW-x6Id4EDWomnbmdJaQ2CQl3pfdf2gO-DDKVViBTQ/edit?gid=0#gid=0">Link to Google Sheet</a>
+<div id="riaa-eq"></div>
 
-<div id="view" style="height: 80vh;">
-	<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQA1U9x3HwPpg1rAhWvkDtTT-GVHk2g6dS2jJQPNJoi0GXV5iXw5j8U97OWbj267_jOaqvHdpWxcR7M/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false" frameborder="0" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%"></iframe>
-</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script src="{{ '/assets/tools/riaa-eq.js' | relative_url }}"></script>
