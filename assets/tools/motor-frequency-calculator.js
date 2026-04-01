@@ -75,14 +75,28 @@
       // Hysteresis motors have negligible torque ripple
       // No torque ripple entries - handled in UI with a message
     } else if (motorType === "reluctance") {
-      // Reluctance torque ripple: at drive/line frequency and harmonics
-      for (var i = 1; i <= 8; i++) {
+      // Reluctance torque ripple: phase-dependent like AC sync,
+      // plus tooth interaction at line frequency harmonics
+      var baseMultiplier = (phases === 2) ? 2 : phases;
+      for (var i = 1; i <= 4; i++) {
         torqueRipple.push({
-          multiplier: i,
-          frequency: i * elecFreq,
-          source: "reluctance",
+          multiplier: i * baseMultiplier,
+          frequency: i * baseMultiplier * elecFreq,
+          source: "reluctance-phase",
         });
       }
+      // Tooth interaction also creates ripple at line frequency harmonics
+      for (var i = 1; i <= 8; i++) {
+        var exists = torqueRipple.some(function (t) { return t.multiplier === i; });
+        if (!exists) {
+          torqueRipple.push({
+            multiplier: i,
+            frequency: i * elecFreq,
+            source: "reluctance-tooth",
+          });
+        }
+      }
+      torqueRipple.sort(function (a, b) { return a.multiplier - b.multiplier; });
     } else {
       // BLDC and AC Sync
       // For AC synchronous single-phase, base multiplier is 2 (power pulsates at 2× electrical)
@@ -436,7 +450,7 @@
 
         h(ToggleGroup, {
           label: "Phases",
-          options: motorType === "bldc"
+          options: motorType === "bldc" || motorType === "reluctance"
             ? [
                 { value: 2, label: "2-phase" },
                 { value: 3, label: "3-phase" },
@@ -531,11 +545,14 @@
                 h("span", { className: "bc-info-value", style: { color: C.dim } }, "Smooth rotor \u2014 no discrete torque pulses")
               )
             : data.torqueRipple.map(function (t, i) {
+                var note = t.source === "half-wave" ? "(half-wave)"
+                  : t.source === "reluctance-tooth" ? "(tooth)"
+                  : null;
                 return h(FreqRow, {
                   key: i,
                   label: t.multiplier + "× electrical",
                   frequency: t.frequency,
-                  note: t.source === "half-wave" ? "(half-wave)" : null,
+                  note: note,
                   color: C.torque,
                 });
               })
