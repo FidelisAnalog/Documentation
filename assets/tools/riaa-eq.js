@@ -60,7 +60,9 @@
   // ============================================================
   // COMPUTE TABLE — always all columns
   // ============================================================
-  var SHELF_NORM = riaaShelf(1000);
+  // Shelf normalization: matches RIAA curve at high frequencies
+  // where the shelf dominates. Accounts for turnover's asymptotic value (T2/T1).
+  var SHELF_NORM = NORM / (T2 / T1);
 
   function computeTable(inverse) {
     var sign = inverse ? -1 : 1;
