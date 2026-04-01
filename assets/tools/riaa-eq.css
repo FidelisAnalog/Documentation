@@ -89,6 +89,27 @@
   overflow: hidden;
 }
 
+#riaa-eq .riaa-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+#riaa-eq .riaa-table-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+}
+
+#riaa-eq .riaa-table-chevron {
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+}
+
 #riaa-eq .riaa-table {
   width: 100%;
   border-collapse: collapse;

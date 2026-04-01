@@ -48,12 +48,18 @@
   }
 
   // ============================================================
-  // STANDARD IEC FREQUENCIES
+  // FREQUENCIES
   // ============================================================
   var TABLE_FREQS = [
-    20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160,
-    200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600,
-    2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000
+    10, 20, 22, 25, 28, 31.5, 35, 40, 44, 50, 55, 63, 70, 80, 90,
+    100, 110, 125, 140, 160, 190, 200, 240, 250, 315, 340, 380, 400,
+    430, 480, 500, 540, 610, 630, 680, 760, 800, 850, 950,
+    1000, 1100, 1200, 1250, 1300, 1500, 1600, 1700, 1900,
+    2000, 2100, 2400, 2500, 2700, 3000, 3150, 3400, 3800,
+    4000, 4300, 4800, 5000, 5400, 6000, 6100, 6300, 6800, 7600,
+    8000, 8500, 9500, 10000, 11000, 12000, 12500, 13000, 15000,
+    16000, 17000, 19000, 20000, 21000, 24000, 25000, 27000, 30000,
+    31500, 34000, 38000, 40000, 43000, 48000, 50000
   ];
 
   // ============================================================
@@ -85,10 +91,10 @@
   // GENERATE PLOT DATA
   // ============================================================
   function generatePlotData(mode) {
-    // Log-spaced frequencies from 10 Hz to 30 kHz
+    // Log-spaced frequencies from 10 Hz to 50 kHz
     var freqs = [];
     var start = Math.log10(10);
-    var end = Math.log10(30000);
+    var end = Math.log10(50000);
     var steps = 500;
     for (var i = 0; i <= steps; i++) {
       freqs.push(Math.pow(10, start + (end - start) * i / steps));
@@ -149,7 +155,7 @@
   }
 
   // ============================================================
-  // PLOT LAYOUT
+  // PLOT LAYOUT — fixed axes for all modes
   // ============================================================
   var plotLayout = {
     paper_bgcolor: "#0b0e14",
@@ -161,9 +167,10 @@
       type: "log",
       gridcolor: "rgba(255,255,255,0.06)",
       linecolor: "rgba(255,255,255,0.1)",
-      tickvals: [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000],
-      ticktext: ["10", "20", "50", "100", "200", "500", "1k", "2k", "5k", "10k", "20k"],
-      range: [Math.log10(10), Math.log10(30000)],
+      tickvals: [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
+      ticktext: ["10", "20", "50", "100", "200", "500", "1k", "2k", "5k", "10k", "20k", "50k"],
+      range: [Math.log10(10), Math.log10(50000)],
+      fixedrange: true,
     },
     yaxis: {
       title: "dB",
@@ -172,6 +179,9 @@
       zeroline: true,
       zerolinecolor: "rgba(255,255,255,0.2)",
       zerolinewidth: 1,
+      range: [-25, 25],
+      dtick: 5,
+      fixedrange: true,
     },
     legend: {
       x: 1, xanchor: "right", y: 1,
@@ -190,7 +200,11 @@
   // FORMAT HELPERS
   // ============================================================
   function formatFreq(f) {
-    if (f >= 1000) return (f / 1000) + "k";
+    if (f >= 1000) {
+      var k = f / 1000;
+      if (k === Math.floor(k)) return k + "k";
+      return k + "k";
+    }
     return String(f);
   }
 
@@ -225,6 +239,9 @@
     var modeState = useState("riaa");
     var mode = modeState[0], setMode = modeState[1];
     var plotRef = useRef(null);
+
+    var tableOpenState = useState(false);
+    var tableOpen = tableOpenState[0], setTableOpen = tableOpenState[1];
 
     var tableData = useMemo(function () {
       return computeTable(mode);
@@ -268,9 +285,16 @@
         className: "riaa-plot",
       }),
 
-      // Table
+      // Table — collapsible, collapsed by default
       h("div", { className: "riaa-table-wrap" },
-        h("table", { className: "riaa-table" },
+        h("div", {
+          className: "riaa-table-header",
+          onClick: function () { setTableOpen(!tableOpen); },
+        },
+          h("span", { className: "riaa-table-title" }, "Table of Values"),
+          h("span", { className: "riaa-table-chevron" }, tableOpen ? "\u25BC" : "\u25B6")
+        ),
+        tableOpen ? h("table", { className: "riaa-table" },
           h("thead", null,
             h("tr", null,
               h("th", null, "Hz"),
@@ -291,7 +315,7 @@
               );
             })
           )
-        )
+        ) : null
       )
     );
   }
