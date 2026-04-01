@@ -75,28 +75,17 @@
       // Hysteresis motors have negligible torque ripple
       // No torque ripple entries - handled in UI with a message
     } else if (motorType === "reluctance") {
-      // Reluctance torque ripple: phase-dependent like AC sync,
-      // plus tooth interaction at line frequency harmonics
-      var baseMultiplier = (phases === 2) ? 2 : phases;
+      // Reluctance torque ripple follows same phase-dependent pattern as AC sync
+      // 3-phase: 6k harmonics (6×, 12×, 18×, 24×)
+      // 2-phase: 2k harmonics (2×, 4×, 6×, 8×)
+      var baseMultiplier = phases;
       for (var i = 1; i <= 4; i++) {
         torqueRipple.push({
           multiplier: i * baseMultiplier,
           frequency: i * baseMultiplier * elecFreq,
-          source: "reluctance-phase",
+          source: "full-wave",
         });
       }
-      // Tooth interaction also creates ripple at line frequency harmonics
-      for (var i = 1; i <= 8; i++) {
-        var exists = torqueRipple.some(function (t) { return t.multiplier === i; });
-        if (!exists) {
-          torqueRipple.push({
-            multiplier: i,
-            frequency: i * elecFreq,
-            source: "reluctance-tooth",
-          });
-        }
-      }
-      torqueRipple.sort(function (a, b) { return a.multiplier - b.multiplier; });
     } else {
       // BLDC and AC Sync
       // For AC synchronous single-phase, base multiplier is 2 (power pulsates at 2× electrical)
@@ -545,9 +534,7 @@
                 h("span", { className: "bc-info-value", style: { color: C.dim } }, "Smooth rotor \u2014 no discrete torque pulses")
               )
             : data.torqueRipple.map(function (t, i) {
-                var note = t.source === "half-wave" ? "(half-wave)"
-                  : t.source === "reluctance-tooth" ? "(tooth)"
-                  : null;
+                var note = t.source === "half-wave" ? "(half-wave)" : null;
                 return h(FreqRow, {
                   key: i,
                   label: t.multiplier + "× electrical",
