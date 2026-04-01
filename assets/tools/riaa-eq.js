@@ -60,13 +60,15 @@
   // ============================================================
   // COMPUTE TABLE — always all columns
   // ============================================================
+  var SHELF_NORM = riaaShelf(1000);
+
   function computeTable(inverse) {
     var sign = inverse ? -1 : 1;
     return TABLE_FREQS.map(function (f) {
       return {
         freq: f,
-        turnover: sign * toDb(riaaTurnover(f)),
-        shelf: sign * toDb(riaaShelf(f)),
+        turnover: sign * toDb(riaaTurnover(f) / NORM),
+        shelf: sign * toDb(riaaShelf(f) / SHELF_NORM),
         full: sign * toDb(riaaFull(f) / NORM),
       };
     });
@@ -87,11 +89,14 @@
     var sign = inverse ? -1 : 1;
     var traces = [];
 
+    // Shelf normalized to its own value at 1 kHz (0 dB at 1 kHz, rolls off in treble)
+    var SHELF_NORM = riaaShelf(1000);
+
     if (curve === "turnover") {
-      // Raw turnover (0 dB at high freq, boosts bass) + dotted full RIAA reference
+      // Turnover normalized to full RIAA at 1 kHz + dotted full RIAA reference
       traces.push({
         x: freqs,
-        y: freqs.map(function (f) { return sign * toDb(riaaTurnover(f)); }),
+        y: freqs.map(function (f) { return sign * toDb(riaaTurnover(f) / NORM); }),
         name: "Turnover",
         line: { color: "#ffc400", width: 2 },
       });
@@ -102,10 +107,10 @@
         line: { color: "rgba(0,229,255,0.3)", width: 1, dash: "dot" },
       });
     } else if (curve === "shelf") {
-      // Raw shelf (0 dB at low freq, rolls off treble) + dotted full RIAA reference
+      // Shelf normalized to shelf at 1 kHz + dotted full RIAA reference
       traces.push({
         x: freqs,
-        y: freqs.map(function (f) { return sign * toDb(riaaShelf(f)); }),
+        y: freqs.map(function (f) { return sign * toDb(riaaShelf(f) / SHELF_NORM); }),
         name: "Shelf",
         line: { color: "#a855f7", width: 2 },
       });
