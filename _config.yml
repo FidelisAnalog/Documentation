@@ -20,10 +20,9 @@ defaults:
       layout: "default"
 
 
-aux_links:
-  View on GitHub: https://github.com/FidelisAnalog/Documentation/
-# Makes Aux links open in a new tab. Default is false
-aux_links_new_tab: false
+# aux_links:
+#   View on GitHub: https://github.com/FidelisAnalog/Documentation/
+# aux_links_new_tab: false
 
 mermaid:
   # Version of mermaid library
