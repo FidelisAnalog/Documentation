@@ -41,16 +41,32 @@ function embedPDF(container) {
       targetPage = Math.min(Math.max(parseInt(hashMatch[1], 10), 1), pdf.numPages);
     }
 
-    // Measure every page individually for correct placeholder sizes
-    var pagePromises = [];
-    for (var i = 1; i <= pdf.numPages; i++) {
-      pagePromises.push(pdf.getPage(i));
+    var mixedSizes = container.hasAttribute("data-pdf-mixed-sizes");
+
+    // Measure pages for placeholder sizes
+    var measurePromise;
+    if (mixedSizes) {
+      // Measure every page individually
+      var pagePromises = [];
+      for (var i = 1; i <= pdf.numPages; i++) {
+        pagePromises.push(pdf.getPage(i));
+      }
+      measurePromise = Promise.all(pagePromises);
+    } else {
+      // Use first page dimensions for all placeholders
+      measurePromise = pdf.getPage(1).then(function (firstPage) {
+        var arr = [];
+        for (var i = 0; i < pdf.numPages; i++) {
+          arr.push(firstPage);
+        }
+        return arr;
+      });
     }
 
-    Promise.all(pagePromises).then(function (pages) {
+    measurePromise.then(function (pages) {
       var containerWidth = container.clientWidth;
 
-      // Create correctly-sized placeholders for each page
+      // Create placeholders
       for (var i = 0; i < pages.length; i++) {
         var unscaledViewport = pages[i].getViewport({ scale: 1 });
         var scale = containerWidth / unscaledViewport.width;
