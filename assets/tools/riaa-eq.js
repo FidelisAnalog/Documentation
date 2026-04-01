@@ -91,9 +91,6 @@
     var sign = inverse ? -1 : 1;
     var traces = [];
 
-    // Shelf normalized to its own value at 1 kHz (0 dB at 1 kHz, rolls off in treble)
-    var SHELF_NORM = riaaShelf(1000);
-
     if (curve === "turnover") {
       // Turnover normalized to full RIAA at 1 kHz + dotted full RIAA reference
       traces.push({
