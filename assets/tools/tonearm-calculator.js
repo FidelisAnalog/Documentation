@@ -379,8 +379,14 @@
       var traces = [{
         x: data.freqResponse.map(function (p) { return p.freq; }),
         y: data.freqResponse.map(function (p) { return p.dB; }),
-        name: "Magnitude",
+        name: "Damped",
         line: { color: "#00e5ff", width: 2 },
+      }, {
+        x: [data.fn, data.fn],
+        y: [-15, Math.max(15, Math.ceil(data.peakDb + 2))],
+        name: "f\u2099 undamped (" + data.fn.toFixed(1) + " Hz)",
+        mode: "lines",
+        line: { color: "rgba(255,196,0,0.5)", width: 1, dash: "dash" },
       }];
 
       var layout = Object.assign(basePlotLayout(), {
@@ -400,6 +406,7 @@
           zeroline: true,
           zerolinecolor: "rgba(255,255,255,0.2)",
           fixedrange: true,
+          range: [-15, Math.max(15, Math.ceil(data.peakDb + 2))],
         },
       });
 
@@ -423,11 +430,13 @@
         margin: { t: 10, r: 20, b: 50, l: 60 },
         showlegend: false,
         xaxis: {
+          title: "Normalized time (\u03c9\u2099t)",
           gridcolor: "rgba(255,255,255,0.06)",
           linecolor: "rgba(255,255,255,0.1)",
           fixedrange: true,
         },
         yaxis: {
+          title: "Amplitude",
           gridcolor: "rgba(255,255,255,0.06)",
           linecolor: "rgba(255,255,255,0.1)",
           zeroline: true,
