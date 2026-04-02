@@ -64,8 +64,8 @@
   var TURNOVER_NORM = riaaTurnover(1000);
   var SHELF_NORM = riaaShelf(1000);
 
-  function computeTable(inverse) {
-    var sign = inverse ? -1 : 1;
+  function computeTable(recording) {
+    var sign = recording ? -1 : 1;
     return TABLE_FREQS.map(function (f) {
       return {
         freq: f,
@@ -79,7 +79,7 @@
   // ============================================================
   // GENERATE PLOT DATA
   // ============================================================
-  function generatePlotData(curve, inverse) {
+  function generatePlotData(curve, recording) {
     var freqs = [];
     var start = Math.log10(10);
     var end = Math.log10(50000);
@@ -88,7 +88,7 @@
       freqs.push(Math.pow(10, start + (end - start) * i / steps));
     }
 
-    var sign = inverse ? -1 : 1;
+    var sign = recording ? -1 : 1;
     var traces = [];
 
     if (curve === "turnover") {
@@ -102,7 +102,7 @@
       traces.push({
         x: freqs,
         y: freqs.map(function (f) { return sign * toDb(riaaFull(f) / NORM); }),
-        name: inverse ? "Inverse" : "RIAA",
+        name: recording ? "Recording" : "Playback",
         line: { color: "rgba(0,229,255,0.3)", width: 1, dash: "dot" },
       });
     } else if (curve === "shelf") {
@@ -116,7 +116,7 @@
       traces.push({
         x: freqs,
         y: freqs.map(function (f) { return sign * toDb(riaaFull(f) / NORM); }),
-        name: inverse ? "Inverse" : "RIAA",
+        name: recording ? "Recording" : "Playback",
         line: { color: "rgba(0,229,255,0.3)", width: 1, dash: "dot" },
       });
     } else if (curve === "both") {
@@ -124,7 +124,7 @@
       traces.push({
         x: freqs,
         y: freqs.map(function (f) { return sign * toDb(riaaFull(f) / NORM); }),
-        name: inverse ? "Inverse RIAA" : "RIAA",
+        name: recording ? "Recording" : "Playback",
         line: { color: "#00e5ff", width: 2 },
       });
     }
@@ -194,8 +194,8 @@
   // ============================================================
   // CSV DOWNLOAD
   // ============================================================
-  function downloadCsv(tableData, inverse) {
-    var label = inverse ? "Inverse" : "RIAA";
+  function downloadCsv(tableData, recording) {
+    var label = recording ? "Recording" : "Playback";
     var header = "Hz,Turnover (dB),Shelf (dB)," + label + " (dB)\n";
     var rows = tableData.map(function (row) {
       return row.freq + "," + row.turnover.toFixed(2) + "," + row.shelf.toFixed(2) + "," + row.full.toFixed(2);
@@ -205,7 +205,7 @@
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
     a.href = url;
-    a.download = (inverse ? "inverse-riaa" : "riaa") + "-eq.csv";
+    a.download = (recording ? "recording" : "playback") + "-riaa-eq.csv";
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -236,7 +236,7 @@
     var curveState = useState("both");
     var curve = curveState[0], setCurve = curveState[1];
 
-    var dirState = useState("riaa");
+    var dirState = useState("playback");
     var direction = dirState[0], setDirection = dirState[1];
 
     var plotRef = useRef(null);
@@ -244,15 +244,15 @@
     var tableOpenState = useState(false);
     var tableOpen = tableOpenState[0], setTableOpen = tableOpenState[1];
 
-    var inverse = direction === "inverse";
+    var recording = direction === "recording";
 
     var tableData = useMemo(function () {
-      return computeTable(inverse);
-    }, [inverse]);
+      return computeTable(recording);
+    }, [recording]);
 
     var plotData = useMemo(function () {
-      return generatePlotData(curve, inverse);
-    }, [curve, inverse]);
+      return generatePlotData(curve, recording);
+    }, [curve, recording]);
 
     useEffect(function () {
       if (plotRef.current && window.Plotly) {
@@ -265,10 +265,10 @@
 
       h("div", { className: "riaa-inputs" },
         h(ToggleGroup, {
-          label: "Direction",
+          label: "RIAA",
           options: [
-            { value: "riaa", label: "RIAA" },
-            { value: "inverse", label: "Inverse" },
+            { value: "playback", label: "Playback" },
+            { value: "recording", label: "Recording" },
           ],
           value: direction,
           onChange: setDirection,
@@ -277,9 +277,9 @@
         h(ToggleGroup, {
           label: "Curve",
           options: [
+            { value: "both", label: "Full" },
             { value: "turnover", label: "Turnover" },
             { value: "shelf", label: "Shelf" },
-            { value: "both", label: "Both" },
           ],
           value: curve,
           onChange: setCurve,
@@ -308,7 +308,7 @@
                 h("th", null, "Hz"),
                 h("th", null, "Turnover"),
                 h("th", null, "Shelf"),
-                h("th", null, inverse ? "Inverse" : "RIAA")
+                h("th", null, recording ? "Recording" : "Playback")
               )
             ),
             h("tbody", null,
@@ -327,7 +327,7 @@
           h("a", {
             className: "riaa-csv-link",
             href: "#",
-            onClick: function (e) { e.preventDefault(); downloadCsv(tableData, inverse); },
+            onClick: function (e) { e.preventDefault(); downloadCsv(tableData, recording); },
           }, "Download CSV")
         ) : null
       )
