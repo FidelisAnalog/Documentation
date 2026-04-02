@@ -149,7 +149,6 @@
     var tStart = 1.0;  // simulation starts at t=1.0
 
     var simData = [];
-    var maxVtfGf = -Infinity;
 
     for (var n = 0; n <= numSteps; n++) {
       var t = tStart + n * dt;
@@ -247,7 +246,6 @@
       riaaLevel: riaaLevel,
       freqResponse: freqResponse,
       transient: transient,
-      minVtf: minVtf,
       T: T,
     };
   }
