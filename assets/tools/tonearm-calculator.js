@@ -262,6 +262,14 @@
   // ============================================================
 
   function InputRow(props) {
+    var localS = useState(String(props.value));
+    var localVal = localS[0], setLocalVal = localS[1];
+    // Sync from parent when value changes externally
+    var prevRef = useRef(props.value);
+    if (prevRef.current !== props.value) {
+      prevRef.current = props.value;
+      if (String(props.value) !== localVal) setLocalVal(String(props.value));
+    }
     return h("div", { className: "tc-input-row" },
       h("label", { className: "tc-input-label" }, props.label),
       h("input", {
@@ -269,8 +277,9 @@
         step: props.step || "any",
         min: props.min,
         max: props.max,
-        value: props.value,
+        value: localVal,
         onChange: function (e) {
+          setLocalVal(e.target.value);
           var val = parseFloat(e.target.value);
           if (!isNaN(val)) props.onChange(val);
         },
@@ -343,18 +352,18 @@
   function App() {
     var s = function (init) { return useState(init); };
 
-    var vtfS = s(1.8);           var vtf = vtfS[0], setVtf = vtfS[1];
-    var scS = s(20.0);           var staticComp = scS[0], setStaticComp = scS[1];
+    var vtfS = s(1.25);          var vtf = vtfS[0], setVtf = vtfS[1];
+    var scS = s(40.0);           var staticComp = scS[0], setStaticComp = scS[1];
     var dcS = s(10.0);           var dynamicComp = dcS[0], setDynamicComp = dcS[1];
     var cfS = s(100.0);          var compFreq = cfS[0], setCompFreq = cfS[1];
-    var amS = s(11.5);           var armMass = amS[0], setArmMass = amS[1];
-    var cmS = s(5.0);            var cartMass = cmS[0], setCartMass = cmS[1];
-    var adS = s(0.08);           var armDamping = adS[0], setArmDamping = adS[1];
+    var amS = s(8.0);            var armMass = amS[0], setArmMass = amS[1];
+    var cmS = s(9.0);            var cartMass = cmS[0], setCartMass = cmS[1];
+    var adS = s(0.15);           var armDamping = adS[0], setArmDamping = adS[1];
     var mfS = s(315.0);          var modFreq = mfS[0], setModFreq = mfS[1];
     var maS = s(0.12);           var modAmplitude = maS[0], setModAmplitude = maS[1];
     var paS = s(4.2);            var peakA = paS[0], setPeakA = paS[1];
     var pbS = s(1.1);            var peakB = pbS[0], setPeakB = pbS[1];
-    var dcOnS = s(true);         var dampingCalcOn = dcOnS[0], setDampingCalcOn = dcOnS[1];
+    var dcOnS = s(false);        var dampingCalcOn = dcOnS[0], setDampingCalcOn = dcOnS[1];
     var exS = s(100);            var excitationUm = exS[0], setExcitationUm = exS[1];
 
     var colS = s({ freqResp: false, transient: false, vtfSweep: false, resonance: false, damping: false, modulation: false });
