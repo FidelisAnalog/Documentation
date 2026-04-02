@@ -124,8 +124,9 @@
       traces.push({
         x: freqs,
         y: freqs.map(function (f) { return sign * toDb(riaaFull(f) / NORM); }),
-        name: recording ? "Recording" : "Playback",
+        name: recording ? "RIAA Recording" : "RIAA Playback",
         line: { color: "#00e5ff", width: 2 },
+        showlegend: true,
       });
     }
 
@@ -135,39 +136,43 @@
   // ============================================================
   // PLOT LAYOUT — fixed axes
   // ============================================================
-  var plotLayout = {
-    paper_bgcolor: "#0b0e14",
-    plot_bgcolor: "#0f1319",
-    font: { family: "IBM Plex Mono, SF Mono, monospace", color: "rgba(255,255,255,0.7)", size: 11 },
-    margin: { t: 20, r: 20, b: 50, l: 60 },
-    xaxis: {
-      title: "Frequency (Hz)",
-      type: "log",
-      gridcolor: "rgba(255,255,255,0.06)",
-      linecolor: "rgba(255,255,255,0.1)",
-      tickvals: [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
-      ticktext: ["10", "20", "50", "100", "200", "500", "1k", "2k", "5k", "10k", "20k", "50k"],
-      range: [Math.log10(10), Math.log10(50000)],
-      fixedrange: true,
-    },
-    yaxis: {
-      title: "dB",
-      gridcolor: "rgba(255,255,255,0.06)",
-      linecolor: "rgba(255,255,255,0.1)",
-      zeroline: true,
-      zerolinecolor: "rgba(255,255,255,0.2)",
-      zerolinewidth: 1,
-      range: [-25, 25],
-      dtick: 5,
-      fixedrange: true,
-    },
-    legend: {
-      x: 1, xanchor: "right", y: 1,
-      bgcolor: "rgba(0,0,0,0)",
-      font: { size: 11 },
-    },
-    hovermode: "x unified",
-  };
+  function getPlotLayout(recording) {
+    return {
+      paper_bgcolor: "#0b0e14",
+      plot_bgcolor: "#0f1319",
+      font: { family: "IBM Plex Mono, SF Mono, monospace", color: "rgba(255,255,255,0.7)", size: 11 },
+      margin: { t: 20, r: 20, b: 50, l: 60 },
+      xaxis: {
+        title: "Frequency (Hz)",
+        type: "log",
+        gridcolor: "rgba(255,255,255,0.06)",
+        linecolor: "rgba(255,255,255,0.1)",
+        tickvals: [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
+        ticktext: ["10", "20", "50", "100", "200", "500", "1k", "2k", "5k", "10k", "20k", "50k"],
+        range: [Math.log10(10), Math.log10(50000)],
+        fixedrange: true,
+      },
+      yaxis: {
+        title: "dB",
+        gridcolor: "rgba(255,255,255,0.06)",
+        linecolor: "rgba(255,255,255,0.1)",
+        zeroline: true,
+        zerolinecolor: "rgba(255,255,255,0.2)",
+        zerolinewidth: 1,
+        range: [-25, 25],
+        dtick: 5,
+        fixedrange: true,
+      },
+      legend: {
+        x: 1, xanchor: "right",
+        y: recording ? 0 : 1, yanchor: recording ? "bottom" : "top",
+        bgcolor: "rgba(0,0,0,0)",
+        font: { size: 11 },
+      },
+      showlegend: true,
+      hovermode: "x unified",
+    };
+  }
 
   var plotConfig = {
     responsive: true,
@@ -256,9 +261,9 @@
 
     useEffect(function () {
       if (plotRef.current && window.Plotly) {
-        Plotly.react(plotRef.current, plotData, plotLayout, plotConfig);
+        Plotly.react(plotRef.current, plotData, getPlotLayout(recording), plotConfig);
       }
-    }, [plotData]);
+    }, [plotData, recording]);
 
     return h("div", null,
       h("h2", { className: "riaa-title" }, "RIAA Equalization"),
