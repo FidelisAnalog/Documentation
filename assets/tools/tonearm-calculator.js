@@ -465,21 +465,19 @@
         h("div", { className: "tc-section-label" }, "Tonearm Parameters"),
         h(InputRow, { label: "Effective mass", value: armMass, onChange: setArmMass, unit: "grams", step: 0.5, min: 1 }),
         h(InputRow, { label: "Cart + fixings mass", value: cartMass, onChange: setCartMass, unit: "grams", step: 0.5, min: 1 }),
-        h(InputRow, { label: "Arm damping ratio", value: armDamping, onChange: setArmDamping, unit: "ratio", step: 0.01, min: 0 }),
-
-        h("div", { className: "tc-section-label" }, "Modulation"),
-        h(InputRow, { label: "Frequency", value: modFreq, onChange: setModFreq, unit: "Hz", step: 1, min: 1 }),
-        h(InputRow, { label: "Amplitude pk-pk", value: modAmplitude, onChange: setModAmplitude, unit: "mm", step: 0.01, min: 0.001 }),
-
-        h("div", { className: "tc-section-label" }, "Damping Measurement (Log Decrement)"),
         h(ToggleGroup, {
-          label: "Calculator",
-          options: [{ value: true, label: "ON" }, { value: false, label: "OFF" }],
+          label: "Damping",
+          options: [{ value: false, label: "Manual" }, { value: true, label: "Log Decrement" }],
           value: dampingCalcOn,
           onChange: setDampingCalcOn,
         }),
         dampingCalcOn ? h(InputRow, { label: "Peak A amplitude", value: peakA, onChange: setPeakA, step: 0.1, min: 0 }) : null,
-        dampingCalcOn ? h(InputRow, { label: "Peak B amplitude", value: peakB, onChange: setPeakB, step: 0.1, min: 0 }) : null
+        dampingCalcOn ? h(InputRow, { label: "Peak B amplitude", value: peakB, onChange: setPeakB, step: 0.1, min: 0 }) : null,
+        !dampingCalcOn ? h(InputRow, { label: "Arm damping ratio", value: armDamping, onChange: setArmDamping, unit: "ratio", step: 0.01, min: 0 }) : null,
+
+        h("div", { className: "tc-section-label" }, "Modulation"),
+        h(InputRow, { label: "Frequency", value: modFreq, onChange: setModFreq, unit: "Hz", step: 1, min: 1 }),
+        h(InputRow, { label: "Amplitude pk-pk", value: modAmplitude, onChange: setModAmplitude, unit: "mm", step: 0.01, min: 0.001 })
       ),
 
       // === OUTPUTS ===
@@ -510,7 +508,6 @@
           onToggle: function () { togglePanel("resonance"); },
         },
           h(InfoRow, { label: "Total effective mass", value: fmt(data.m, 1), unit: "g" }),
-          h(InfoRow, { label: "Spring constant (k)", value: fmt(data.k, 1), unit: "N/m" }),
           h(InfoRow, { label: "Natural frequency (undamped)", value: fmt(data.fn, 2), unit: "Hz" }),
           h(InfoRow, { label: "Resonant peak frequency", value: fmt(data.fRes, 2), unit: "Hz", highlight: true }),
           h(InfoRow, { label: "Resonant peak", value: fmt(data.peakDb, 1), unit: "dB" }),
@@ -523,15 +520,12 @@
           collapsed: collapsed.damping,
           onToggle: function () { togglePanel("damping"); },
         },
-          h(InfoRow, { label: "Cartridge damping ratio", value: fmt(data.Tc, 5) }),
-          h(InfoRow, { label: "Cartridge Q", value: fmt(data.cartQ, 2) }),
-          h(InfoRow, { label: "Arm damping ratio", value: fmt(data.Ta, 5) }),
-          h(InfoRow, { label: "Arm Q", value: fmt(data.armQ, 2) }),
-          h(InfoRow, { label: "Overall damping ratio", value: fmt(data.overallDamping, 5), highlight: true }),
-          h(InfoRow, { label: "Overall Q", value: fmt(data.overallQ, 2) }),
-          h(InfoRow, { label: "Critical damping coeff", value: fmt(data.cc, 4), unit: "Ns/m" }),
+          h(InfoRow, { label: "Cartridge damping ratio", value: fmt(data.Tc, 2) }),
+          h(InfoRow, { label: "Cartridge Q", value: fmt(data.cartQ, 1) }),
+          h(InfoRow, { label: "Arm Q", value: fmt(data.armQ, 1) }),
+          h(InfoRow, { label: "Overall Q", value: fmt(data.overallQ, 1), highlight: true }),
           h(InfoRow, { label: "Damping coeff", value: fmt(data.dampingCoeff, 4), unit: "Ns/m" }),
-          dampingCalcOn ? h(InfoRow, { label: "Calculated arm damping", value: fmt(data.calcArmDamping, 5) }) : null
+          dampingCalcOn ? h(InfoRow, { label: "Calculated arm damping", value: fmt(data.calcArmDamping, 2) }) : null
         ),
 
         h(Panel, {
