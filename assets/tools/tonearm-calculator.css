@@ -1,0 +1,247 @@
+/* Tonearm LF Mechanics Calculator - scoped to #tonearm-calc */
+
+#tonearm-calc {
+  font-family: 'IBM Plex Mono', 'SF Mono', monospace;
+  color: rgba(255,255,255,0.7);
+  background: #0b0e14;
+  border-radius: 10px;
+  margin: 1.5em 0;
+  padding: 16px 20px;
+}
+
+#tonearm-calc *, #tonearm-calc *::before, #tonearm-calc *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#tonearm-calc .tc-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #fff;
+  margin: 0 0 16px 0;
+}
+
+/* Input section */
+#tonearm-calc .tc-inputs {
+  background: #0f1319;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+#tonearm-calc .tc-inputs-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 14px;
+}
+
+#tonearm-calc .tc-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+#tonearm-calc .tc-input-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  width: 140px;
+  flex-shrink: 0;
+}
+
+#tonearm-calc .tc-number-input {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  width: 90px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.9);
+  outline: none;
+}
+
+#tonearm-calc .tc-number-input:focus {
+  border-color: #00e5ff;
+  background: rgba(0,229,255,0.08);
+}
+
+#tonearm-calc .tc-input-unit {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  width: 60px;
+  flex-shrink: 0;
+}
+
+/* Toggle */
+#tonearm-calc .tc-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+#tonearm-calc .tc-toggle-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+#tonearm-calc .tc-toggle-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+#tonearm-calc .tc-toggle-btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.3);
+}
+
+#tonearm-calc .tc-toggle-btn.tc-toggle-active {
+  background: rgba(0,229,255,0.15);
+  border-color: rgba(0,229,255,0.5);
+  color: #00e5ff;
+}
+
+/* Output panels */
+#tonearm-calc .tc-outputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#tonearm-calc .tc-panel {
+  background: #0f1319;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#tonearm-calc .tc-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer;
+}
+
+#tonearm-calc .tc-panel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+#tonearm-calc .tc-panel-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  flex: 1;
+}
+
+#tonearm-calc .tc-panel-chevron {
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+}
+
+#tonearm-calc .tc-panel-content {
+  padding: 10px 14px;
+}
+
+#tonearm-calc .tc-info-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+#tonearm-calc .tc-info-row:last-child {
+  border-bottom: none;
+}
+
+#tonearm-calc .tc-info-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+}
+
+#tonearm-calc .tc-info-value {
+  font-size: 12px;
+  color: rgba(255,255,255,0.9);
+  font-weight: 500;
+}
+
+#tonearm-calc .tc-info-unit {
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  margin-left: 4px;
+}
+
+/* Section divider */
+#tonearm-calc .tc-section-label {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.3);
+  margin-top: 8px;
+  margin-bottom: 4px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Plot */
+#tonearm-calc .tc-plot {
+  width: 100%;
+  height: 350px;
+}
+
+/* Highlight values */
+#tonearm-calc .tc-highlight {
+  color: #00e5ff;
+}
+
+#tonearm-calc .tc-warn {
+  color: #ffc400;
+}
+
+#tonearm-calc .tc-danger {
+  color: #ff2d7b;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  #tonearm-calc {
+    padding: 12px 14px;
+  }
+
+  #tonearm-calc .tc-inputs {
+    padding: 12px 14px;
+  }
+
+  #tonearm-calc .tc-input-label {
+    width: 110px;
+  }
+
+  #tonearm-calc .tc-toggle-btn {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  #tonearm-calc .tc-plot {
+    height: 280px;
+  }
+}
