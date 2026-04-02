@@ -198,46 +198,27 @@
       transient.push({ time: tt, amplitude: amp });
     }
 
-    // ============================================================
-    // VTF vs FREQUENCY — peak VTF swing at each frequency
-    // Uses the transmissibility to compute the steady-state extension
-    // amplitude, then derives the peak VTF variation.
-    // ============================================================
-    var vtfVsFreq = [];
-    var numVtfPoints = 400;
+    // Min VTF required — from Sheet2 peak VTF during time-domain simulation
+    // Sheet2 J column: vtf + (k * extension + zetaS2 * velocity) / 0.01
+    // zetaS2 (Sheet2 B1) = 0.001 + cartridge damping coefficient
+    var zetaS2 = 0.001 + (k * Math.sqrt(Math.pow(Z / k, 2) - 1)) / (2 * PI * dfreq);
+    var maxVtfGf = vtf;
 
-    for (var vi = 0; vi < numVtfPoints; vi++) {
-      var vf = Math.pow(10, Math.log10(1) + (Math.log10(vtfMaxFreq) - Math.log10(1)) * vi / (numVtfPoints - 1));
-      var vw = 2 * PI * vf;
-      var vr = vw / wn;
-      var vr2 = vr * vr;
-      var ztot = Ta + Tc;
+    for (var n = 1; n < simData.length; n++) {
+      // extension (K column) in meters
+      var ext_n = AE * Math.cos(w * simData[n].t) - simData[n].yt;
 
-      // Force transmissibility for base excitation:
-      // T = sqrt(1 + (2*z*r)^2) / sqrt((1-r^2)^2 + (2*z*r)^2)
-      // Starts at 1, peaks at resonance, goes to 0 at high freq
-      var forceTrans = Math.sqrt(1 + Math.pow(2 * ztot * vr, 2)) /
-                       Math.sqrt(Math.pow(1 - vr2, 2) + Math.pow(2 * ztot * vr, 2));
+      // stylus position (L column) in mm, velocity from finite difference
+      var sty_n = AE * Math.cos(w * simData[n].t) * 1000;
+      var sty_prev = AE * Math.cos(w * simData[n - 1].t) * 1000;
+      var vel = ((sty_n - sty_prev) / (dt)) / 1000;  // mm/s to m/s
 
-      // VTF swing = static cantilever force from groove amplitude × transmissibility
-      var vtfSwing = k * AE * forceTrans / 9.81e-3;  // gf
-
-      vtfVsFreq.push({
-        freq: vf,
-        maxVtf: vtf + vtfSwing,
-        minVtf: vtf - vtfSwing,
-        swing: vtfSwing,
-      });
+      // VTF in gf (Sheet2 J column)
+      var vGf = vtf + (k * ext_n + zetaS2 * vel) / 0.01;
+      if (vGf > maxVtfGf) maxVtfGf = vGf;
     }
 
-    // VTF swing at the user-specified modulation frequency
-    var modR = w / wn;
-    var modR2 = modR * modR;
-    var ztotMod = Ta + Tc;
-    var modForceTrans = Math.sqrt(1 + Math.pow(2 * ztotMod * modR, 2)) /
-                        Math.sqrt(Math.pow(1 - modR2, 2) + Math.pow(2 * ztotMod * modR, 2));
-    var modVtfSwing = k * AE * modForceTrans / 9.81e-3;
-    var minVtf = modVtfSwing;
+    var minVtf = maxVtfGf - vtf;
 
     // Resonant peak dB
     var peakDb = 0;
@@ -266,8 +247,7 @@
       riaaLevel: riaaLevel,
       freqResponse: freqResponse,
       transient: transient,
-      vtfVsFreq: vtfVsFreq,
-      modVtfSwing: modVtfSwing,
+      minVtf: minVtf,
       T: T,
     };
   }
@@ -371,9 +351,7 @@
     var pbS = s(1.1);            var peakB = pbS[0], setPeakB = pbS[1];
     var dcOnS = s(true);         var dampingCalcOn = dcOnS[0], setDampingCalcOn = dcOnS[1];
 
-    var vtfRangeS = s(100);       var vtfRange = vtfRangeS[0], setVtfRange = vtfRangeS[1];
-
-    var colS = s({ freqResp: false, transient: false, vtfTrack: false, resonance: false, damping: false, modulation: true });
+    var colS = s({ freqResp: false, transient: false, resonance: false, damping: false, modulation: false });
     var collapsed = colS[0], setCollapsed = colS[1];
     function togglePanel(id) {
       setCollapsed(function (prev) {
@@ -385,7 +363,6 @@
 
     var freqPlotRef = useRef(null);
     var transPlotRef = useRef(null);
-    var vtfPlotRef = useRef(null);
 
     var data = useMemo(function () {
       return calculate({
@@ -393,10 +370,9 @@
         compFreq: compFreq, armMass: armMass, cartMass: cartMass,
         armDamping: armDamping, modFreq: modFreq, modAmplitude: modAmplitude,
         peakA: peakA, peakB: peakB, dampingCalcOn: dampingCalcOn,
-        vtfMaxFreq: vtfRange,
       });
     }, [vtf, staticComp, dynamicComp, compFreq, armMass, cartMass,
-        armDamping, modFreq, modAmplitude, peakA, peakB, dampingCalcOn, vtfRange]);
+        armDamping, modFreq, modAmplitude, peakA, peakB, dampingCalcOn]);
 
     // Frequency response plot
     useEffect(function () {
@@ -466,65 +442,6 @@
       Plotly.react(transPlotRef.current, traces, layout, plotConfig);
     }, [data, collapsed.transient]);
 
-    // VTF vs frequency plot
-    useEffect(function () {
-      if (!vtfPlotRef.current || !window.Plotly || collapsed.vtfTrack) return;
-
-      var vf = data.vtfVsFreq;
-      var freqsArr = vf.map(function (p) { return p.freq; });
-
-      var traces = [
-        {
-          x: freqsArr,
-          y: vf.map(function (p) { return p.maxVtf; }),
-          name: "Max VTF",
-          line: { color: "#ff2d7b", width: 1.5 },
-        },
-        {
-          x: freqsArr,
-          y: vf.map(function (p) { return p.minVtf; }),
-          name: "Min VTF",
-          line: { color: "#ffc400", width: 1.5 },
-        },
-        {
-          x: [1, vtfRange],
-          y: [vtf, vtf],
-          name: "Nominal",
-          line: { color: "rgba(255,255,255,0.3)", width: 1, dash: "dot" },
-          showlegend: false,
-        },
-        {
-          x: [1, vtfRange],
-          y: [0, 0],
-          name: "Liftoff",
-          line: { color: "rgba(255,45,123,0.3)", width: 1, dash: "dash" },
-          showlegend: false,
-        },
-      ];
-
-      var layout = Object.assign(basePlotLayout(), {
-        margin: { t: 10, r: 20, b: 50, l: 60 },
-        xaxis: {
-          title: "Frequency (Hz)",
-          type: "log",
-          gridcolor: "rgba(255,255,255,0.06)",
-          linecolor: "rgba(255,255,255,0.1)",
-          range: [Math.log10(1), Math.log10(vtfRange)],
-          fixedrange: true,
-        },
-        yaxis: {
-          title: "VTF (gf)",
-          gridcolor: "rgba(255,255,255,0.06)",
-          linecolor: "rgba(255,255,255,0.1)",
-          zeroline: true,
-          zerolinecolor: "rgba(255,255,255,0.2)",
-          fixedrange: true,
-        },
-      });
-
-      Plotly.react(vtfPlotRef.current, traces, layout, plotConfig);
-    }, [data, collapsed.vtfTrack]);
-
     function fmt(val, digits) { return isFinite(val) ? val.toFixed(digits !== undefined ? digits : 2) : "\u2014"; }
 
     return h("div", null,
@@ -577,26 +494,6 @@
           onToggle: function () { togglePanel("transient"); },
         },
           h("div", { ref: transPlotRef, className: "tc-plot" })
-        ),
-
-        h(Panel, {
-          title: "VTF Tracking",
-          color: "#ff2d7b",
-          collapsed: collapsed.vtfTrack,
-          onToggle: function () { togglePanel("vtfTrack"); },
-        },
-          h(ToggleGroup, {
-            label: "Range",
-            options: [
-              { value: 100, label: "100 Hz" },
-              { value: 1000, label: "1 kHz" },
-              { value: 10000, label: "10 kHz" },
-              { value: 20000, label: "20 kHz" },
-            ],
-            value: vtfRange,
-            onChange: setVtfRange,
-          }),
-          h("div", { ref: vtfPlotRef, className: "tc-plot" })
         ),
 
         h(Panel, {
