@@ -104,15 +104,21 @@
     var numFreqPoints = 400;
 
     for (var i = 0; i < numFreqPoints; i++) {
-      var ff = Math.pow(10, Math.log10(1) + (Math.log10(100) - Math.log10(1)) * i / (numFreqPoints - 1));
+      var ff = Math.pow(10, Math.log10(1) + (Math.log10(10000) - Math.log10(1)) * i / (numFreqPoints - 1));
       var ww = 2 * PI * ff;
       var rr = ww / wn;  // frequency ratio using angular freq
       var rr2 = rr * rr;
       var rr4 = rr2 * rr2;
       var num = rr4 + Math.pow(2 * Ta * rr, 2);
       var den = Math.pow(1 - rr2, 2) + Math.pow(2 * (Ta + Tc) * rr, 2);
-      var HdB = 20 * Math.log10(Math.sqrt(num / den));
-      freqResponse.push({ freq: ff, dB: HdB });
+      var Hlin = Math.sqrt(num / den);
+      var HdB = 20 * Math.log10(Hlin);
+      // Base-excited force transmissibility: sqrt((1 + (2*zeta*r)^2) / ((1-r^2)^2 + (2*zeta*r)^2))
+      var zetaTotal = Ta + Tc;
+      var fNum = 1 + Math.pow(2 * zetaTotal * rr, 2);
+      var fDen = Math.pow(1 - rr2, 2) + Math.pow(2 * zetaTotal * rr, 2);
+      var Hforce = Math.sqrt(fNum / fDen);
+      freqResponse.push({ freq: ff, dB: HdB, Hlin: Hlin, Hforce: Hforce });
     }
 
     // ============================================================
@@ -219,89 +225,6 @@
 
     var minVtf = maxVtfGf - vtf;
 
-    // ============================================================
-    // VTF SWEEP — min VTF required vs frequency (RIAA-weighted)
-    // Uses the modulation inputs to define an RIAA reference level,
-    // then sweeps 1–100 Hz computing groove displacement from RIAA
-    // and contact force both analytically (steady-state) and via
-    // time-domain simulation (transient onset).
-    // ============================================================
-
-    // RIAA correction at a given frequency
-    function riaaCorr(freq) {
-      var wf = 2 * PI * freq;
-      return 10 * Math.log10(1 + wf * wf * tc1 * tc1)
-           - 10 * Math.log10(1 + 1 / (wf * wf * tc2 * tc2))
-           + 10 * Math.log10(1 + 1 / (wf * wf * tc3 * tc3));
-    }
-
-    // Full damping parameter for VTF sweep (includes both arm and cartridge damping)
-    var Tfull = overallDamping * cc / m;  // = 2 * (Tc + Ta) * wn
-
-    var vtfSweep = [];
-    var numVtfPoints = 200;
-
-    for (var vi = 0; vi < numVtfPoints; vi++) {
-      var vf = Math.pow(10, Math.log10(1) + (Math.log10(10000) - Math.log10(1)) * vi / (numVtfPoints - 1));
-      var vw = 2 * PI * vf;
-
-      // RIAA-weighted groove displacement at this frequency
-      var vRms = 5.6 * Math.pow(10, (riaaLevel + riaaCorr(vf)) / 20);  // cm/s
-      var vAE = vRms * Math.SQRT2 / (vw * 100);  // half pk-pk in meters (cm/s -> m/s: /100)
-
-      // Particular solution coefficients at this frequency (using full damping)
-      var denom = Math.pow(wn * wn - vw * vw, 2) + Tfull * Tfull * vw * vw;
-      var vF = vAE * wn * wn * (wn * wn - vw * vw) / denom;
-      var vG = vAE * wn * wn * Tfull * vw / denom;
-
-      // --- Steady-state: analytical peak contact force ---
-      var cosComp = k * (vAE - vF);
-      var sinComp = k * vG + zetaS2 * vAE * vw;
-      var peakForce = Math.sqrt(cosComp * cosComp + sinComp * sinComp);
-      var vtfSteady = peakForce / 0.01;  // gf
-
-      // --- Transient: time-domain simulation at this frequency ---
-      var vB1 = -vF;
-      var vw1;
-      if (Math.abs(Tfull - 2 * wn) < 1e-10) {
-        vw1 = 1;
-      } else if (Tfull < 2 * wn) {
-        vw1 = Math.sqrt(wn * wn - Tfull * Tfull / 4);
-      } else {
-        vw1 = Math.sqrt(Tfull * Tfull / 4 - wn * wn);
-      }
-      var vA1 = -(vG * vw + (Tfull / 2) * vF) / vw1;
-      var vIsUnder = Tfull < 2 * wn;
-      var vIsCrit = Math.abs(Tfull - 2 * wn) < 1e-10;
-
-      var maxForceGf = 0;
-      for (var vn = 0; vn <= numSteps; vn++) {
-        var vt = tStart + vn * dt;
-
-        // y(t) = particular + homogeneous
-        var vyt;
-        if (vIsCrit) {
-          vyt = vG * Math.sin(vw * vt) + vF * Math.cos(vw * vt) + Math.exp(-Tfull * vt / 2) * (vA1 * vt + vB1);
-        } else if (vIsUnder) {
-          vyt = vG * Math.sin(vw * vt) + vF * Math.cos(vw * vt) + Math.exp(-Tfull * vt / 2) * (vA1 * Math.sin(vw1 * vt) + vB1 * Math.cos(vw1 * vt));
-        } else {
-          vyt = vG * Math.sin(vw * vt) + vF * Math.cos(vw * vt) + Math.exp(-Tfull * vt / 2) * (vA1 * Math.sinh(vw1 * vt) + vB1 * Math.cosh(vw1 * vt));
-        }
-
-        // Extension and stylus velocity
-        var vExt = vAE * Math.cos(vw * vt) - vyt;
-        if (vn > 0) {
-          var vStyNow = vAE * Math.cos(vw * vt) * 1000;
-          var vStyPrev = vAE * Math.cos(vw * (vt - dt)) * 1000;
-          var vVel = ((vStyNow - vStyPrev) / dt) / 1000;
-          var vForceGf = (k * vExt + zetaS2 * vVel) / 0.01;
-          if (vForceGf > maxForceGf) maxForceGf = vForceGf;
-        }
-      }
-
-      vtfSweep.push({ freq: vf, steadyState: vtfSteady, transient: maxForceGf });
-    }
-
     // Resonant peak dB
     var peakDb = 0;
     if (overallDamping > 0 && overallDamping < 0.707) {
@@ -329,7 +252,6 @@
       riaaLevel: riaaLevel,
       freqResponse: freqResponse,
       transient: transient,
-      vtfSweep: vtfSweep,
       vtf: vtf,
       T: T,
     };
@@ -433,6 +355,7 @@
     var paS = s(4.2);            var peakA = paS[0], setPeakA = paS[1];
     var pbS = s(1.1);            var peakB = pbS[0], setPeakB = pbS[1];
     var dcOnS = s(true);         var dampingCalcOn = dcOnS[0], setDampingCalcOn = dcOnS[1];
+    var exS = s(100);            var excitationUm = exS[0], setExcitationUm = exS[1];
 
     var colS = s({ freqResp: false, transient: false, vtfSweep: false, resonance: false, damping: false, modulation: false });
     var collapsed = colS[0], setCollapsed = colS[1];
@@ -535,32 +458,42 @@
       Plotly.react(transPlotRef.current, traces, layout, plotConfig);
     }, [data, collapsed.transient]);
 
-    // VTF sweep plot — min VTF required vs frequency
+    // Contact force envelope — frequency response × excitation → gf around VTF
     useEffect(function () {
       if (!vtfPlotRef.current || !window.Plotly || collapsed.vtfSweep) return;
 
-      var sweep = data.vtfSweep;
+      var fr = data.freqResponse;
+      var v = data.vtf;
+      var excM = excitationUm / 1e6;  // µm to meters
+      var forceScale = data.k * excM / 0.01;  // peak force in gf for 1× H
+
+      var freqs = fr.map(function (p) { return p.freq; });
+      var upper = fr.map(function (p) { return v + forceScale * p.Hforce; });
+      var lower = fr.map(function (p) { return v - forceScale * p.Hforce; });
 
       var traces = [{
-        x: sweep.map(function (p) { return p.freq; }),
-        y: sweep.map(function (p) { return p.transient; }),
-        name: "Transient onset",
-        line: { color: "#f97316", width: 2 },
-      }, {
-        x: sweep.map(function (p) { return p.freq; }),
-        y: sweep.map(function (p) { return p.steadyState; }),
-        name: "Steady state",
+        x: freqs,
+        y: upper,
+        name: "Upper envelope",
         line: { color: "#00e5ff", width: 2 },
       }, {
+        x: freqs,
+        y: lower,
+        name: "Lower envelope",
+        line: { color: "#f97316", width: 2 },
+      }, {
         x: [1, 10000],
-        y: [data.vtf, data.vtf],
-        name: "Static VTF (" + data.vtf.toFixed(1) + " gf)",
+        y: [v, v],
+        name: "Static VTF (" + v.toFixed(1) + " gf)",
         mode: "lines",
         line: { color: "rgba(255,255,255,0.5)", width: 1, dash: "dash" },
       }];
 
-      var yMax = Math.max(data.vtf * 1.5,
-        Math.max.apply(null, sweep.map(function (p) { return p.transient; })) * 1.2);
+      var upperMax = Math.max.apply(null, upper);
+      var lowerMin = Math.min.apply(null, lower);
+      var maxSwing = Math.max(upperMax - v, v - lowerMin) * 1.2;
+      var yMax = v + maxSwing;
+      var yMin = v - maxSwing;
 
       var layout = Object.assign(basePlotLayout(), {
         margin: { t: 10, r: 20, b: 50, l: 60 },
@@ -573,18 +506,17 @@
           fixedrange: true,
         },
         yaxis: {
-          title: "Min VTF (gf)",
+          title: "Contact force (gf)",
           gridcolor: "rgba(255,255,255,0.06)",
           linecolor: "rgba(255,255,255,0.1)",
-          zeroline: true,
-          zerolinecolor: "rgba(255,255,255,0.2)",
+          zeroline: false,
           fixedrange: true,
-          range: [0, yMax],
+          range: [yMin, yMax],
         },
       });
 
       Plotly.react(vtfPlotRef.current, traces, layout, plotConfig);
-    }, [data, collapsed.vtfSweep]);
+    }, [data, excitationUm, collapsed.vtfSweep]);
 
     function fmt(val, digits) { return isFinite(val) ? val.toFixed(digits !== undefined ? digits : 2) : "\u2014"; }
 
@@ -614,7 +546,10 @@
 
         h("div", { className: "tc-section-label" }, "Modulation"),
         h(InputRow, { label: "Frequency", value: modFreq, onChange: setModFreq, unit: "Hz", step: 1, min: 1 }),
-        h(InputRow, { label: "Amplitude pk-pk", value: modAmplitude, onChange: setModAmplitude, unit: "mm", step: 0.01, min: 0.001 })
+        h(InputRow, { label: "Amplitude pk-pk", value: modAmplitude, onChange: setModAmplitude, unit: "mm", step: 0.01, min: 0.001 }),
+
+        h("div", { className: "tc-section-label" }, "Excitation"),
+        h(InputRow, { label: "Amplitude", value: excitationUm, onChange: setExcitationUm, unit: "\u00b5m", step: 5, min: 1, max: 2000 })
       ),
 
       // === OUTPUTS ===
