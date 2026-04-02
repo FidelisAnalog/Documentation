@@ -471,6 +471,22 @@
       var upper = fr.map(function (p) { return v + forceScale * p.Hforce; });
       var lower = fr.map(function (p) { return v - forceScale * p.Hforce; });
 
+      // Wear multiplier: cycle-averaged (force^n) / (vtf^n), Hertzian n=1.5
+      var wearExp = 1.5;
+      var nIntSteps = 64;
+      var baseWear = Math.pow(v, wearExp);
+      var wear = fr.map(function (p) {
+        var amp = forceScale * p.Hforce;
+        var sum = 0;
+        for (var wi = 0; wi < nIntSteps; wi++) {
+          var theta = 2 * PI * wi / nIntSteps;
+          var fInst = v + amp * Math.sin(theta);
+          if (fInst < 0) fInst = 0;  // stylus lifts off, no wear
+          sum += Math.pow(fInst, wearExp);
+        }
+        return (sum / nIntSteps) / baseWear;
+      });
+
       var traces = [{
         x: freqs,
         y: upper,
@@ -482,11 +498,17 @@
         name: "Lower envelope",
         line: { color: "#f97316", width: 2 },
       }, {
-        x: [1, 10000],
+        x: [1, 100],
         y: [v, v],
         name: "Static VTF (" + v.toFixed(1) + " gf)",
         mode: "lines",
         line: { color: "rgba(255,255,255,0.5)", width: 1, dash: "dash" },
+      }, {
+        x: freqs,
+        y: wear,
+        name: "Relative wear",
+        yaxis: "y2",
+        line: { color: "#a855f7", width: 2 },
       }];
 
       var upperMax = Math.max.apply(null, upper);
@@ -495,14 +517,16 @@
       var yMax = v + maxSwing;
       var yMin = v - maxSwing;
 
+      var wearMax = Math.max.apply(null, wear);
+
       var layout = Object.assign(basePlotLayout(), {
-        margin: { t: 10, r: 20, b: 50, l: 60 },
+        margin: { t: 10, r: 60, b: 50, l: 60 },
         xaxis: {
           title: "Frequency (Hz)",
           type: "log",
           gridcolor: "rgba(255,255,255,0.06)",
           linecolor: "rgba(255,255,255,0.1)",
-          range: [Math.log10(1), Math.log10(10000)],
+          range: [Math.log10(1), Math.log10(100)],
           fixedrange: true,
         },
         yaxis: {
@@ -512,6 +536,15 @@
           zeroline: false,
           fixedrange: true,
           range: [yMin, yMax],
+        },
+        yaxis2: {
+          title: "Wear (×)",
+          overlaying: "y",
+          side: "right",
+          gridcolor: "rgba(0,0,0,0)",
+          linecolor: "rgba(255,255,255,0.1)",
+          fixedrange: true,
+          range: [0.9, Math.max(wearMax * 1.1, 1.2)],
         },
       });
 
@@ -574,7 +607,7 @@
         ),
 
         h(Panel, {
-          title: "Tracking Force Margin",
+          title: "Contact Force",
           color: "#f97316",
           collapsed: collapsed.vtfSweep,
           onToggle: function () { togglePanel("vtfSweep"); },
