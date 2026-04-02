@@ -124,7 +124,7 @@
       traces.push({
         x: freqs,
         y: freqs.map(function (f) { return sign * toDb(riaaFull(f) / NORM); }),
-        name: recording ? "RIAA Recording" : "RIAA Playback",
+        name: recording ? "Recording" : "Playback",
         line: { color: "#00e5ff", width: 2 },
         showlegend: true,
       });
