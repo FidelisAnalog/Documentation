@@ -554,7 +554,10 @@
     function fmt(val, digits) { return isFinite(val) ? val.toFixed(digits !== undefined ? digits : 2) : "\u2014"; }
 
     return h("div", null,
-      h("h2", { className: "tc-title" }, "Tonearm LF Mechanics Calculator"),
+      h("h2", { className: "tc-title" },
+        "Tonearm LF Mechanics ",
+        h("span", { style: { color: "#ef4444", fontSize: "0.7em" } }, "Under Development")
+      ),
 
       // === INPUTS ===
       h("div", { className: "tc-inputs" },
@@ -638,7 +641,7 @@
           h(InfoRow, { label: "Cartridge Q", value: fmt(data.cartQ, 1) }),
           h(InfoRow, { label: "Arm Q", value: fmt(data.armQ, 1) }),
           h(InfoRow, { label: "Overall Q", value: fmt(data.overallQ, 1), highlight: true }),
-          h(InfoRow, { label: "Damping coeff", value: fmt(data.dampingCoeff, 4), unit: "Ns/m" }),
+          h(InfoRow, { label: "Damping coeff", value: fmt(data.dampingCoeff, 2), unit: "Ns/m" }),
           dampingCalcOn ? h(InfoRow, { label: "Calculated arm damping", value: fmt(data.calcArmDamping, 2) }) : null
         ),
 
