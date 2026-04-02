@@ -589,7 +589,7 @@
         dampingCalcOn ? h(InputRow, { label: "Peak B amplitude", value: peakB, onChange: setPeakB, step: 0.1, min: 0 }) : null,
         !dampingCalcOn ? h(InputRow, { label: "Arm damping ratio", value: armDamping, onChange: setArmDamping, unit: "ratio", step: 0.01, min: 0 }) : null,
 
-        h("div", { className: "tc-section-label" }, "Modulation"),
+        h("div", { className: "tc-section-label" }, "Trackability"),
         h(InputRow, { label: "Frequency", value: modFreq, onChange: setModFreq, unit: "Hz", step: 1, min: 1 }),
         h(InputRow, { label: "Amplitude pk-pk", value: modAmplitude, onChange: setModAmplitude, unit: "mm", step: 0.01, min: 0.001 }),
 
@@ -655,7 +655,7 @@
         ),
 
         h(Panel, {
-          title: "Modulation Analysis",
+          title: "Trackability",
           color: "#f97316",
           collapsed: collapsed.modulation,
           onToggle: function () { togglePanel("modulation"); },
