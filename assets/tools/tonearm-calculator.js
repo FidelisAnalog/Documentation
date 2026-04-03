@@ -405,6 +405,12 @@
         name: "f\u2099 undamped (" + data.fn.toFixed(1) + " Hz)",
         mode: "lines",
         line: { color: "rgba(255,196,0,0.5)", width: 1, dash: "dash" },
+      }, {
+        x: [data.fRes, data.fRes],
+        y: [-15, Math.max(15, Math.ceil(data.peakDb + 2))],
+        name: "f\u1D63 damped (" + data.fRes.toFixed(1) + " Hz)",
+        mode: "lines",
+        line: { color: "rgba(0,229,255,0.5)", width: 1, dash: "dash" },
       }];
 
       var layout = Object.assign(basePlotLayout(), {
