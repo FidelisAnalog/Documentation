@@ -642,8 +642,7 @@
           h(InfoRow, { label: "Total effective mass", value: fmt(data.m, 1), unit: "g" }),
           h(InfoRow, { label: "Natural frequency (undamped)", value: fmt(data.fn, 2), unit: "Hz" }),
           h(InfoRow, { label: "Resonant peak frequency", value: fmt(data.fRes, 2), unit: "Hz", highlight: true }),
-          h(InfoRow, { label: "Resonant peak", value: fmt(data.peakDb, 1), unit: "dB" }),
-          h(InfoRow, { label: "Min VTF required", value: fmt(data.minVtf, 2), unit: "gf" })
+          h(InfoRow, { label: "Resonant peak", value: fmt(data.peakDb, 1), unit: "dB" })
         ),
 
         h(Panel, {
@@ -666,6 +665,7 @@
           collapsed: collapsed.modulation,
           onToggle: function () { togglePanel("modulation"); },
         },
+          h(InfoRow, { label: "Min VTF required", value: fmt(data.minVtf, 2), unit: "gf" }),
           h(InfoRow, { label: "Velocity (rms)", value: fmt(data.velocityRms, 2), unit: "cm/s" }),
           h(InfoRow, { label: "RIAA level", value: fmt(data.riaaLevel, 2), unit: "dB" })
         )
