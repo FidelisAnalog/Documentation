@@ -368,6 +368,22 @@
     );
   }
 
+  function SelectRow(props) {
+    return h("div", { className: "gc-input-row" },
+      h("label", { className: "gc-input-label" }, props.label),
+      h("select", {
+        value: String(props.value),
+        onChange: function (e) { props.onChange(parseFloat(e.target.value)); },
+        className: "gc-select",
+      },
+        props.options.map(function (opt) {
+          return h("option", { key: opt.value, value: String(opt.value) }, opt.label);
+        })
+      ),
+      h("span", { className: "gc-input-unit" }, props.unit || "")
+    );
+  }
+
   function InfoRow(props) {
     var cls = "gc-info-value" + (props.highlight ? " gc-highlight" : "") + (props.warn ? " gc-warn" : "") + (props.danger ? " gc-danger" : "");
     return h("div", { className: "gc-info-row" },
@@ -436,6 +452,9 @@
       velocityEnvelope: false,
     });
     var collapsed = cs[0], setCollapsed = cs[1];
+
+    var us = useState("um"); // "um" or "mil"
+    var stylusUnit = us[0], setStylusUnit = us[1];
 
     function set(key) {
       return function (val) {
@@ -709,15 +728,41 @@
     }, [data, collapsed.velocityEnvelope]);
 
     return h("div", null,
-      h("div", { className: "gc-title" }, "Groove Geometry"),
+      h("h2", { className: "gc-title" },
+        "Groove Geometry ",
+        h("span", { style: { color: "#ef4444", fontSize: "0.7em" } }, "Under Development")
+      ),
 
       h("div", { className: "gc-inputs" },
         h("div", { className: "gc-inputs-title" }, "Parameters"),
         h(InputRow, { label: "Radius from spindle", value: inputs.radius, unit: "cm", step: 0.1, min: 5, max: 16, onChange: set("radius") }),
         h(InputRow, { label: "Frequency", value: inputs.frequency, unit: "kHz", step: 0.1, min: 0.02, max: 50, onChange: set("frequency") }),
         h(InputRow, { label: "Level (pre-RIAA)", value: inputs.level, unit: "dB", step: 0.1, onChange: set("level") }),
-        h(InputRow, { label: "Rotation rate", value: inputs.rpm, unit: "rpm", step: 1, min: 33, max: 78, onChange: set("rpm") }),
-        h(InputRow, { label: "Stylus radius", value: inputs.stylusRadius, unit: "\u00B5m", step: 0.1, min: 0.1, max: 25, onChange: set("stylusRadius") })
+        h(SelectRow, { label: "Rotation rate", value: inputs.rpm, unit: "rpm", onChange: set("rpm"), options: [
+          { value: 33.333, label: "33\u2153" },
+          { value: 45, label: "45" },
+          { value: 78, label: "78" },
+        ]}),
+        h("div", { className: "gc-input-row" },
+          h("label", { className: "gc-input-label" }, "Stylus radius"),
+          h("input", {
+            type: "number",
+            step: stylusUnit === "um" ? 0.1 : 0.01,
+            min: 0.01,
+            max: stylusUnit === "um" ? 25 : 1,
+            value: stylusUnit === "um" ? inputs.stylusRadius : (inputs.stylusRadius / 25.4).toFixed(2),
+            onChange: function (e) {
+              var val = parseFloat(e.target.value);
+              if (!isNaN(val)) set("stylusRadius")(stylusUnit === "um" ? val : val * 25.4);
+            },
+            className: "gc-number-input",
+          }),
+          h("button", {
+            className: "gc-unit-toggle",
+            onClick: function () { setStylusUnit(function (u) { return u === "um" ? "mil" : "um"; }); },
+            title: "Toggle units",
+          }, stylusUnit === "um" ? "\u00B5m" : "mil")
+        )
       ),
 
       h("div", { className: "gc-outputs" },
@@ -785,7 +830,7 @@
           h(InfoRow, { label: "HD\u2084 post-RIAA", value: fmt(data.tracD4post, 4), unit: "%" }),
           h(InfoRow, { label: "HD\u2085 post-RIAA", value: fmt(data.tracD5post, 4), unit: "%" }),
           h(InfoRow, {
-            label: "THD\u2082\u208B\u2085 post-RIAA",
+            label: "THD\u2085 post-RIAA",
             value: fmt(data.tracTHDpost, 3),
             unit: "%",
             highlight: data.tracTHDpost < 1,
