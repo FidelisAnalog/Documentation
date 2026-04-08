@@ -146,6 +146,79 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
     return Math.sqrt(riaaRecH2(freq) / riaaRecH2(3 * freq));
   }
 
+  function riaaPlaybackRatioNf(freq, n) {
+    return Math.sqrt(riaaRecH2(freq) / riaaRecH2(n * freq));
+  }
+
+  // ============================================================
+  // NUMERICAL POID SIMULATION (Jovanovic Eq. 5-6)
+  // ============================================================
+  // Solves the tracing contact equation numerically for a spherical
+  // stylus tracing a sinusoidal groove.
+  //
+  // Contact offset ε satisfies (Eq. 5):
+  //   ε / √(ρ² - ε²) = -A·kw·sin(kw·(x + ε))
+  // Output displacement (Eq. 6):
+  //   y_out(x) = A·cos(kw·(x + ε)) + √(ρ² - ε²)
+  //
+  // The second term (stylus center offset) is what Cooper's
+  // approximation omits — it partially cancels the distortion,
+  // giving the correct D₂ = β/4 rather than Cooper's β/2.
+  //
+  // Returns displacement-domain distortion ratios D2..D5.
+
+  function solvePoid(A_m, rho_m, kw, N) {
+    N = N || 2048;
+    var lambda = 2 * PI / kw;
+    var yout = new Array(N);
+    var rho2 = rho_m * rho_m;
+    var maxEps = 0.999 * rho_m;
+
+    // Forward sweep with warm start
+    var eps = 0;
+    for (var i = 0; i < N; i++) {
+      var x = lambda * i / N;
+      for (var iter = 0; iter < 50; iter++) {
+        if (eps > maxEps) eps = maxEps;
+        if (eps < -maxEps) eps = -maxEps;
+        var sq = Math.sqrt(rho2 - eps * eps);
+        var arg = kw * (x + eps);
+        var g = eps / sq + A_m * kw * Math.sin(arg);
+        var gp = rho2 / (sq * sq * sq) + A_m * kw * kw * Math.cos(arg);
+        if (Math.abs(gp) < 1e-30) break;
+        var step = g / gp;
+        if (Math.abs(step) > rho_m * 0.1) step = rho_m * 0.1 * (step > 0 ? 1 : -1);
+        eps = eps - step;
+        if (Math.abs(step) < 1e-15) break;
+      }
+      var sq2 = Math.sqrt(rho2 - eps * eps);
+      yout[i] = A_m * Math.cos(kw * (x + eps)) + sq2;
+    }
+
+    // DFT to extract harmonics 1..5
+    var harmonics = [];
+    for (var h_n = 1; h_n <= 5; h_n++) {
+      var re = 0, im = 0;
+      for (var j = 0; j < N; j++) {
+        var angle = 2 * PI * h_n * j / N;
+        re += yout[j] * Math.cos(angle);
+        im -= yout[j] * Math.sin(angle);
+      }
+      re *= 2 / N;
+      im *= 2 / N;
+      harmonics.push(Math.sqrt(re * re + im * im));
+    }
+
+    var A1 = harmonics[0];
+    return {
+      A1: A1,
+      D2: A1 > 0 ? harmonics[1] / A1 : 0,
+      D3: A1 > 0 ? harmonics[2] / A1 : 0,
+      D4: A1 > 0 ? harmonics[3] / A1 : 0,
+      D5: A1 > 0 ? harmonics[4] / A1 : 0,
+    };
+  }
+
   function calculate(params) {
     var R = params.radius / 100;           // cm → m
     var f = params.frequency * 1000;       // kHz → Hz
@@ -244,27 +317,29 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
     // Groove tracing status
     var tracingOk = Rcurv_um >= rs;
 
-    // ---- Tracing distortion (Yamamoto/Corrington, Jovanovic Eqs. 10-11) ----
-    // For 45°/45° stereo, each channel behaves like vertical cut.
-    // kA = vmax/V (peak groove slope, = our k)
-    // kρ = 2πfρ/(ΩR) where ρ in m, V = ΩR in m/s
+    // ---- Tracing distortion (numerical poid, Jovanovic Eqs. 5-6) ----
+    // Numerical simulation of spherical stylus tracing sinusoidal groove.
+    // Each channel of 45°/45° stereo behaves like vertical cut.
     var rho_m = rs * 1e-6;
-    var kRho = 2 * PI * f * rho_m / vGrooveMs;
+    var kw = 2 * PI * f / vGrooveMs;
+    var kRho = kw * rho_m;
     var beta = k * kRho;  // modulation index
+    var traceable = Rcurv_um >= rs;  // stylus can follow the groove
 
-    // Displacement-domain harmonics (fraction, not %)
-    // D₂ = β/2 = πfρv/V²  (Corrington, Jovanovic Eq. 10)
-    // D₃ = 3β²/8 = (3/2)(πfρv/V²)²  (Yamamoto; vertical/45° cut)
-    var tracD2disp = beta / 2;
-    var tracD3disp = 3 * beta * beta / 8;
+    // Displacement-domain harmonics from numerical solver
+    var poid = solvePoid(A, rho_m, kw, 2048);
+    var tracD2disp = poid.D2;
+    var tracD3disp = poid.D3;
+    var tracD4disp = poid.D4;
+    var tracD5disp = poid.D5;
 
     // Velocity cartridge: multiply by harmonic order n
     // RIAA playback: multiply by H_play(nf)/H_play(f)
-    var riaaRatio2 = riaaPlaybackRatio2f(f);
-    var riaaRatio3 = riaaPlaybackRatio3f(f);
-    var tracD2post = tracD2disp * 2 * riaaRatio2;
-    var tracD3post = tracD3disp * 3 * riaaRatio3;
-    var tracTHDpost = Math.sqrt(tracD2post * tracD2post + tracD3post * tracD3post);
+    var tracD2post = tracD2disp * 2 * riaaPlaybackRatioNf(f, 2);
+    var tracD3post = tracD3disp * 3 * riaaPlaybackRatioNf(f, 3);
+    var tracD4post = tracD4disp * 4 * riaaPlaybackRatioNf(f, 4);
+    var tracD5post = tracD5disp * 5 * riaaPlaybackRatioNf(f, 5);
+    var tracTHDpost = Math.sqrt(tracD2post * tracD2post + tracD3post * tracD3post + tracD4post * tracD4post + tracD5post * tracD5post);
 
     // ---- Velocity envelope (Stafford/Yamamoto) ----
     // Computed as a function for the plot; store params for the plot useEffect
@@ -291,10 +366,15 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
       // Tracing distortion
       tracD2disp: 100 * tracD2disp,
       tracD3disp: 100 * tracD3disp,
+      tracD4disp: 100 * tracD4disp,
+      tracD5disp: 100 * tracD5disp,
       tracD2post: 100 * tracD2post,
       tracD3post: 100 * tracD3post,
+      tracD4post: 100 * tracD4post,
+      tracD5post: 100 * tracD5post,
       tracTHDpost: 100 * tracTHDpost,
       beta: beta,
+      traceable: traceable,
       // For plots
       freq: f,
       radiusCm: params.radius,
@@ -303,18 +383,29 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
     };
   }
 
-  // Compute tracing HD₂ post-RIAA for a given radius (cm), reusing other params
-  function tracingD2postAtRadius(rCm, f, level, rpm, rs) {
+  // Compute tracing harmonics post-RIAA at a given radius using numerical poid.
+  function tracingAtRadius(rCm, f, level, rpm, rs) {
     var R = rCm / 100;
     var vGrooveMs = 2 * PI * R * rpm / 60;
     var riaaPre = riaaPreEmphasis(f);
     var vRms = 5.6 * Math.pow(10, (level + riaaPre) / 20);
     var vPeakMs = vRms * Math.sqrt(2) / 100;
+    var A_m = vPeakMs / (2 * PI * f);
+    var rho_m = rs * 1e-6;
+    var kw = 2 * PI * f / vGrooveMs;
     var kA = vPeakMs / vGrooveMs;
-    var kRho = 2 * PI * f * (rs * 1e-6) / vGrooveMs;
+    var kRho = kw * rho_m;
     var beta = kA * kRho;
-    var d2disp = beta / 2;
-    return d2disp * 2 * riaaPlaybackRatio2f(f);
+
+    // Groove curvature radius
+    var lambda = vGrooveMs / f;
+    var Rcurv = lambda * lambda / (4 * PI * PI * A_m);
+    var traceable = Rcurv >= rho_m;
+
+    var poid = solvePoid(A_m, rho_m, kw, 512);
+    var d2post = poid.D2 * 2 * riaaPlaybackRatioNf(f, 2);
+    var d3post = poid.D3 * 3 * riaaPlaybackRatioNf(f, 3);
+    return { d2post: d2post, d3post: d3post, beta: beta, traceable: traceable };
   }
 
   // Velocity envelope: three Stafford limits
@@ -598,46 +689,106 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
 
       var nPts = 100;
       var rMin = 6.0, rMax = 14.6;
-      var rs2 = [], hd2s = [], hd3s = [];
+      // Traceable region (solid lines)
+      var rs2t = [], hd2st = [], hd3st = [];
+      // Untraceable region (dashed lines)
+      var rs2u = [], hd2su = [], hd3su = [];
+      var boundaryR = null;  // radius where traceability is lost
+
       for (var i = 0; i <= nPts; i++) {
         var rCm = rMin + (rMax - rMin) * i / nPts;
-        rs2.push(rCm);
-        var d2 = tracingD2postAtRadius(rCm, f, level, rpm, rs);
-        hd2s.push(100 * d2);
-        // HD3 post-RIAA at this radius
-        var R = rCm / 100;
-        var vG = 2 * PI * R * rpm / 60;
-        var rP = riaaPreEmphasis(f);
-        var vRms = 5.6 * Math.pow(10, (level + rP) / 20);
-        var vPk = vRms * Math.sqrt(2) / 100;
-        var kA = vPk / vG;
-        var kR = 2 * PI * f * (rs * 1e-6) / vG;
-        var b = kA * kR;
-        var d3 = (3 * b * b / 8) * 3 * riaaPlaybackRatio3f(f);
-        hd3s.push(100 * d3);
+        var tr = tracingAtRadius(rCm, f, level, rpm, rs);
+        if (tr.traceable) {
+          rs2t.push(rCm);
+          hd2st.push(100 * tr.d2post);
+          hd3st.push(100 * tr.d3post);
+        } else {
+          if (boundaryR === null) {
+            boundaryR = rCm;
+            // Bridge: add last untraceable point to traceable arrays for continuity
+            rs2t.push(rCm);
+            hd2st.push(100 * tr.d2post);
+            hd3st.push(100 * tr.d3post);
+          }
+          rs2u.push(rCm);
+          hd2su.push(100 * tr.d2post);
+          hd3su.push(100 * tr.d3post);
+        }
       }
 
       var traces = [
+        // Traceable region — solid lines
         {
-          x: rs2, y: hd2s,
+          x: rs2t, y: hd2st,
           mode: "lines",
           line: { color: "#00e5ff", width: 2 },
           name: "HD\u2082",
         },
         {
-          x: rs2, y: hd3s,
+          x: rs2t, y: hd3st,
           mode: "lines",
           line: { color: "#f97316", width: 2, dash: "dash" },
           name: "HD\u2083",
         },
-        // Current radius marker
-        {
-          x: [curR], y: [data.tracD2post],
-          mode: "markers",
-          marker: { color: "#00e5ff", size: 8, symbol: "diamond" },
-          name: "Current",
-        },
       ];
+
+      // Untraceable region — dotted, dimmed
+      if (rs2u.length > 0) {
+        traces.push({
+          x: rs2u, y: hd2su,
+          mode: "lines",
+          line: { color: "rgba(0,229,255,0.3)", width: 1.5, dash: "dot" },
+          name: "HD\u2082 (untraceable)",
+          showlegend: false,
+        });
+        traces.push({
+          x: rs2u, y: hd3su,
+          mode: "lines",
+          line: { color: "rgba(249,115,22,0.3)", width: 1.5, dash: "dot" },
+          name: "HD\u2083 (untraceable)",
+          showlegend: false,
+        });
+      }
+
+      // Current radius marker
+      traces.push({
+        x: [curR], y: [data.tracD2post],
+        mode: "markers",
+        marker: { color: "#00e5ff", size: 8, symbol: "diamond" },
+        name: "Current",
+      });
+
+      var shapes = [];
+      // Shaded untraceable region
+      if (boundaryR !== null) {
+        shapes.push({
+          type: "rect",
+          x0: rMin, x1: boundaryR,
+          y0: 0, y1: 1,
+          yref: "paper",
+          fillcolor: "rgba(255,45,123,0.06)",
+          line: { width: 0 },
+        });
+        shapes.push({
+          type: "line",
+          x0: boundaryR, x1: boundaryR,
+          y0: 0, y1: 1,
+          yref: "paper",
+          line: { color: "rgba(255,45,123,0.4)", width: 1, dash: "dash" },
+        });
+      }
+
+      var annotations = [];
+      if (boundaryR !== null) {
+        annotations.push({
+          x: (rMin + boundaryR) / 2,
+          y: 0.95,
+          yref: "paper",
+          text: "untraceable",
+          showarrow: false,
+          font: { color: "rgba(255,45,123,0.5)", size: 10 },
+        });
+      }
 
       var layout = Object.assign(basePlotLayout(), {
         showlegend: true,
@@ -645,6 +796,8 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
         margin: { t: 10, r: 20, b: 50, l: 60 },
         xaxis: { title: "Groove radius (cm)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", range: [rMin, rMax] },
         yaxis: { title: "Distortion post-RIAA (%)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", rangemode: "tozero" },
+        shapes: shapes,
+        annotations: annotations,
       });
 
       Plotly.newPlot(tracingPlotRef.current, traces, layout, plotConfig);
@@ -753,6 +906,7 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
           collapsed: collapsed.tracingDist,
           onToggle: function () { togglePanel("tracingDist"); },
         },
+          h(InfoRow, { label: "\u03B2 (modulation index)", value: fmt(data.beta, 3) }),
           h(InfoRow, { label: "HD\u2082 displacement", value: fmt(data.tracD2disp, 3), unit: "%" }),
           h(InfoRow, {
             label: "HD\u2082 post-RIAA",
@@ -768,21 +922,23 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
             value: fmt(data.tracD3post, 4),
             unit: "%",
           }),
+          h(InfoRow, { label: "HD\u2084 post-RIAA", value: fmt(data.tracD4post, 4), unit: "%" }),
+          h(InfoRow, { label: "HD\u2085 post-RIAA", value: fmt(data.tracD5post, 4), unit: "%" }),
           h(InfoRow, {
-            label: "THD\u2082\u208A\u2083 post-RIAA",
+            label: "THD\u2082\u208B\u2085 post-RIAA",
             value: fmt(data.tracTHDpost, 3),
             unit: "%",
             highlight: data.tracTHDpost < 1,
             warn: data.tracTHDpost >= 1 && data.tracTHDpost < 5,
             danger: data.tracTHDpost >= 5,
           }),
-          data.beta > 0.5 ? h("div", {
+          !data.traceable ? h("div", {
             className: "gc-info-row gc-tooltip",
-            "data-tip": "The Corrington/Yamamoto harmonic formulas are truncated power series that overestimate distortion when \u03B2 = kA\u00B7k\u03C1 exceeds ~0.5. Numerical simulation would give more accurate results at this modulation level.",
+            "data-tip": "Groove curvature radius is smaller than stylus radius \u2014 the stylus cannot follow the groove modulation and bridges over the peaks. Distortion values above this threshold are approximate.",
           },
-            h("span", { className: "gc-info-label" }, "\u26A0 Approximation"),
+            h("span", { className: "gc-info-label" }, "\u26A0 Untraceable"),
             h("span", null,
-              h("span", { className: "gc-info-value gc-warn" }, "\u03B2=" + fmt(data.beta, 2) + " > 0.5")
+              h("span", { className: "gc-info-value gc-danger" }, "R\u1D04\u1D1C\u0280\u1D20 < r\u209B")
             )
           ) : null
         ),
