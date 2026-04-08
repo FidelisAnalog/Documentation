@@ -330,7 +330,7 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
 
       var lam = data.lambda;
       var A = data.A_um;
-      var d = data.stylusCurv;  // nominal half-groove-width ≈ stylus radius (µm)
+      var d = 12.5;  // RIAA stereo minimum groove half-width (µm): 25 µm min top width, 90° included angle
       var nPoints = 500;
       var xMax = 50;  // fixed range in µm, matching Groovy
       var kk = 2 * PI / lam;
