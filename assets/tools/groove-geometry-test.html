@@ -79,6 +79,17 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
 #groove-calc .gc-highlight { color: #00e5ff; }
 #groove-calc .gc-warn { color: #ffc400; }
 #groove-calc .gc-danger { color: #ff2d7b; }
+#groove-calc .gc-tooltip { position: relative; cursor: help; }
+#groove-calc .gc-tooltip::after {
+  content: attr(data-tip);
+  position: absolute; bottom: 100%; left: 0; right: 0;
+  background: #1a1f2a; color: rgba(255,255,255,0.8);
+  font-size: 10px; line-height: 1.4; padding: 8px 10px;
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 6px;
+  pointer-events: none; opacity: 0; transition: opacity 0.15s;
+  white-space: normal; z-index: 10;
+}
+#groove-calc .gc-tooltip:hover::after { opacity: 1; }
 #groove-calc .gc-plot { width: 100%; height: 320px; }
 @media (max-width: 480px) {
   #groove-calc { padding: 12px 14px; }
@@ -125,11 +136,14 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
   }
 
   // Playback de-emphasis: inverse of recording, so H_play = 1/H_rec
-  // Ratio at 2f vs f in dB (negative = 2f is attenuated relative to f)
+  // H_play(f) ∝ 1/√H_rec(f), ratio in amplitude at nf vs f:
+  // H_play(nf)/H_play(f) = √(H_rec(f)/H_rec(nf))
   function riaaPlaybackRatio2f(freq) {
-    // H_play(f) ∝ 1/√H_rec(f), ratio in amplitude:
-    // H_play(2f)/H_play(f) = √(H_rec(f)/H_rec(2f))
     return Math.sqrt(riaaRecH2(freq) / riaaRecH2(2 * freq));
+  }
+
+  function riaaPlaybackRatio3f(freq) {
+    return Math.sqrt(riaaRecH2(freq) / riaaRecH2(3 * freq));
   }
 
   function calculate(params) {
@@ -230,8 +244,34 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
     // Groove tracing status
     var tracingOk = Rcurv_um >= rs;
 
+    // ---- Tracing distortion (Yamamoto/Corrington, Jovanovic Eqs. 10-11) ----
+    // For 45°/45° stereo, each channel behaves like vertical cut.
+    // kA = vmax/V (peak groove slope, = our k)
+    // kρ = 2πfρ/(ΩR) where ρ in m, V = ΩR in m/s
+    var rho_m = rs * 1e-6;
+    var kRho = 2 * PI * f * rho_m / vGrooveMs;
+    var beta = k * kRho;  // modulation index
+
+    // Displacement-domain harmonics (fraction, not %)
+    // D₂ = β/2 = πfρv/V²  (Corrington, Jovanovic Eq. 10)
+    // D₃ = 3β²/8 = (3/2)(πfρv/V²)²  (Yamamoto; vertical/45° cut)
+    var tracD2disp = beta / 2;
+    var tracD3disp = 3 * beta * beta / 8;
+
+    // Velocity cartridge: multiply by harmonic order n
+    // RIAA playback: multiply by H_play(nf)/H_play(f)
+    var riaaRatio2 = riaaPlaybackRatio2f(f);
+    var riaaRatio3 = riaaPlaybackRatio3f(f);
+    var tracD2post = tracD2disp * 2 * riaaRatio2;
+    var tracD3post = tracD3disp * 3 * riaaRatio3;
+    var tracTHDpost = Math.sqrt(tracD2post * tracD2post + tracD3post * tracD3post);
+
+    // ---- Velocity envelope (Stafford/Yamamoto) ----
+    // Computed as a function for the plot; store params for the plot useEffect
+    var V_cms = vGrooveMs * 100;
+
     return {
-      vGroove: vGroove * 100,    // m/s → cm/s for display
+      vGroove: V_cms,
       riaaPre: riaaPre,
       vRms: vRms,
       vPeak: vPeak,
@@ -248,7 +288,70 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
       tracingOk: tracingOk,
       lambda: lambda * 1e6,      // m → µm for plots
       A_um: A_um,
+      // Tracing distortion
+      tracD2disp: 100 * tracD2disp,
+      tracD3disp: 100 * tracD3disp,
+      tracD2post: 100 * tracD2post,
+      tracD3post: 100 * tracD3post,
+      tracTHDpost: 100 * tracTHDpost,
+      beta: beta,
+      // For plots
+      freq: f,
+      radiusCm: params.radius,
+      rpm: rpm,
+      stylusRadius: rs,
     };
+  }
+
+  // Compute tracing HD₂ post-RIAA for a given radius (cm), reusing other params
+  function tracingD2postAtRadius(rCm, f, level, rpm, rs) {
+    var R = rCm / 100;
+    var vGrooveMs = 2 * PI * R * rpm / 60;
+    var riaaPre = riaaPreEmphasis(f);
+    var vRms = 5.6 * Math.pow(10, (level + riaaPre) / 20);
+    var vPeakMs = vRms * Math.sqrt(2) / 100;
+    var kA = vPeakMs / vGrooveMs;
+    var kRho = 2 * PI * f * (rs * 1e-6) / vGrooveMs;
+    var beta = kA * kRho;
+    var d2disp = beta / 2;
+    return d2disp * 2 * riaaPlaybackRatio2f(f);
+  }
+
+  // Velocity envelope: three Stafford limits
+  function velocityEnvelope(rCm, rpm, rs_um) {
+    var R = rCm / 100;
+    var omega = 2 * PI * rpm / 60;
+    var V = omega * R;  // groove speed m/s
+
+    // Defaults for LP
+    var pitchPerCm = 100;
+    var Wmin_cm = 0.0025;  // 25 µm
+    var pw = 1 / pitchPerCm;
+    var Amax = (pw - Wmin_cm) / (4 * Math.sqrt(2));  // per 45° channel, in cm
+    var alpha = PI / 4;  // 45° relief angle
+    var rho_cm = rs_um * 1e-4;
+
+    var freqs = [];
+    var v1 = [], v2 = [], v3 = [];
+    // Log-spaced from 20 Hz to 50 kHz
+    for (var i = 0; i <= 200; i++) {
+      var fHz = 20 * Math.pow(50000 / 20, i / 200);
+      freqs.push(fHz);
+
+      // Eq 1: amplitude limit (pitch-dependent)
+      var vmax1 = 2 * PI * fHz * Amax;  // cm/s (Amax in cm)
+
+      // Eq 2: slope overload (diameter-dependent)
+      var vmax2 = V * 100 * Math.tan(alpha) / Math.sqrt(2);  // cm/s
+
+      // Eq 3: curvature/tracing limit (stylus-dependent)
+      var vmax3 = Math.pow(V * 100, 2) / (2 * PI * fHz * rho_cm);  // cm/s
+
+      v1.push(vmax1);
+      v2.push(vmax2);
+      v3.push(vmax3);
+    }
+    return { freqs: freqs, v1: v1, v2: v2, v3: v3 };
   }
 
   // ============================================================
@@ -343,8 +446,11 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
 
     var cs = useState({
       results: false,
+      tracingDist: false,
       grooveProfile: false,
       gradient: false,
+      tracingPlot: false,
+      velocityEnvelope: false,
     });
     var collapsed = cs[0], setCollapsed = cs[1];
 
@@ -375,6 +481,8 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
     // Plot refs
     var grooveRef = useRef(null);
     var gradientRef = useRef(null);
+    var tracingPlotRef = useRef(null);
+    var velEnvRef = useRef(null);
 
     useEffect(function () {
       if (!grooveRef.current || collapsed.grooveProfile) return;
@@ -478,6 +586,115 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
       Plotly.newPlot(gradientRef.current, traces, layout, plotConfig);
     }, [data, collapsed.gradient]);
 
+    // Tracing distortion vs radius plot
+    useEffect(function () {
+      if (!tracingPlotRef.current || collapsed.tracingPlot) return;
+
+      var f = data.freq;
+      var level = inputs.level;
+      var rpm = data.rpm;
+      var rs = data.stylusRadius;
+      var curR = data.radiusCm;
+
+      var nPts = 100;
+      var rMin = 6.0, rMax = 14.6;
+      var rs2 = [], hd2s = [], hd3s = [];
+      for (var i = 0; i <= nPts; i++) {
+        var rCm = rMin + (rMax - rMin) * i / nPts;
+        rs2.push(rCm);
+        var d2 = tracingD2postAtRadius(rCm, f, level, rpm, rs);
+        hd2s.push(100 * d2);
+        // HD3 post-RIAA at this radius
+        var R = rCm / 100;
+        var vG = 2 * PI * R * rpm / 60;
+        var rP = riaaPreEmphasis(f);
+        var vRms = 5.6 * Math.pow(10, (level + rP) / 20);
+        var vPk = vRms * Math.sqrt(2) / 100;
+        var kA = vPk / vG;
+        var kR = 2 * PI * f * (rs * 1e-6) / vG;
+        var b = kA * kR;
+        var d3 = (3 * b * b / 8) * 3 * riaaPlaybackRatio3f(f);
+        hd3s.push(100 * d3);
+      }
+
+      var traces = [
+        {
+          x: rs2, y: hd2s,
+          mode: "lines",
+          line: { color: "#00e5ff", width: 2 },
+          name: "HD\u2082",
+        },
+        {
+          x: rs2, y: hd3s,
+          mode: "lines",
+          line: { color: "#f97316", width: 2, dash: "dash" },
+          name: "HD\u2083",
+        },
+        // Current radius marker
+        {
+          x: [curR], y: [data.tracD2post],
+          mode: "markers",
+          marker: { color: "#00e5ff", size: 8, symbol: "diamond" },
+          name: "Current",
+        },
+      ];
+
+      var layout = Object.assign(basePlotLayout(), {
+        showlegend: true,
+        legend: { x: 0.98, xanchor: "right", y: 0.98, bgcolor: "rgba(0,0,0,0)" },
+        margin: { t: 10, r: 20, b: 50, l: 60 },
+        xaxis: { title: "Groove radius (cm)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", range: [rMin, rMax] },
+        yaxis: { title: "Distortion post-RIAA (%)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", rangemode: "tozero" },
+      });
+
+      Plotly.newPlot(tracingPlotRef.current, traces, layout, plotConfig);
+    }, [data, collapsed.tracingPlot]);
+
+    // Velocity envelope plot
+    useEffect(function () {
+      if (!velEnvRef.current || collapsed.velocityEnvelope) return;
+
+      var env = velocityEnvelope(data.radiusCm, data.rpm, data.stylusRadius);
+
+      var traces = [
+        {
+          x: env.freqs, y: env.v1,
+          mode: "lines",
+          line: { color: "#22c55e", width: 2 },
+          name: "Amplitude limit",
+        },
+        {
+          x: env.freqs, y: env.v2,
+          mode: "lines",
+          line: { color: "#f97316", width: 2 },
+          name: "Slope overload",
+        },
+        {
+          x: env.freqs, y: env.v3,
+          mode: "lines",
+          line: { color: "#ff2d7b", width: 2 },
+          name: "Curvature limit",
+        },
+        // Current operating point
+        {
+          x: [data.freq], y: [data.vPeak],
+          mode: "markers",
+          marker: { color: "#00e5ff", size: 10, symbol: "diamond" },
+          name: "Current (v\u209A\u2091\u2090\u2096)",
+        },
+      ];
+
+      var layout = Object.assign(basePlotLayout(), {
+        showlegend: true,
+        legend: { x: 0.02, y: 0.02, bgcolor: "rgba(0,0,0,0)" },
+        margin: { t: 10, r: 20, b: 50, l: 60 },
+        xaxis: { title: "Frequency (Hz)", type: "log", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", range: [Math.log10(20), Math.log10(50000)] },
+        yaxis: { title: "Peak velocity (cm/s)", type: "log", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", range: [-1, 3] },
+      });
+
+      Plotly.newPlot(velEnvRef.current, traces, layout, plotConfig);
+    }, [data, collapsed.velocityEnvelope]);
+
     return h("div", null,
       h("div", { className: "gc-title" }, "Groove Geometry"),
 
@@ -531,6 +748,46 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
         ),
 
         h(Panel, {
+          title: "Tracing Distortion",
+          color: "#00e5ff",
+          collapsed: collapsed.tracingDist,
+          onToggle: function () { togglePanel("tracingDist"); },
+        },
+          h(InfoRow, { label: "HD\u2082 displacement", value: fmt(data.tracD2disp, 3), unit: "%" }),
+          h(InfoRow, {
+            label: "HD\u2082 post-RIAA",
+            value: fmt(data.tracD2post, 3),
+            unit: "%",
+            highlight: data.tracD2post < 1,
+            warn: data.tracD2post >= 1 && data.tracD2post < 5,
+            danger: data.tracD2post >= 5,
+          }),
+          h(InfoRow, { label: "HD\u2083 displacement", value: fmt(data.tracD3disp, 4), unit: "%" }),
+          h(InfoRow, {
+            label: "HD\u2083 post-RIAA",
+            value: fmt(data.tracD3post, 4),
+            unit: "%",
+          }),
+          h(InfoRow, {
+            label: "THD\u2082\u208A\u2083 post-RIAA",
+            value: fmt(data.tracTHDpost, 3),
+            unit: "%",
+            highlight: data.tracTHDpost < 1,
+            warn: data.tracTHDpost >= 1 && data.tracTHDpost < 5,
+            danger: data.tracTHDpost >= 5,
+          }),
+          data.beta > 0.5 ? h("div", {
+            className: "gc-info-row gc-tooltip",
+            "data-tip": "The Corrington/Yamamoto harmonic formulas are truncated power series that overestimate distortion when \u03B2 = kA\u00B7k\u03C1 exceeds ~0.5. Numerical simulation would give more accurate results at this modulation level.",
+          },
+            h("span", { className: "gc-info-label" }, "\u26A0 Approximation"),
+            h("span", null,
+              h("span", { className: "gc-info-value gc-warn" }, "\u03B2=" + fmt(data.beta, 2) + " > 0.5")
+            )
+          ) : null
+        ),
+
+        h(Panel, {
           title: "Physical Groove Image",
           color: "#00e5ff",
           collapsed: collapsed.grooveProfile,
@@ -546,6 +803,24 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
           onToggle: function () { togglePanel("gradient"); },
         },
           h("div", { ref: gradientRef, className: "gc-plot" })
+        ),
+
+        h(Panel, {
+          title: "Tracing Distortion vs Radius",
+          color: "#00e5ff",
+          collapsed: collapsed.tracingPlot,
+          onToggle: function () { togglePanel("tracingPlot"); },
+        },
+          h("div", { ref: tracingPlotRef, className: "gc-plot" })
+        ),
+
+        h(Panel, {
+          title: "Velocity Envelope",
+          color: "#f97316",
+          collapsed: collapsed.velocityEnvelope,
+          onToggle: function () { togglePanel("velocityEnvelope"); },
+        },
+          h("div", { ref: velEnvRef, className: "gc-plot" })
         )
       )
     );
