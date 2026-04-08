@@ -435,10 +435,10 @@
 
   function App() {
     var s = useState({
-      radius: 14.0,
-      frequency: 10.0,
-      level: 8.3,
-      rpm: 45,
+      radius: 8.0,
+      frequency: 12.0,
+      level: -12,
+      rpm: 33.333,
       stylusRadius: 7.0,
     });
     var inputs = s[0], setInputs = s[1];
