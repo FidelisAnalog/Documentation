@@ -527,10 +527,10 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
 
   function App() {
     var s = useState({
-      radius: 14.0,
-      frequency: 10.0,
-      level: 8.3,
-      rpm: 45,
+      radius: 8.0,
+      frequency: 12.0,
+      level: -12,
+      rpm: 33.333,
       stylusRadius: 7.0,
     });
     var inputs = s[0], setInputs = s[1];
@@ -893,7 +893,7 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
           h(InfoRow, { label: "HD\u2084 post-RIAA", value: fmt(data.tracD4post, 4), unit: "%" }),
           h(InfoRow, { label: "HD\u2085 post-RIAA", value: fmt(data.tracD5post, 4), unit: "%" }),
           h(InfoRow, {
-            label: "THD\u2082\u208B\u2085 post-RIAA",
+            label: "THD\u2085 post-RIAA",
             value: fmt(data.tracTHDpost, 3),
             unit: "%",
             highlight: data.tracTHDpost < 1,
