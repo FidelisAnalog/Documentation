@@ -109,16 +109,27 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
   // PHYSICS ENGINE
   // ============================================================
 
-  // Standard RIAA recording pre-emphasis relative to 1 kHz (dB)
+  // RIAA transfer function magnitude squared (recording pre-emphasis)
   // H_rec(f) = ((1 + (2πf·τ₁)²)(1 + (2πf·τ₃)²)) / (1 + (2πf·τ₂)²)
   // τ₁ = 3180 µs, τ₂ = 318 µs, τ₃ = 75 µs
+  var RIAA_T1 = 3180e-6, RIAA_T2 = 318e-6, RIAA_T3 = 75e-6;
+
+  function riaaRecH2(f) {
+    var w = 2 * PI * f;
+    return ((1 + Math.pow(w * RIAA_T1, 2)) * (1 + Math.pow(w * RIAA_T3, 2))) / (1 + Math.pow(w * RIAA_T2, 2));
+  }
+
+  // Recording pre-emphasis in dB relative to 1 kHz
   function riaaPreEmphasis(freq) {
-    var t1 = 3180e-6, t2 = 318e-6, t3 = 75e-6;
-    function Hrec(f) {
-      var w = 2 * PI * f;
-      return ((1 + Math.pow(w * t1, 2)) * (1 + Math.pow(w * t3, 2))) / (1 + Math.pow(w * t2, 2));
-    }
-    return 10 * Math.log10(Hrec(freq) / Hrec(1000));
+    return 10 * Math.log10(riaaRecH2(freq) / riaaRecH2(1000));
+  }
+
+  // Playback de-emphasis: inverse of recording, so H_play = 1/H_rec
+  // Ratio at 2f vs f in dB (negative = 2f is attenuated relative to f)
+  function riaaPlaybackRatio2f(freq) {
+    // H_play(f) ∝ 1/√H_rec(f), ratio in amplitude:
+    // H_play(2f)/H_play(f) = √(H_rec(f)/H_rec(2f))
+    return Math.sqrt(riaaRecH2(freq) / riaaRecH2(2 * freq));
   }
 
   function calculate(params) {
@@ -169,53 +180,52 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
     // Output 6: Stylus curvature radius — pass-through
     var stylusCurv_um = rs;
 
-    // Output 7: Pinch effect — peak vertical displacement (µm)
+    // Output 7: Pinch effect — vertical displacement (µm)
     //
-    // Derivation from first principles:
-    // A 90° V-groove is cut by a triangular chisel moving in the x-direction.
-    // Cross-section perpendicular to x: V with half-angle 45° from vertical.
-    // Sphere of radius rs rests at height z₀ = rs√2 above the groove bottom.
+    // A 90° V-groove with lateral modulation has STEEPER walls in the
+    // perpendicular cross-section: z = |s|·√(1 + k²cos²u).
+    // The effective V is NARROWER, so the sphere sits HIGHER.
     //
-    // When the groove curves laterally (modulation angle θ, tan θ = k·cos u),
-    // the perpendicular-to-groove cross-section slices the V obliquely.
-    // The effective V has half-angle α where tan α = sec θ = √(1+k²cos²u).
-    // The sphere drops to height z = rs/sin α = rs√(1 + cos²θ)
-    //   = rs√((2 + k²cos²u)/(1 + k²cos²u)).
+    // Sphere center height: z_c(u) = rs · √(2 + k²cos²u)
+    // At rest: z₀ = rs√2.  At zero crossings (max slope): rs√(2+k²).
     //
-    // Peak pinch displacement (at zero crossings, u = 0, maximum slope):
-    //   P = z₀ − z_min = rs[√2 − √((2+k²)/(1+k²))]
-    //
-    // P is monotonically increasing in k and saturates at rs(√2 − 1).
-    // P ∝ k² at small k (correct 2nd-order behavior).
+    // Full excursion from rest: rs·(√(2+k²) − √2)
+    // Displayed as half peak-to-peak (AC amplitude) = full excursion / 2,
+    // matching the Groovy spreadsheet convention.
     var k2 = k * k;
-    var pinch = rs * (Math.sqrt(2) - Math.sqrt((2 + k2) / (1 + k2)));
+    var pinchFullExcursion = rs * (Math.sqrt(2 + k2) - Math.sqrt(2));
+    var pinch = pinchFullExcursion / 2;
 
-    // Output 8: Pinch effect distortion — 2nd harmonic percentage
+    // Output 8: Pinch effect distortion — three conventions
     //
-    // The pinch displacement δz(u) is an even function of cos(u), so its
-    // Fourier series contains only even harmonics: DC + P₂cos(2u) + P₄cos(4u) + …
-    // In 45/45 stereo, this vertical motion maps to per-channel 2nd harmonic
-    // distortion: D = P₂/A × 100%, where P₂ is the cos(2u) Fourier coefficient
-    // and A is the peak lateral amplitude.
-    //
-    // P₂ is computed by numerical integration:
+    // The pinch waveform δz(u) = rs·(√(2 + k²cos²u) − √2) contains
+    // only even harmonics. P₂ is the 2nd harmonic Fourier coefficient:
     //   P₂ = (1/π) ∫₀²π δz(u)·cos(2u) du
-    //
-    // At small k: P₂ ≈ P/2, D ≈ P/(2A) ∝ k (linear, always increasing).
-    // D peaks near k ≈ 1 and decreases at extreme modulation (k >> 1)
-    // because the pinch displacement saturates at rs(√2−1) while A grows
-    // without bound. In practice, k > 1 corresponds to modulation angles
-    // above 45° which rarely occur on vinyl records.
     var NPTS = 64;
     var p2cos = 0;
     for (var i = 0; i < NPTS; i++) {
       var u = 2 * PI * i / NPTS;
       var s2 = k2 * Math.cos(u) * Math.cos(u);
-      var dz = rs * (Math.sqrt(2) - Math.sqrt((2 + s2) / (1 + s2)));
+      var dz = rs * (Math.sqrt(2 + s2) - Math.sqrt(2));
       p2cos += dz * Math.cos(2 * u);
     }
-    var P2 = 2 * Math.abs(p2cos) / NPTS;  // 2nd harmonic amplitude
-    var pinchDist = A_um > 0 ? 100 * P2 / A_um : 0;
+    var P2 = 2 * Math.abs(p2cos) / NPTS;
+
+    // (a) Groovy convention: half pk-pk / (A√2)
+    //     = pinch AC amplitude / per-channel pk-pk lateral displacement
+    var pinchDistGroovy = A_um > 0 ? 100 * pinch / (A_um * Math.sqrt(2)) : 0;
+
+    // (b) Pre-RIAA THD₂: what the cartridge generates electrically.
+    //     The cartridge is a velocity transducer, so the 2f pinch component
+    //     has 2× the velocity per unit displacement vs the fundamental at f.
+    //     THD₂_pre = (P₂/A) × 2
+    var thd2PreRiaa = A_um > 0 ? 100 * P2 / A_um * 2 : 0;
+
+    // (c) Post-RIAA THD₂: what you'd measure at the preamp output.
+    //     RIAA playback de-emphasis attenuates 2f relative to f.
+    //     THD₂_post = THD₂_pre × H_play(2f)/H_play(f)
+    var riaaRatio = riaaPlaybackRatio2f(f);
+    var thd2PostRiaa = thd2PreRiaa * riaaRatio;
 
     // Groove tracing status
     var tracingOk = Rcurv_um >= rs;
@@ -232,7 +242,9 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
       Rcurv: Rcurv_um,
       stylusCurv: stylusCurv_um,
       pinch: pinch,
-      pinchDist: pinchDist,
+      pinchDistGroovy: pinchDistGroovy,
+      thd2PreRiaa: thd2PreRiaa,
+      thd2PostRiaa: thd2PostRiaa,
       tracingOk: tracingOk,
       lambda: lambda * 1e6,      // m → µm for plots
       A_um: A_um,
@@ -499,12 +511,22 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
           h(InfoRow, { label: "Stylus curvature radius", value: fmt(data.stylusCurv, 1), unit: "\u00B5m" }),
           h(InfoRow, { label: "Pinch effect", value: fmt(data.pinch, 2), unit: "\u00B5m peak" }),
           h(InfoRow, {
-            label: "Pinch effect distortion",
-            value: fmt(data.pinchDist, 2),
-            unit: "% peak",
-            highlight: data.pinchDist < 5,
-            warn: data.pinchDist >= 5 && data.pinchDist < 15,
-            danger: data.pinchDist >= 15,
+            label: "Pinch distortion",
+            value: fmt(data.pinchDistGroovy, 2),
+            unit: "% pk",
+            highlight: data.pinchDistGroovy < 5,
+            warn: data.pinchDistGroovy >= 5 && data.pinchDistGroovy < 15,
+            danger: data.pinchDistGroovy >= 15,
+          }),
+          h(InfoRow, {
+            label: "Pinch THD\u2082 pre-RIAA",
+            value: fmt(data.thd2PreRiaa, 2),
+            unit: "%",
+          }),
+          h(InfoRow, {
+            label: "Pinch THD\u2082 post-RIAA",
+            value: fmt(data.thd2PostRiaa, 2),
+            unit: "%",
           })
         ),
 
