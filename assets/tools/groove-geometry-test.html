@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- groove geometry calculator v2 -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Groove Geometry Calculator — Test</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body { margin: 0; background: #0a0d12; padding: 24px; }
+
+/* Scoped to #groove-calc — same pattern as tonearm-calculator.css */
+#groove-calc {
+  font-family: 'IBM Plex Mono', 'SF Mono', monospace;
+  color: rgba(255,255,255,0.7);
+  background: #0b0e14;
+  border-radius: 10px;
+  margin: 0 auto;
+  max-width: 700px;
+  padding: 16px 20px;
+}
+#groove-calc *, #groove-calc *::before, #groove-calc *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+}
+#groove-calc .gc-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 20px; font-weight: 400; color: #fff; margin: 0 0 16px 0;
+}
+#groove-calc .gc-inputs {
+  background: #0f1319; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 14px 16px; margin-bottom: 16px;
+}
+#groove-calc .gc-inputs-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px; font-weight: 400; color: #fff; margin-bottom: 14px;
+}
+#groove-calc .gc-input-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+}
+#groove-calc .gc-input-label {
+  font-size: 11px; color: rgba(255,255,255,0.5); width: 160px; flex-shrink: 0;
+}
+#groove-calc .gc-number-input {
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  width: 90px; padding: 6px 10px; border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.9); outline: none;
+}
+#groove-calc .gc-number-input:focus {
+  border-color: #00e5ff; background: rgba(0,229,255,0.08);
+}
+#groove-calc .gc-input-unit {
+  font-size: 11px; color: rgba(255,255,255,0.35); width: 80px; flex-shrink: 0;
+}
+#groove-calc .gc-outputs { display: flex; flex-direction: column; gap: 10px; }
+#groove-calc .gc-panel {
+  background: #0f1319; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; overflow: hidden;
+}
+#groove-calc .gc-panel-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer;
+}
+#groove-calc .gc-panel-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+#groove-calc .gc-panel-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px; font-weight: 500; color: #fff; flex: 1;
+}
+#groove-calc .gc-panel-chevron { font-size: 10px; color: rgba(255,255,255,0.3); }
+#groove-calc .gc-panel-content { padding: 10px 14px; }
+#groove-calc .gc-info-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+#groove-calc .gc-info-row:last-child { border-bottom: none; }
+#groove-calc .gc-info-label { font-size: 11px; color: rgba(255,255,255,0.5); }
+#groove-calc .gc-info-value { font-size: 12px; color: rgba(255,255,255,0.9); font-weight: 500; }
+#groove-calc .gc-info-unit { font-size: 10px; color: rgba(255,255,255,0.35); margin-left: 4px; }
+#groove-calc .gc-highlight { color: #00e5ff; }
+#groove-calc .gc-warn { color: #ffc400; }
+#groove-calc .gc-danger { color: #ff2d7b; }
+#groove-calc .gc-plot { width: 100%; height: 320px; }
+@media (max-width: 480px) {
+  #groove-calc { padding: 12px 14px; }
+  #groove-calc .gc-input-label { width: 120px; }
+  #groove-calc .gc-plot { height: 260px; }
+}
+</style>
+</head>
+<body>
+
+<div id="groove-calc"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script>
+"use strict";
+(function () {
+  var h = React.createElement;
+  var useState = React.useState;
+  var useMemo = React.useMemo;
+  var useEffect = React.useEffect;
+  var useRef = React.useRef;
+
+  var PI = Math.PI;
+
+  // ============================================================
+  // PHYSICS ENGINE
+  // ============================================================
+
+  // Standard RIAA recording pre-emphasis relative to 1 kHz (dB)
+  // H_rec(f) = ((1 + (2πf·τ₁)²)(1 + (2πf·τ₃)²)) / (1 + (2πf·τ₂)²)
+  // τ₁ = 3180 µs, τ₂ = 318 µs, τ₃ = 75 µs
+  function riaaPreEmphasis(freq) {
+    var t1 = 3180e-6, t2 = 318e-6, t3 = 75e-6;
+    function Hrec(f) {
+      var w = 2 * PI * f;
+      return ((1 + Math.pow(w * t1, 2)) * (1 + Math.pow(w * t3, 2))) / (1 + Math.pow(w * t2, 2));
+    }
+    return 10 * Math.log10(Hrec(freq) / Hrec(1000));
+  }
+
+  function calculate(params) {
+    var R = params.radius / 100;           // cm → m
+    var f = params.frequency * 1000;       // kHz → Hz
+    var L = params.level;                  // dB post-RIAA
+    var rpm = params.rpm;
+    var rs = params.stylusRadius;          // µm
+
+    // Groove velocity (m/s)
+    var vGroove = 2 * PI * R * rpm / 60;
+
+    // RIAA pre-emphasis at signal frequency
+    var riaaPre = riaaPreEmphasis(f);
+
+    // Signal velocity — actual groove velocity (cm/s rms)
+    var vRms = 5.6 * Math.pow(10, (L + riaaPre) / 20);
+
+    // Peak velocity (cm/s)
+    var vPeak = vRms * Math.sqrt(2);
+
+    // Convert to m/s for calculations
+    var vPeakMs = vPeak / 100;
+    var vGrooveMs = vGroove; // already m/s
+
+    // Output 1: Amplitude (m → µm)
+    var A = vPeakMs / (2 * PI * f);
+    var A_um = A * 1e6;
+
+    // Output 2: Velocity (cm/s rms) — already computed as vRms
+
+    // Output 3: Acceleration (G peak)
+    var aPeak = vPeakMs * 2 * PI * f;
+    var Gpeak = aPeak / 9.80665;
+
+    // Dimensionless peak groove slope
+    var k = vPeakMs / vGrooveMs;
+
+    // Output 4: Modulation angle (degrees)
+    var theta = Math.atan(k);
+    var thetaDeg = theta * 180 / PI;
+
+    // Output 5: Groove curvature radius (µm) — standard formula, no cos(θ) correction
+    var lambda = vGrooveMs / f;
+    var Rcurv = lambda * lambda / (4 * PI * PI * A);
+    var Rcurv_um = Rcurv * 1e6;
+
+    // Output 6: Stylus curvature radius — pass-through
+    var stylusCurv_um = rs;
+
+    // Output 7: Pinch effect (µm)
+    // Uses rs/√2 to account for 45° groove wall contact geometry
+    var k2 = k * k;
+    var rsEff = rs / Math.sqrt(2);
+    var pinch = rsEff * (Math.sqrt(2 * (1 + k2)) - Math.sqrt(2 + k2)) / k;
+
+    // Output 8: Pinch effect distortion (%)
+    var pinchDist = 100 * pinch / (A_um * Math.sqrt(2));
+
+    // Groove tracing status
+    var tracingOk = Rcurv_um >= rs;
+
+    return {
+      vGroove: vGroove * 100,    // m/s → cm/s for display
+      riaaPre: riaaPre,
+      vRms: vRms,
+      vPeak: vPeak,
+      amplitude: A_um,
+      Gpeak: Gpeak,
+      k: k,
+      thetaDeg: thetaDeg,
+      Rcurv: Rcurv_um,
+      stylusCurv: stylusCurv_um,
+      pinch: pinch,
+      pinchDist: pinchDist,
+      tracingOk: tracingOk,
+      lambda: lambda * 1e6,      // m → µm for plots
+      A_um: A_um,
+    };
+  }
+
+  // ============================================================
+  // UI COMPONENTS
+  // ============================================================
+
+  function InputRow(props) {
+    var localS = useState(String(props.value));
+    var localVal = localS[0], setLocalVal = localS[1];
+    var prevRef = useRef(props.value);
+    if (prevRef.current !== props.value) {
+      prevRef.current = props.value;
+      if (String(props.value) !== localVal) setLocalVal(String(props.value));
+    }
+    return h("div", { className: "gc-input-row" },
+      h("label", { className: "gc-input-label" }, props.label),
+      h("input", {
+        type: "number",
+        step: props.step || "any",
+        min: props.min,
+        max: props.max,
+        value: localVal,
+        onChange: function (e) {
+          setLocalVal(e.target.value);
+          var val = parseFloat(e.target.value);
+          if (!isNaN(val)) props.onChange(val);
+        },
+        className: "gc-number-input",
+      }),
+      h("span", { className: "gc-input-unit" }, props.unit || "")
+    );
+  }
+
+  function InfoRow(props) {
+    var cls = "gc-info-value" + (props.highlight ? " gc-highlight" : "") + (props.warn ? " gc-warn" : "") + (props.danger ? " gc-danger" : "");
+    return h("div", { className: "gc-info-row" },
+      h("span", { className: "gc-info-label" }, props.label),
+      h("span", null,
+        h("span", { className: cls }, props.value),
+        props.unit ? h("span", { className: "gc-info-unit" }, props.unit) : null
+      )
+    );
+  }
+
+  function Panel(props) {
+    return h("div", { className: "gc-panel" },
+      h("div", {
+        className: "gc-panel-header",
+        onClick: props.onToggle,
+      },
+        h("div", { className: "gc-panel-dot", style: { background: props.color } }),
+        h("span", { className: "gc-panel-title" }, props.title),
+        h("span", { className: "gc-panel-chevron" }, props.collapsed ? "\u25B6" : "\u25BC")
+      ),
+      !props.collapsed ? h("div", { className: "gc-panel-content" }, props.children) : null
+    );
+  }
+
+  // ============================================================
+  // PLOT HELPERS
+  // ============================================================
+  var plotConfig = { responsive: true, displayModeBar: false };
+
+  function basePlotLayout() {
+    return {
+      paper_bgcolor: "#0b0e14",
+      plot_bgcolor: "#0f1319",
+      font: { family: "IBM Plex Mono, SF Mono, monospace", color: "rgba(255,255,255,0.7)", size: 11 },
+      showlegend: false,
+      hovermode: "x unified",
+    };
+  }
+
+  function fmt(val, decimals) {
+    if (val === undefined || val === null || isNaN(val)) return "—";
+    return val.toFixed(decimals);
+  }
+
+  // ============================================================
+  // APP
+  // ============================================================
+
+  function App() {
+    var s = useState({
+      radius: 14.0,
+      frequency: 10.0,
+      level: 8.3,
+      rpm: 45,
+      stylusRadius: 7.0,
+    });
+    var inputs = s[0], setInputs = s[1];
+
+    var cs = useState({
+      results: false,
+      grooveProfile: false,
+      gradient: false,
+    });
+    var collapsed = cs[0], setCollapsed = cs[1];
+
+    function set(key) {
+      return function (val) {
+        setInputs(function (prev) {
+          var next = {};
+          for (var k in prev) next[k] = prev[k];
+          next[key] = val;
+          return next;
+        });
+      };
+    }
+
+    function togglePanel(key) {
+      setCollapsed(function (prev) {
+        var next = {};
+        for (var k in prev) next[k] = prev[k];
+        next[key] = !prev[key];
+        return next;
+      });
+    }
+
+    var data = useMemo(function () {
+      return calculate(inputs);
+    }, [inputs.radius, inputs.frequency, inputs.level, inputs.rpm, inputs.stylusRadius]);
+
+    // Plot refs
+    var grooveRef = useRef(null);
+    var gradientRef = useRef(null);
+
+    useEffect(function () {
+      if (!grooveRef.current || collapsed.grooveProfile) return;
+
+      var lam = data.lambda;
+      var A = data.A_um;
+      var d = data.stylusCurv;  // nominal half-groove-width ≈ stylus radius (µm)
+      var nPoints = 500;
+      var xMax = 50;  // fixed range in µm, matching Groovy
+      var kk = 2 * PI / lam;
+
+      // Groove walls: fixed vertical offset ±d from the center path,
+      // matching the original Groovy spreadsheet's Excel error-bar approach.
+      // The visual narrowing on steep slopes emerges naturally from the
+      // geometry — fixed vertical bars appear narrower perpendicular to
+      // a steep curve.
+      var xs = [], ys = [];
+      var yUpper = [], yLower = [];
+
+      for (var i = 0; i <= nPoints; i++) {
+        var x = xMax * i / nPoints;
+        var y = A * Math.sin(kk * x);
+
+        xs.push(x);
+        ys.push(y);
+        yUpper.push(y + d);
+        yLower.push(y - d);
+      }
+
+      var traces = [
+        // Filled groove region
+        {
+          x: xs.concat(xs.slice().reverse()),
+          y: yUpper.concat(yLower.slice().reverse()),
+          fill: "toself",
+          fillcolor: "rgba(0,229,255,0.12)",
+          line: { color: "rgba(0,0,0,0)", width: 0 },
+          hoverinfo: "skip",
+        },
+        // Groove walls
+        {
+          x: xs, y: yUpper,
+          mode: "lines",
+          line: { color: "rgba(0,229,255,0.35)", width: 1 },
+          hoverinfo: "skip",
+        },
+        {
+          x: xs, y: yLower,
+          mode: "lines",
+          line: { color: "rgba(0,229,255,0.35)", width: 1 },
+          hoverinfo: "skip",
+        },
+        // Center path (groove bottom)
+        {
+          x: xs, y: ys,
+          mode: "lines",
+          line: { color: "#00e5ff", width: 2 },
+          name: "Groove center",
+        },
+      ];
+
+      var yPad = (A + d) * 1.3;
+      var layout = Object.assign(basePlotLayout(), {
+        margin: { t: 10, r: 20, b: 50, l: 60 },
+        xaxis: { title: "Distance along groove axis (\u00B5m)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)" },
+        yaxis: { title: "Lateral Offset (\u00B5m)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", range: [-yPad, yPad] },
+      });
+
+      Plotly.newPlot(grooveRef.current, traces, layout, plotConfig);
+    }, [data, collapsed.grooveProfile]);
+
+    useEffect(function () {
+      if (!gradientRef.current || collapsed.gradient) return;
+
+      var lam = data.lambda;
+      var A = data.A_um;
+      var peakSlope = 2 * PI * A / lam;
+      var nPoints = 300;
+      var xMax = 1.5 * lam;
+      var xs = [], ys = [];
+      for (var i = 0; i <= nPoints; i++) {
+        var x = xMax * i / nPoints;
+        xs.push(x);
+        var slope = peakSlope * Math.cos(2 * PI * x / lam);
+        ys.push(Math.atan(slope) * 180 / PI);
+      }
+
+      var traces = [{
+        x: xs, y: ys,
+        mode: "lines",
+        line: { color: "#f97316", width: 2 },
+      }];
+
+      var yRange = Math.max(Math.ceil(data.thetaDeg / 10) * 10, 10);
+      var layout = Object.assign(basePlotLayout(), {
+        margin: { t: 10, r: 20, b: 50, l: 60 },
+        xaxis: { title: "Distance along groove axis (\u00B5m)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)" },
+        yaxis: { title: "Gradient (degrees)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", range: [-yRange, yRange] },
+      });
+
+      Plotly.newPlot(gradientRef.current, traces, layout, plotConfig);
+    }, [data, collapsed.gradient]);
+
+    return h("div", null,
+      h("div", { className: "gc-title" }, "Groove Geometry"),
+
+      h("div", { className: "gc-inputs" },
+        h("div", { className: "gc-inputs-title" }, "Parameters"),
+        h(InputRow, { label: "Radius from spindle", value: inputs.radius, unit: "cm", step: 0.1, min: 5, max: 16, onChange: set("radius") }),
+        h(InputRow, { label: "Frequency", value: inputs.frequency, unit: "kHz", step: 0.1, min: 0.02, max: 50, onChange: set("frequency") }),
+        h(InputRow, { label: "Level (post-RIAA)", value: inputs.level, unit: "dB", step: 0.1, onChange: set("level") }),
+        h(InputRow, { label: "Rotation rate", value: inputs.rpm, unit: "rpm", step: 1, min: 33, max: 78, onChange: set("rpm") }),
+        h(InputRow, { label: "Stylus radius", value: inputs.stylusRadius, unit: "\u00B5m", step: 0.1, min: 0.1, max: 25, onChange: set("stylusRadius") })
+      ),
+
+      h("div", { className: "gc-outputs" },
+
+        h(Panel, {
+          title: "Results",
+          color: "#00e5ff",
+          collapsed: collapsed.results,
+          onToggle: function () { togglePanel("results"); },
+        },
+          h(InfoRow, { label: "Amplitude", value: fmt(data.amplitude, 1), unit: "\u00B5m peak" }),
+          h(InfoRow, { label: "Velocity", value: fmt(data.vRms, 1), unit: "cm/s rms" }),
+          h(InfoRow, { label: "Acceleration", value: fmt(data.Gpeak, 0), unit: "G peak" }),
+          h(InfoRow, { label: "Modulation angle", value: fmt(data.thetaDeg, 1), unit: "\u00B0 peak" }),
+          h(InfoRow, {
+            label: "Groove curvature radius",
+            value: fmt(data.Rcurv, 1),
+            unit: "\u00B5m peak",
+            warn: !data.tracingOk,
+          }),
+          h(InfoRow, { label: "Stylus curvature radius", value: fmt(data.stylusCurv, 1), unit: "\u00B5m" }),
+          h(InfoRow, { label: "Pinch effect", value: fmt(data.pinch, 2), unit: "\u00B5m peak" }),
+          h(InfoRow, {
+            label: "Pinch effect distortion",
+            value: fmt(data.pinchDist, 2),
+            unit: "% peak",
+            highlight: data.pinchDist < 5,
+            warn: data.pinchDist >= 5 && data.pinchDist < 15,
+            danger: data.pinchDist >= 15,
+          })
+        ),
+
+        h(Panel, {
+          title: "Physical Groove Image",
+          color: "#00e5ff",
+          collapsed: collapsed.grooveProfile,
+          onToggle: function () { togglePanel("grooveProfile"); },
+        },
+          h("div", { ref: grooveRef, className: "gc-plot" })
+        ),
+
+        h(Panel, {
+          title: "Modulation Gradient",
+          color: "#f97316",
+          collapsed: collapsed.gradient,
+          onToggle: function () { togglePanel("gradient"); },
+        },
+          h("div", { ref: gradientRef, className: "gc-plot" })
+        )
+      )
+    );
+  }
+
+  var root = document.getElementById("groove-calc");
+  if (root) {
+    ReactDOM.createRoot(root).render(h(App));
+  }
+})();
+</script>
+</body>
+</html>
