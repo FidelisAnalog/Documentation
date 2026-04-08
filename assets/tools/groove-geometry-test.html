@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- groove geometry calculator v2 -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Groove Geometry Calculator — Test</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body { margin: 0; background: #0a0d12; padding: 24px; }
+
+/* Scoped to #groove-calc — same pattern as tonearm-calculator.css */
+#groove-calc {
+  font-family: 'IBM Plex Mono', 'SF Mono', monospace;
+  color: rgba(255,255,255,0.7);
+  background: #0b0e14;
+  border-radius: 10px;
+  margin: 0 auto;
+  max-width: 700px;
+  padding: 16px 20px;
+}
+#groove-calc *, #groove-calc *::before, #groove-calc *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+}
+#groove-calc .gc-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 20px; font-weight: 400; color: #fff; margin: 0 0 16px 0;
+}
+#groove-calc .gc-inputs {
+  background: #0f1319; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 14px 16px; margin-bottom: 16px;
+}
+#groove-calc .gc-inputs-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px; font-weight: 400; color: #fff; margin-bottom: 14px;
+}
+#groove-calc .gc-input-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+}
+#groove-calc .gc-input-label {
+  font-size: 11px; color: rgba(255,255,255,0.5); width: 160px; flex-shrink: 0;
+}
+#groove-calc .gc-number-input {
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  width: 90px; padding: 6px 10px; border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.9); outline: none;
+}
+#groove-calc .gc-number-input:focus {
+  border-color: #00e5ff; background: rgba(0,229,255,0.08);
+}
+#groove-calc .gc-input-unit {
+  font-size: 11px; color: rgba(255,255,255,0.35); width: 80px; flex-shrink: 0;
+}
+#groove-calc .gc-outputs { display: flex; flex-direction: column; gap: 10px; }
+#groove-calc .gc-panel {
+  background: #0f1319; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; overflow: hidden;
+}
+#groove-calc .gc-panel-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer;
+}
+#groove-calc .gc-panel-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+#groove-calc .gc-panel-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px; font-weight: 500; color: #fff; flex: 1;
+}
+#groove-calc .gc-panel-chevron { font-size: 10px; color: rgba(255,255,255,0.3); }
+#groove-calc .gc-panel-content { padding: 10px 14px; }
+#groove-calc .gc-info-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+#groove-calc .gc-info-row:last-child { border-bottom: none; }
+#groove-calc .gc-info-label { font-size: 11px; color: rgba(255,255,255,0.5); }
+#groove-calc .gc-info-value { font-size: 12px; color: rgba(255,255,255,0.9); font-weight: 500; }
+#groove-calc .gc-info-unit { font-size: 10px; color: rgba(255,255,255,0.35); margin-left: 4px; }
+#groove-calc .gc-highlight { color: #00e5ff; }
+#groove-calc .gc-warn { color: #ffc400; }
+#groove-calc .gc-danger { color: #ff2d7b; }
+#groove-calc .gc-tooltip { position: relative; cursor: help; }
+#groove-calc .gc-tooltip::after {
+  content: attr(data-tip);
+  position: absolute; bottom: 100%; left: 0; right: 0;
+  background: #1a1f2a; color: rgba(255,255,255,0.8);
+  font-size: 10px; line-height: 1.4; padding: 8px 10px;
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 6px;
+  pointer-events: none; opacity: 0; transition: opacity 0.15s;
+  white-space: normal; z-index: 10;
+}
+#groove-calc .gc-tooltip:hover::after { opacity: 1; }
+#groove-calc .gc-plot { width: 100%; height: 320px; }
+@media (max-width: 480px) {
+  #groove-calc { padding: 12px 14px; }
+  #groove-calc .gc-input-label { width: 120px; }
+  #groove-calc .gc-plot { height: 260px; }
+}
+</style>
+</head>
+<body>
+
+<div id="groove-calc"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script>
+"use strict";
+(function () {
+  var h = React.createElement;
+  var useState = React.useState;
+  var useMemo = React.useMemo;
+  var useEffect = React.useEffect;
+  var useRef = React.useRef;
+
+  var PI = Math.PI;
+
+  // ============================================================
+  // PHYSICS ENGINE
+  // ============================================================
+
+  // RIAA transfer function magnitude squared (recording pre-emphasis)
+  // H_rec(f) = ((1 + (2πf·τ₁)²)(1 + (2πf·τ₃)²)) / (1 + (2πf·τ₂)²)
+  // τ₁ = 3180 µs, τ₂ = 318 µs, τ₃ = 75 µs
+  var RIAA_T1 = 3180e-6, RIAA_T2 = 318e-6, RIAA_T3 = 75e-6;
+
+  function riaaRecH2(f) {
+    var w = 2 * PI * f;
+    return ((1 + Math.pow(w * RIAA_T1, 2)) * (1 + Math.pow(w * RIAA_T3, 2))) / (1 + Math.pow(w * RIAA_T2, 2));
+  }
+
+  // Recording pre-emphasis in dB relative to 1 kHz
+  function riaaPreEmphasis(freq) {
+    return 10 * Math.log10(riaaRecH2(freq) / riaaRecH2(1000));
+  }
+
+  // Playback de-emphasis: inverse of recording, so H_play = 1/H_rec
+  // H_play(f) ∝ 1/√H_rec(f), ratio in amplitude at nf vs f:
+  // H_play(nf)/H_play(f) = √(H_rec(f)/H_rec(nf))
+  function riaaPlaybackRatio2f(freq) {
+    return Math.sqrt(riaaRecH2(freq) / riaaRecH2(2 * freq));
+  }
+
+  function riaaPlaybackRatio3f(freq) {
+    return Math.sqrt(riaaRecH2(freq) / riaaRecH2(3 * freq));
+  }
+
+  function riaaPlaybackRatioNf(freq, n) {
+    return Math.sqrt(riaaRecH2(freq) / riaaRecH2(n * freq));
+  }
+
+  // ============================================================
+  // NUMERICAL POID SIMULATION (Jovanovic Eq. 5-6)
+  // ============================================================
+  // Solves the tracing contact equation numerically for a spherical
+  // stylus tracing a sinusoidal groove.
+  //
+  // Contact offset ε satisfies (Eq. 5):
+  //   ε / √(ρ² - ε²) = -A·kw·sin(kw·(x + ε))
+  // Output displacement (Eq. 6):
+  //   y_out(x) = A·cos(kw·(x + ε)) + √(ρ² - ε²)
+  //
+  // The second term (stylus center offset) is what Cooper's
+  // approximation omits — it partially cancels the distortion,
+  // giving the correct D₂ = β/4 rather than Cooper's β/2.
+  //
+  // Returns displacement-domain distortion ratios D2..D5.
+
+  function solvePoid(A_m, rho_m, kw, N) {
+    N = N || 2048;
+    var lambda = 2 * PI / kw;
+    var yout = new Array(N);
+    var rho2 = rho_m * rho_m;
+    var maxEps = 0.999 * rho_m;
+
+    // Forward sweep with warm start
+    var eps = 0;
+    for (var i = 0; i < N; i++) {
+      var x = lambda * i / N;
+      for (var iter = 0; iter < 50; iter++) {
+        if (eps > maxEps) eps = maxEps;
+        if (eps < -maxEps) eps = -maxEps;
+        var sq = Math.sqrt(rho2 - eps * eps);
+        var arg = kw * (x + eps);
+        var g = eps / sq + A_m * kw * Math.sin(arg);
+        var gp = rho2 / (sq * sq * sq) + A_m * kw * kw * Math.cos(arg);
+        if (Math.abs(gp) < 1e-30) break;
+        var step = g / gp;
+        if (Math.abs(step) > rho_m * 0.1) step = rho_m * 0.1 * (step > 0 ? 1 : -1);
+        eps = eps - step;
+        if (Math.abs(step) < 1e-15) break;
+      }
+      var sq2 = Math.sqrt(rho2 - eps * eps);
+      yout[i] = A_m * Math.cos(kw * (x + eps)) + sq2;
+    }
+
+    // DFT to extract harmonics 1..5
+    var harmonics = [];
+    for (var h_n = 1; h_n <= 5; h_n++) {
+      var re = 0, im = 0;
+      for (var j = 0; j < N; j++) {
+        var angle = 2 * PI * h_n * j / N;
+        re += yout[j] * Math.cos(angle);
+        im -= yout[j] * Math.sin(angle);
+      }
+      re *= 2 / N;
+      im *= 2 / N;
+      harmonics.push(Math.sqrt(re * re + im * im));
+    }
+
+    var A1 = harmonics[0];
+    return {
+      A1: A1,
+      D2: A1 > 0 ? harmonics[1] / A1 : 0,
+      D3: A1 > 0 ? harmonics[2] / A1 : 0,
+      D4: A1 > 0 ? harmonics[3] / A1 : 0,
+      D5: A1 > 0 ? harmonics[4] / A1 : 0,
+    };
+  }
+
+  function calculate(params) {
+    var R = params.radius / 100;           // cm → m
+    var f = params.frequency * 1000;       // kHz → Hz
+    var L = params.level;                  // dB post-RIAA
+    var rpm = params.rpm;
+    var rs = params.stylusRadius;          // µm
+
+    // Groove velocity (m/s)
+    var vGroove = 2 * PI * R * rpm / 60;
+
+    // RIAA pre-emphasis at signal frequency
+    var riaaPre = riaaPreEmphasis(f);
+
+    // Signal velocity — actual groove velocity (cm/s rms)
+    var vRms = 5.6 * Math.pow(10, (L + riaaPre) / 20);
+
+    // Peak velocity (cm/s)
+    var vPeak = vRms * Math.sqrt(2);
+
+    // Convert to m/s for calculations
+    var vPeakMs = vPeak / 100;
+    var vGrooveMs = vGroove; // already m/s
+
+    // Output 1: Amplitude (m → µm)
+    var A = vPeakMs / (2 * PI * f);
+    var A_um = A * 1e6;
+
+    // Output 2: Velocity (cm/s rms) — already computed as vRms
+
+    // Output 3: Acceleration (G peak)
+    var aPeak = vPeakMs * 2 * PI * f;
+    var Gpeak = aPeak / 9.80665;
+
+    // Dimensionless peak groove slope
+    var k = vPeakMs / vGrooveMs;
+
+    // Output 4: Modulation angle (degrees)
+    var theta = Math.atan(k);
+    var thetaDeg = theta * 180 / PI;
+
+    // Output 5: Groove curvature radius (µm) — standard formula, no cos(θ) correction
+    var lambda = vGrooveMs / f;
+    var Rcurv = lambda * lambda / (4 * PI * PI * A);
+    var Rcurv_um = Rcurv * 1e6;
+
+    // Output 6: Stylus curvature radius — pass-through
+    var stylusCurv_um = rs;
+
+    // Output 7: Pinch effect — vertical displacement (µm)
+    //
+    // A 90° V-groove with lateral modulation has STEEPER walls in the
+    // perpendicular cross-section: z = |s|·√(1 + k²cos²u).
+    // The effective V is NARROWER, so the sphere sits HIGHER.
+    //
+    // Sphere center height: z_c(u) = rs · √(2 + k²cos²u)
+    // At rest: z₀ = rs√2.  At zero crossings (max slope): rs√(2+k²).
+    //
+    // Full excursion from rest: rs·(√(2+k²) − √2)
+    // Displayed as half peak-to-peak (AC amplitude) = full excursion / 2,
+    // matching the Groovy spreadsheet convention.
+    var k2 = k * k;
+    var pinchFullExcursion = rs * (Math.sqrt(2 + k2) - Math.sqrt(2));
+    var pinch = pinchFullExcursion / 2;
+
+    // Output 8: Pinch effect distortion — three conventions
+    //
+    // The pinch waveform δz(u) = rs·(√(2 + k²cos²u) − √2) contains
+    // only even harmonics. P₂ is the 2nd harmonic Fourier coefficient:
+    //   P₂ = (1/π) ∫₀²π δz(u)·cos(2u) du
+    var NPTS = 64;
+    var p2cos = 0;
+    for (var i = 0; i < NPTS; i++) {
+      var u = 2 * PI * i / NPTS;
+      var s2 = k2 * Math.cos(u) * Math.cos(u);
+      var dz = rs * (Math.sqrt(2 + s2) - Math.sqrt(2));
+      p2cos += dz * Math.cos(2 * u);
+    }
+    var P2 = 2 * Math.abs(p2cos) / NPTS;
+
+    // (a) Groovy convention: half pk-pk / (A√2)
+    //     = pinch AC amplitude / per-channel pk-pk lateral displacement
+    var pinchDistGroovy = A_um > 0 ? 100 * pinch / (A_um * Math.sqrt(2)) : 0;
+
+    // (b) Pre-RIAA THD₂: what the cartridge generates electrically.
+    //     The cartridge is a velocity transducer, so the 2f pinch component
+    //     has 2× the velocity per unit displacement vs the fundamental at f.
+    //     THD₂_pre = (P₂/A) × 2
+    var thd2PreRiaa = A_um > 0 ? 100 * P2 / A_um * 2 : 0;
+
+    // (c) Post-RIAA THD₂: what you'd measure at the preamp output.
+    //     RIAA playback de-emphasis attenuates 2f relative to f.
+    //     THD₂_post = THD₂_pre × H_play(2f)/H_play(f)
+    var riaaRatio = riaaPlaybackRatio2f(f);
+    var thd2PostRiaa = thd2PreRiaa * riaaRatio;
+
+    // Groove tracing status
+    var tracingOk = Rcurv_um >= rs;
+
+    // ---- Tracing distortion (numerical poid, Jovanovic Eqs. 5-6) ----
+    // Numerical simulation of spherical stylus tracing sinusoidal groove.
+    // Each channel of 45°/45° stereo behaves like vertical cut.
+    var rho_m = rs * 1e-6;
+    var kw = 2 * PI * f / vGrooveMs;
+    var kRho = kw * rho_m;
+    var beta = k * kRho;  // modulation index
+    var traceable = Rcurv_um >= rs;  // stylus can follow the groove
+
+    // Displacement-domain harmonics from numerical solver
+    var poid = solvePoid(A, rho_m, kw, 2048);
+    var tracD2disp = poid.D2;
+    var tracD3disp = poid.D3;
+    var tracD4disp = poid.D4;
+    var tracD5disp = poid.D5;
+
+    // Velocity cartridge: multiply by harmonic order n
+    // RIAA playback: multiply by H_play(nf)/H_play(f)
+    var tracD2post = tracD2disp * 2 * riaaPlaybackRatioNf(f, 2);
+    var tracD3post = tracD3disp * 3 * riaaPlaybackRatioNf(f, 3);
+    var tracD4post = tracD4disp * 4 * riaaPlaybackRatioNf(f, 4);
+    var tracD5post = tracD5disp * 5 * riaaPlaybackRatioNf(f, 5);
+    var tracTHDpost = Math.sqrt(tracD2post * tracD2post + tracD3post * tracD3post + tracD4post * tracD4post + tracD5post * tracD5post);
+
+    // ---- Velocity envelope (Stafford/Yamamoto) ----
+    // Computed as a function for the plot; store params for the plot useEffect
+    var V_cms = vGrooveMs * 100;
+
+    return {
+      vGroove: V_cms,
+      riaaPre: riaaPre,
+      vRms: vRms,
+      vPeak: vPeak,
+      amplitude: A_um,
+      Gpeak: Gpeak,
+      k: k,
+      thetaDeg: thetaDeg,
+      Rcurv: Rcurv_um,
+      stylusCurv: stylusCurv_um,
+      pinch: pinch,
+      pinchDistGroovy: pinchDistGroovy,
+      thd2PreRiaa: thd2PreRiaa,
+      thd2PostRiaa: thd2PostRiaa,
+      tracingOk: tracingOk,
+      lambda: lambda * 1e6,      // m → µm for plots
+      A_um: A_um,
+      // Tracing distortion
+      tracD2disp: 100 * tracD2disp,
+      tracD3disp: 100 * tracD3disp,
+      tracD4disp: 100 * tracD4disp,
+      tracD5disp: 100 * tracD5disp,
+      tracD2post: 100 * tracD2post,
+      tracD3post: 100 * tracD3post,
+      tracD4post: 100 * tracD4post,
+      tracD5post: 100 * tracD5post,
+      tracTHDpost: 100 * tracTHDpost,
+      beta: beta,
+      traceable: traceable,
+      // For plots
+      freq: f,
+      radiusCm: params.radius,
+      rpm: rpm,
+      stylusRadius: rs,
+    };
+  }
+
+  // Compute tracing harmonics post-RIAA at a given radius using numerical poid.
+  function tracingAtRadius(rCm, f, level, rpm, rs) {
+    var R = rCm / 100;
+    var vGrooveMs = 2 * PI * R * rpm / 60;
+    var riaaPre = riaaPreEmphasis(f);
+    var vRms = 5.6 * Math.pow(10, (level + riaaPre) / 20);
+    var vPeakMs = vRms * Math.sqrt(2) / 100;
+    var A_m = vPeakMs / (2 * PI * f);
+    var rho_m = rs * 1e-6;
+    var kw = 2 * PI * f / vGrooveMs;
+    var kA = vPeakMs / vGrooveMs;
+    var kRho = kw * rho_m;
+    var beta = kA * kRho;
+
+    // Groove curvature radius
+    var lambda = vGrooveMs / f;
+    var Rcurv = lambda * lambda / (4 * PI * PI * A_m);
+    var traceable = Rcurv >= rho_m;
+
+    var poid = solvePoid(A_m, rho_m, kw, 512);
+    var d2post = poid.D2 * 2 * riaaPlaybackRatioNf(f, 2);
+    var d3post = poid.D3 * 3 * riaaPlaybackRatioNf(f, 3);
+    return { d2post: d2post, d3post: d3post, beta: beta, traceable: traceable };
+  }
+
+  // Velocity envelope: three Stafford limits
+  function velocityEnvelope(rCm, rpm, rs_um) {
+    var R = rCm / 100;
+    var omega = 2 * PI * rpm / 60;
+    var V = omega * R;  // groove speed m/s
+
+    // Defaults for LP
+    var pitchPerCm = 100;
+    var Wmin_cm = 0.0025;  // 25 µm
+    var pw = 1 / pitchPerCm;
+    var Amax = (pw - Wmin_cm) / (4 * Math.sqrt(2));  // per 45° channel, in cm
+    var alpha = PI / 4;  // 45° relief angle
+    var rho_cm = rs_um * 1e-4;
+
+    var freqs = [];
+    var v1 = [], v2 = [], v3 = [];
+    // Log-spaced from 20 Hz to 50 kHz
+    for (var i = 0; i <= 200; i++) {
+      var fHz = 20 * Math.pow(50000 / 20, i / 200);
+      freqs.push(fHz);
+
+      // Eq 1: amplitude limit (pitch-dependent)
+      var vmax1 = 2 * PI * fHz * Amax;  // cm/s (Amax in cm)
+
+      // Eq 2: slope overload (diameter-dependent)
+      var vmax2 = V * 100 * Math.tan(alpha) / Math.sqrt(2);  // cm/s
+
+      // Eq 3: curvature/tracing limit (stylus-dependent)
+      var vmax3 = Math.pow(V * 100, 2) / (2 * PI * fHz * rho_cm);  // cm/s
+
+      v1.push(vmax1);
+      v2.push(vmax2);
+      v3.push(vmax3);
+    }
+    return { freqs: freqs, v1: v1, v2: v2, v3: v3 };
+  }
+
+  // ============================================================
+  // UI COMPONENTS
+  // ============================================================
+
+  function InputRow(props) {
+    var localS = useState(String(props.value));
+    var localVal = localS[0], setLocalVal = localS[1];
+    var prevRef = useRef(props.value);
+    if (prevRef.current !== props.value) {
+      prevRef.current = props.value;
+      if (String(props.value) !== localVal) setLocalVal(String(props.value));
+    }
+    return h("div", { className: "gc-input-row" },
+      h("label", { className: "gc-input-label" }, props.label),
+      h("input", {
+        type: "number",
+        step: props.step || "any",
+        min: props.min,
+        max: props.max,
+        value: localVal,
+        onChange: function (e) {
+          setLocalVal(e.target.value);
+          var val = parseFloat(e.target.value);
+          if (!isNaN(val)) props.onChange(val);
+        },
+        className: "gc-number-input",
+      }),
+      h("span", { className: "gc-input-unit" }, props.unit || "")
+    );
+  }
+
+  function InfoRow(props) {
+    var cls = "gc-info-value" + (props.highlight ? " gc-highlight" : "") + (props.warn ? " gc-warn" : "") + (props.danger ? " gc-danger" : "");
+    return h("div", { className: "gc-info-row" },
+      h("span", { className: "gc-info-label" }, props.label),
+      h("span", null,
+        h("span", { className: cls }, props.value),
+        props.unit ? h("span", { className: "gc-info-unit" }, props.unit) : null
+      )
+    );
+  }
+
+  function Panel(props) {
+    return h("div", { className: "gc-panel" },
+      h("div", {
+        className: "gc-panel-header",
+        onClick: props.onToggle,
+      },
+        h("div", { className: "gc-panel-dot", style: { background: props.color } }),
+        h("span", { className: "gc-panel-title" }, props.title),
+        h("span", { className: "gc-panel-chevron" }, props.collapsed ? "\u25B6" : "\u25BC")
+      ),
+      !props.collapsed ? h("div", { className: "gc-panel-content" }, props.children) : null
+    );
+  }
+
+  // ============================================================
+  // PLOT HELPERS
+  // ============================================================
+  var plotConfig = { responsive: true, displayModeBar: false };
+
+  function basePlotLayout() {
+    return {
+      paper_bgcolor: "#0b0e14",
+      plot_bgcolor: "#0f1319",
+      font: { family: "IBM Plex Mono, SF Mono, monospace", color: "rgba(255,255,255,0.7)", size: 11 },
+      showlegend: false,
+      hovermode: "x unified",
+    };
+  }
+
+  function fmt(val, decimals) {
+    if (val === undefined || val === null || isNaN(val)) return "—";
+    return val.toFixed(decimals);
+  }
+
+  // ============================================================
+  // APP
+  // ============================================================
+
+  function App() {
+    var s = useState({
+      radius: 14.0,
+      frequency: 10.0,
+      level: 8.3,
+      rpm: 45,
+      stylusRadius: 7.0,
+    });
+    var inputs = s[0], setInputs = s[1];
+
+    var cs = useState({
+      results: false,
+      tracingDist: false,
+      grooveProfile: false,
+      gradient: false,
+      tracingPlot: false,
+      velocityEnvelope: false,
+    });
+    var collapsed = cs[0], setCollapsed = cs[1];
+
+    function set(key) {
+      return function (val) {
+        setInputs(function (prev) {
+          var next = {};
+          for (var k in prev) next[k] = prev[k];
+          next[key] = val;
+          return next;
+        });
+      };
+    }
+
+    function togglePanel(key) {
+      setCollapsed(function (prev) {
+        var next = {};
+        for (var k in prev) next[k] = prev[k];
+        next[key] = !prev[key];
+        return next;
+      });
+    }
+
+    var data = useMemo(function () {
+      return calculate(inputs);
+    }, [inputs.radius, inputs.frequency, inputs.level, inputs.rpm, inputs.stylusRadius]);
+
+    // Plot refs
+    var grooveRef = useRef(null);
+    var gradientRef = useRef(null);
+    var tracingPlotRef = useRef(null);
+    var velEnvRef = useRef(null);
+
+    useEffect(function () {
+      if (!grooveRef.current || collapsed.grooveProfile) return;
+
+      var lam = data.lambda;
+      var A = data.A_um;
+      var d = 12.5;  // RIAA stereo minimum groove half-width (µm): 25 µm min top width, 90° included angle
+      var nPoints = 500;
+      var xMax = 50;  // fixed range in µm, matching Groovy
+      var kk = 2 * PI / lam;
+
+      // Groove walls: fixed vertical offset ±d from the center path,
+      // matching the original Groovy spreadsheet's Excel error-bar approach.
+      // The visual narrowing on steep slopes emerges naturally from the
+      // geometry — fixed vertical bars appear narrower perpendicular to
+      // a steep curve.
+      var xs = [], ys = [];
+      var yUpper = [], yLower = [];
+
+      for (var i = 0; i <= nPoints; i++) {
+        var x = xMax * i / nPoints;
+        var y = A * Math.sin(kk * x);
+
+        xs.push(x);
+        ys.push(y);
+        yUpper.push(y + d);
+        yLower.push(y - d);
+      }
+
+      var traces = [
+        // Filled groove region
+        {
+          x: xs.concat(xs.slice().reverse()),
+          y: yUpper.concat(yLower.slice().reverse()),
+          fill: "toself",
+          fillcolor: "rgba(0,229,255,0.12)",
+          line: { color: "rgba(0,0,0,0)", width: 0 },
+          hoverinfo: "skip",
+        },
+        // Groove walls
+        {
+          x: xs, y: yUpper,
+          mode: "lines",
+          line: { color: "rgba(0,229,255,0.35)", width: 1 },
+          hoverinfo: "skip",
+        },
+        {
+          x: xs, y: yLower,
+          mode: "lines",
+          line: { color: "rgba(0,229,255,0.35)", width: 1 },
+          hoverinfo: "skip",
+        },
+        // Center path (groove bottom)
+        {
+          x: xs, y: ys,
+          mode: "lines",
+          line: { color: "#00e5ff", width: 2 },
+          name: "Groove center",
+        },
+      ];
+
+      var yPad = 20;  // fixed y-range matching Groovy
+      var layout = Object.assign(basePlotLayout(), {
+        margin: { t: 10, r: 20, b: 50, l: 60 },
+        xaxis: { title: "Distance along groove axis (\u00B5m)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)" },
+        yaxis: { title: "Lateral Offset (\u00B5m)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", range: [-yPad, yPad] },
+      });
+
+      Plotly.newPlot(grooveRef.current, traces, layout, plotConfig);
+    }, [data, collapsed.grooveProfile]);
+
+    useEffect(function () {
+      if (!gradientRef.current || collapsed.gradient) return;
+
+      var lam = data.lambda;
+      var A = data.A_um;
+      var peakSlope = 2 * PI * A / lam;
+      var nPoints = 300;
+      var xMax = 1.5 * lam;
+      var xs = [], ys = [];
+      for (var i = 0; i <= nPoints; i++) {
+        var x = xMax * i / nPoints;
+        xs.push(x);
+        var slope = peakSlope * Math.cos(2 * PI * x / lam);
+        ys.push(Math.atan(slope) * 180 / PI);
+      }
+
+      var traces = [{
+        x: xs, y: ys,
+        mode: "lines",
+        line: { color: "#f97316", width: 2 },
+      }];
+
+      var yRange = Math.max(Math.ceil(data.thetaDeg / 10) * 10, 10);
+      var layout = Object.assign(basePlotLayout(), {
+        margin: { t: 10, r: 20, b: 50, l: 60 },
+        xaxis: { title: "Distance along groove axis (\u00B5m)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)" },
+        yaxis: { title: "Gradient (degrees)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", range: [-yRange, yRange] },
+      });
+
+      Plotly.newPlot(gradientRef.current, traces, layout, plotConfig);
+    }, [data, collapsed.gradient]);
+
+    // Tracing distortion vs radius plot
+    useEffect(function () {
+      if (!tracingPlotRef.current || collapsed.tracingPlot) return;
+
+      var f = data.freq;
+      var level = inputs.level;
+      var rpm = data.rpm;
+      var rs = data.stylusRadius;
+      var curR = data.radiusCm;
+
+      var nPts = 100;
+      var rMin = 6.0, rMax = 14.6;
+      var rs2t = [], hd2st = [], hd3st = [];
+      var boundaryR = null;  // last untraceable radius
+
+      for (var i = 0; i <= nPts; i++) {
+        var rCm = rMin + (rMax - rMin) * i / nPts;
+        var tr = tracingAtRadius(rCm, f, level, rpm, rs);
+        if (tr.traceable) {
+          rs2t.push(rCm);
+          hd2st.push(100 * tr.d2post);
+          hd3st.push(100 * tr.d3post);
+        } else {
+          boundaryR = rCm;
+        }
+      }
+
+      var traces = [
+        {
+          x: rs2t, y: hd2st,
+          mode: "lines",
+          line: { color: "#00e5ff", width: 2 },
+          name: "HD\u2082",
+        },
+        {
+          x: rs2t, y: hd3st,
+          mode: "lines",
+          line: { color: "#f97316", width: 2, dash: "dash" },
+          name: "HD\u2083",
+        },
+      ];
+
+      // Current radius marker — only in traceable region
+      if (data.traceable) {
+        traces.push({
+          x: [curR], y: [data.tracD2post],
+          mode: "markers",
+          marker: { color: "#00e5ff", size: 8, symbol: "diamond" },
+          name: "Current",
+        });
+      }
+
+      var shapes = [];
+      // Shaded untraceable region
+      if (boundaryR !== null) {
+        shapes.push({
+          type: "rect",
+          x0: rMin, x1: boundaryR,
+          y0: 0, y1: 1,
+          yref: "paper",
+          fillcolor: "rgba(255,45,123,0.15)",
+          line: { width: 0 },
+        });
+        shapes.push({
+          type: "line",
+          x0: boundaryR, x1: boundaryR,
+          y0: 0, y1: 1,
+          yref: "paper",
+          line: { color: "rgba(255,45,123,0.4)", width: 1, dash: "dash" },
+        });
+      }
+
+      // Legend entry for untraceable region
+      if (boundaryR !== null) {
+        traces.push({
+          x: [null], y: [null],
+          mode: "lines",
+          line: { color: "rgba(255,45,123,0.5)", width: 8 },
+          name: "Untraceable",
+        });
+      }
+
+      var layout = Object.assign(basePlotLayout(), {
+        showlegend: true,
+        legend: { x: 0.98, xanchor: "right", y: 0.98, bgcolor: "rgba(0,0,0,0)" },
+        margin: { t: 10, r: 20, b: 50, l: 60 },
+        xaxis: { title: "Groove radius (cm)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", range: [rMin, rMax] },
+        yaxis: { title: "Distortion post-RIAA (%)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", rangemode: "tozero" },
+        shapes: shapes,
+      });
+
+      Plotly.newPlot(tracingPlotRef.current, traces, layout, plotConfig);
+    }, [data, collapsed.tracingPlot]);
+
+    // Velocity envelope plot
+    useEffect(function () {
+      if (!velEnvRef.current || collapsed.velocityEnvelope) return;
+
+      var env = velocityEnvelope(data.radiusCm, data.rpm, data.stylusRadius);
+
+      var traces = [
+        {
+          x: env.freqs, y: env.v1,
+          mode: "lines",
+          line: { color: "#22c55e", width: 2 },
+          name: "Amplitude limit",
+        },
+        {
+          x: env.freqs, y: env.v2,
+          mode: "lines",
+          line: { color: "#f97316", width: 2 },
+          name: "Slope overload",
+        },
+        {
+          x: env.freqs, y: env.v3,
+          mode: "lines",
+          line: { color: "#ff2d7b", width: 2 },
+          name: "Curvature limit",
+        },
+        // Current operating point
+        {
+          x: [data.freq], y: [data.vPeak],
+          mode: "markers",
+          marker: { color: "#00e5ff", size: 10, symbol: "diamond" },
+          name: "Current (v\u209A\u2091\u2090\u2096)",
+        },
+      ];
+
+      var layout = Object.assign(basePlotLayout(), {
+        showlegend: true,
+        legend: { x: 0.02, y: 0.02, bgcolor: "rgba(0,0,0,0)" },
+        margin: { t: 10, r: 20, b: 50, l: 60 },
+        xaxis: { title: "Frequency (Hz)", type: "log", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", range: [Math.log10(20), Math.log10(50000)] },
+        yaxis: { title: "Peak velocity (cm/s)", type: "log", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", range: [-1, 3] },
+      });
+
+      Plotly.newPlot(velEnvRef.current, traces, layout, plotConfig);
+    }, [data, collapsed.velocityEnvelope]);
+
+    return h("div", null,
+      h("div", { className: "gc-title" }, "Groove Geometry"),
+
+      h("div", { className: "gc-inputs" },
+        h("div", { className: "gc-inputs-title" }, "Parameters"),
+        h(InputRow, { label: "Radius from spindle", value: inputs.radius, unit: "cm", step: 0.1, min: 5, max: 16, onChange: set("radius") }),
+        h(InputRow, { label: "Frequency", value: inputs.frequency, unit: "kHz", step: 0.1, min: 0.02, max: 50, onChange: set("frequency") }),
+        h(InputRow, { label: "Level (pre-RIAA)", value: inputs.level, unit: "dB", step: 0.1, onChange: set("level") }),
+        h(InputRow, { label: "Rotation rate", value: inputs.rpm, unit: "rpm", step: 1, min: 33, max: 78, onChange: set("rpm") }),
+        h(InputRow, { label: "Stylus radius", value: inputs.stylusRadius, unit: "\u00B5m", step: 0.1, min: 0.1, max: 25, onChange: set("stylusRadius") })
+      ),
+
+      h("div", { className: "gc-outputs" },
+
+        h(Panel, {
+          title: "Results",
+          color: "#00e5ff",
+          collapsed: collapsed.results,
+          onToggle: function () { togglePanel("results"); },
+        },
+          h(InfoRow, { label: "Amplitude", value: fmt(data.amplitude, 1), unit: "\u00B5m peak" }),
+          h(InfoRow, { label: "Velocity", value: fmt(data.vRms, 1), unit: "cm/s rms" }),
+          h(InfoRow, { label: "Acceleration", value: fmt(data.Gpeak, 0), unit: "G peak" }),
+          h(InfoRow, { label: "Modulation angle", value: fmt(data.thetaDeg, 1), unit: "\u00B0 peak" }),
+          h(InfoRow, {
+            label: "Groove curvature radius",
+            value: fmt(data.Rcurv, 1),
+            unit: "\u00B5m peak",
+            warn: !data.tracingOk,
+          }),
+          h(InfoRow, { label: "Stylus curvature radius", value: fmt(data.stylusCurv, 1), unit: "\u00B5m" }),
+          h(InfoRow, { label: "Pinch effect", value: fmt(data.pinch, 2), unit: "\u00B5m peak" }),
+          h(InfoRow, {
+            label: "Pinch distortion",
+            value: fmt(data.pinchDistGroovy, 2),
+            unit: "% pk",
+            highlight: data.pinchDistGroovy < 5,
+            warn: data.pinchDistGroovy >= 5 && data.pinchDistGroovy < 15,
+            danger: data.pinchDistGroovy >= 15,
+          }),
+          h(InfoRow, {
+            label: "Pinch THD\u2082 pre-RIAA",
+            value: fmt(data.thd2PreRiaa, 2),
+            unit: "%",
+          }),
+          h(InfoRow, {
+            label: "Pinch THD\u2082 post-RIAA",
+            value: fmt(data.thd2PostRiaa, 2),
+            unit: "%",
+          })
+        ),
+
+        h(Panel, {
+          title: "Tracing Distortion",
+          color: "#00e5ff",
+          collapsed: collapsed.tracingDist,
+          onToggle: function () { togglePanel("tracingDist"); },
+        },
+          h(InfoRow, { label: "\u03B2 (modulation index)", value: fmt(data.beta, 3) }),
+          h(InfoRow, { label: "HD\u2082 displacement", value: fmt(data.tracD2disp, 3), unit: "%" }),
+          h(InfoRow, {
+            label: "HD\u2082 post-RIAA",
+            value: fmt(data.tracD2post, 3),
+            unit: "%",
+            highlight: data.tracD2post < 1,
+            warn: data.tracD2post >= 1 && data.tracD2post < 5,
+            danger: data.tracD2post >= 5,
+          }),
+          h(InfoRow, { label: "HD\u2083 displacement", value: fmt(data.tracD3disp, 4), unit: "%" }),
+          h(InfoRow, {
+            label: "HD\u2083 post-RIAA",
+            value: fmt(data.tracD3post, 4),
+            unit: "%",
+          }),
+          h(InfoRow, { label: "HD\u2084 post-RIAA", value: fmt(data.tracD4post, 4), unit: "%" }),
+          h(InfoRow, { label: "HD\u2085 post-RIAA", value: fmt(data.tracD5post, 4), unit: "%" }),
+          h(InfoRow, {
+            label: "THD\u2082\u208B\u2085 post-RIAA",
+            value: fmt(data.tracTHDpost, 3),
+            unit: "%",
+            highlight: data.tracTHDpost < 1,
+            warn: data.tracTHDpost >= 1 && data.tracTHDpost < 5,
+            danger: data.tracTHDpost >= 5,
+          }),
+          !data.traceable ? h("div", {
+            className: "gc-info-row gc-tooltip",
+            "data-tip": "Groove curvature radius is smaller than stylus radius \u2014 the stylus cannot follow the groove modulation and bridges over the peaks. Distortion values above this threshold are approximate.",
+          },
+            h("span", { className: "gc-info-label" }, "\u26A0 Untraceable"),
+            h("span", null,
+              h("span", { className: "gc-info-value gc-danger" }, "R\u1D04\u1D1C\u0280\u1D20 < r\u209B")
+            )
+          ) : null
+        ),
+
+        h(Panel, {
+          title: "Physical Groove Image",
+          color: "#00e5ff",
+          collapsed: collapsed.grooveProfile,
+          onToggle: function () { togglePanel("grooveProfile"); },
+        },
+          h("div", { ref: grooveRef, className: "gc-plot" })
+        ),
+
+        h(Panel, {
+          title: "Modulation Gradient",
+          color: "#f97316",
+          collapsed: collapsed.gradient,
+          onToggle: function () { togglePanel("gradient"); },
+        },
+          h("div", { ref: gradientRef, className: "gc-plot" })
+        ),
+
+        h(Panel, {
+          title: "Tracing Distortion vs Radius",
+          color: "#00e5ff",
+          collapsed: collapsed.tracingPlot,
+          onToggle: function () { togglePanel("tracingPlot"); },
+        },
+          h("div", { ref: tracingPlotRef, className: "gc-plot" })
+        ),
+
+        h(Panel, {
+          title: "Velocity Envelope",
+          color: "#f97316",
+          collapsed: collapsed.velocityEnvelope,
+          onToggle: function () { togglePanel("velocityEnvelope"); },
+        },
+          h("div", { ref: velEnvRef, className: "gc-plot" })
+        )
+      )
+    );
+  }
+
+  var root = document.getElementById("groove-calc");
+  if (root) {
+    ReactDOM.createRoot(root).render(h(App));
+  }
+})();
+</script>
+</body>
+</html>
