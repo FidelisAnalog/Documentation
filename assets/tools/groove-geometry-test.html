@@ -169,14 +169,53 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
     // Output 6: Stylus curvature radius — pass-through
     var stylusCurv_um = rs;
 
-    // Output 7: Pinch effect (µm)
-    // Uses rs/√2 to account for 45° groove wall contact geometry
+    // Output 7: Pinch effect — peak vertical displacement (µm)
+    //
+    // Derivation from first principles:
+    // A 90° V-groove is cut by a triangular chisel moving in the x-direction.
+    // Cross-section perpendicular to x: V with half-angle 45° from vertical.
+    // Sphere of radius rs rests at height z₀ = rs√2 above the groove bottom.
+    //
+    // When the groove curves laterally (modulation angle θ, tan θ = k·cos u),
+    // the perpendicular-to-groove cross-section slices the V obliquely.
+    // The effective V has half-angle α where tan α = sec θ = √(1+k²cos²u).
+    // The sphere drops to height z = rs/sin α = rs√(1 + cos²θ)
+    //   = rs√((2 + k²cos²u)/(1 + k²cos²u)).
+    //
+    // Peak pinch displacement (at zero crossings, u = 0, maximum slope):
+    //   P = z₀ − z_min = rs[√2 − √((2+k²)/(1+k²))]
+    //
+    // P is monotonically increasing in k and saturates at rs(√2 − 1).
+    // P ∝ k² at small k (correct 2nd-order behavior).
     var k2 = k * k;
-    var rsEff = rs / Math.sqrt(2);
-    var pinch = rsEff * (Math.sqrt(2 * (1 + k2)) - Math.sqrt(2 + k2)) / k;
+    var pinch = rs * (Math.sqrt(2) - Math.sqrt((2 + k2) / (1 + k2)));
 
-    // Output 8: Pinch effect distortion (%)
-    var pinchDist = 100 * pinch / (A_um * Math.sqrt(2));
+    // Output 8: Pinch effect distortion — 2nd harmonic percentage
+    //
+    // The pinch displacement δz(u) is an even function of cos(u), so its
+    // Fourier series contains only even harmonics: DC + P₂cos(2u) + P₄cos(4u) + …
+    // In 45/45 stereo, this vertical motion maps to per-channel 2nd harmonic
+    // distortion: D = P₂/A × 100%, where P₂ is the cos(2u) Fourier coefficient
+    // and A is the peak lateral amplitude.
+    //
+    // P₂ is computed by numerical integration:
+    //   P₂ = (1/π) ∫₀²π δz(u)·cos(2u) du
+    //
+    // At small k: P₂ ≈ P/2, D ≈ P/(2A) ∝ k (linear, always increasing).
+    // D peaks near k ≈ 1 and decreases at extreme modulation (k >> 1)
+    // because the pinch displacement saturates at rs(√2−1) while A grows
+    // without bound. In practice, k > 1 corresponds to modulation angles
+    // above 45° which rarely occur on vinyl records.
+    var NPTS = 64;
+    var p2cos = 0;
+    for (var i = 0; i < NPTS; i++) {
+      var u = 2 * PI * i / NPTS;
+      var s2 = k2 * Math.cos(u) * Math.cos(u);
+      var dz = rs * (Math.sqrt(2) - Math.sqrt((2 + s2) / (1 + s2)));
+      p2cos += dz * Math.cos(2 * u);
+    }
+    var P2 = 2 * Math.abs(p2cos) / NPTS;  // 2nd harmonic amplitude
+    var pinchDist = A_um > 0 ? 100 * P2 / A_um : 0;
 
     // Groove tracing status
     var tracingOk = Rcurv_um >= rs;
@@ -385,7 +424,7 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
         },
       ];
 
-      var yPad = (A + d) * 1.3;
+      var yPad = 20;  // fixed y-range matching Groovy
       var layout = Object.assign(basePlotLayout(), {
         margin: { t: 10, r: 20, b: 50, l: 60 },
         xaxis: { title: "Distance along groove axis (\u00B5m)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)" },
@@ -434,7 +473,7 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
         h("div", { className: "gc-inputs-title" }, "Parameters"),
         h(InputRow, { label: "Radius from spindle", value: inputs.radius, unit: "cm", step: 0.1, min: 5, max: 16, onChange: set("radius") }),
         h(InputRow, { label: "Frequency", value: inputs.frequency, unit: "kHz", step: 0.1, min: 0.02, max: 50, onChange: set("frequency") }),
-        h(InputRow, { label: "Level (post-RIAA)", value: inputs.level, unit: "dB", step: 0.1, onChange: set("level") }),
+        h(InputRow, { label: "Level (pre-RIAA)", value: inputs.level, unit: "dB", step: 0.1, onChange: set("level") }),
         h(InputRow, { label: "Rotation rate", value: inputs.rpm, unit: "rpm", step: 1, min: 33, max: 78, onChange: set("rpm") }),
         h(InputRow, { label: "Stylus radius", value: inputs.stylusRadius, unit: "\u00B5m", step: 0.1, min: 0.1, max: 25, onChange: set("stylusRadius") })
       ),
