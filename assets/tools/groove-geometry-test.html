@@ -689,11 +689,8 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
 
       var nPts = 100;
       var rMin = 6.0, rMax = 14.6;
-      // Traceable region (solid lines)
       var rs2t = [], hd2st = [], hd3st = [];
-      // Untraceable region (dashed lines)
-      var rs2u = [], hd2su = [], hd3su = [];
-      var boundaryR = null;  // radius where traceability is lost
+      var boundaryR = null;  // last untraceable radius
 
       for (var i = 0; i <= nPts; i++) {
         var rCm = rMin + (rMax - rMin) * i / nPts;
@@ -703,21 +700,11 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
           hd2st.push(100 * tr.d2post);
           hd3st.push(100 * tr.d3post);
         } else {
-          if (boundaryR === null) {
-            boundaryR = rCm;
-            // Bridge: add last untraceable point to traceable arrays for continuity
-            rs2t.push(rCm);
-            hd2st.push(100 * tr.d2post);
-            hd3st.push(100 * tr.d3post);
-          }
-          rs2u.push(rCm);
-          hd2su.push(100 * tr.d2post);
-          hd3su.push(100 * tr.d3post);
+          boundaryR = rCm;
         }
       }
 
       var traces = [
-        // Traceable region — solid lines
         {
           x: rs2t, y: hd2st,
           mode: "lines",
@@ -732,31 +719,15 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
         },
       ];
 
-      // Untraceable region — dotted, dimmed
-      if (rs2u.length > 0) {
+      // Current radius marker — only in traceable region
+      if (data.traceable) {
         traces.push({
-          x: rs2u, y: hd2su,
-          mode: "lines",
-          line: { color: "rgba(0,229,255,0.3)", width: 1.5, dash: "dot" },
-          name: "HD\u2082 (untraceable)",
-          showlegend: false,
-        });
-        traces.push({
-          x: rs2u, y: hd3su,
-          mode: "lines",
-          line: { color: "rgba(249,115,22,0.3)", width: 1.5, dash: "dot" },
-          name: "HD\u2083 (untraceable)",
-          showlegend: false,
+          x: [curR], y: [data.tracD2post],
+          mode: "markers",
+          marker: { color: "#00e5ff", size: 8, symbol: "diamond" },
+          name: "Current",
         });
       }
-
-      // Current radius marker
-      traces.push({
-        x: [curR], y: [data.tracD2post],
-        mode: "markers",
-        marker: { color: "#00e5ff", size: 8, symbol: "diamond" },
-        name: "Current",
-      });
 
       var shapes = [];
       // Shaded untraceable region
@@ -766,7 +737,7 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
           x0: rMin, x1: boundaryR,
           y0: 0, y1: 1,
           yref: "paper",
-          fillcolor: "rgba(255,45,123,0.06)",
+          fillcolor: "rgba(255,45,123,0.15)",
           line: { width: 0 },
         });
         shapes.push({
@@ -778,15 +749,13 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
         });
       }
 
-      var annotations = [];
+      // Legend entry for untraceable region
       if (boundaryR !== null) {
-        annotations.push({
-          x: (rMin + boundaryR) / 2,
-          y: 0.95,
-          yref: "paper",
-          text: "untraceable",
-          showarrow: false,
-          font: { color: "rgba(255,45,123,0.5)", size: 10 },
+        traces.push({
+          x: [null], y: [null],
+          mode: "lines",
+          line: { color: "rgba(255,45,123,0.5)", width: 8 },
+          name: "Untraceable",
         });
       }
 
@@ -797,7 +766,6 @@ body { margin: 0; background: #0a0d12; padding: 24px; }
         xaxis: { title: "Groove radius (cm)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", range: [rMin, rMax] },
         yaxis: { title: "Distortion post-RIAA (%)", color: "rgba(255,255,255,0.5)", gridcolor: "rgba(255,255,255,0.05)", rangemode: "tozero" },
         shapes: shapes,
-        annotations: annotations,
       });
 
       Plotly.newPlot(tracingPlotRef.current, traces, layout, plotConfig);
