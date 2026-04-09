@@ -368,6 +368,42 @@
     );
   }
 
+  function StylusInput(props) {
+    var displayVal = props.unit === "um" ? props.value : props.value / 25.4;
+    var localS = useState(String(displayVal.toFixed(props.unit === "um" ? 1 : 2)));
+    var localVal = localS[0], setLocalVal = localS[1];
+    var prevRef = useRef(props.value);
+    var prevUnit = useRef(props.unit);
+    if (prevRef.current !== props.value || prevUnit.current !== props.unit) {
+      prevRef.current = props.value;
+      prevUnit.current = props.unit;
+      var dv = props.unit === "um" ? props.value : props.value / 25.4;
+      var newStr = String(props.unit === "um" ? parseFloat(dv.toFixed(1)) : parseFloat(dv.toFixed(2)));
+      if (newStr !== localVal) setLocalVal(newStr);
+    }
+    return h("div", { className: "gc-input-row" },
+      h("label", { className: "gc-input-label" }, "Stylus radius"),
+      h("input", {
+        type: "number",
+        step: props.unit === "um" ? 0.1 : 0.01,
+        min: 0.01,
+        max: props.unit === "um" ? 25 : 1,
+        value: localVal,
+        onChange: function (e) {
+          setLocalVal(e.target.value);
+          var val = parseFloat(e.target.value);
+          if (!isNaN(val)) props.onChangeValue(props.unit === "um" ? val : val * 25.4);
+        },
+        className: "gc-number-input",
+      }),
+      h("button", {
+        className: "gc-unit-toggle",
+        onClick: props.onToggleUnit,
+        title: "Toggle units",
+      }, props.unit === "um" ? "\u00B5m" : "mil")
+    );
+  }
+
   function SelectRow(props) {
     return h("div", { className: "gc-input-row" },
       h("label", { className: "gc-input-label" }, props.label),
@@ -743,26 +779,12 @@
           { value: 45, label: "45" },
           { value: 78, label: "78" },
         ]}),
-        h("div", { className: "gc-input-row" },
-          h("label", { className: "gc-input-label" }, "Stylus radius"),
-          h("input", {
-            type: "number",
-            step: stylusUnit === "um" ? 0.1 : 0.01,
-            min: 0.01,
-            max: stylusUnit === "um" ? 25 : 1,
-            value: stylusUnit === "um" ? inputs.stylusRadius : (inputs.stylusRadius / 25.4).toFixed(2),
-            onChange: function (e) {
-              var val = parseFloat(e.target.value);
-              if (!isNaN(val)) set("stylusRadius")(stylusUnit === "um" ? val : val * 25.4);
-            },
-            className: "gc-number-input",
-          }),
-          h("button", {
-            className: "gc-unit-toggle",
-            onClick: function () { setStylusUnit(function (u) { return u === "um" ? "mil" : "um"; }); },
-            title: "Toggle units",
-          }, stylusUnit === "um" ? "\u00B5m" : "mil")
-        )
+        h(StylusInput, {
+          value: inputs.stylusRadius,
+          unit: stylusUnit,
+          onChangeValue: set("stylusRadius"),
+          onToggleUnit: function () { setStylusUnit(function (u) { return u === "um" ? "mil" : "um"; }); },
+        })
       ),
 
       h("div", { className: "gc-outputs" },
