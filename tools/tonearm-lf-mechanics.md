@@ -4,6 +4,8 @@ parent: Tools
 nav_order: 4
 ---
 
+[About this calculator]({{ '/tools/tonearm-lf-mechanics-about' | relative_url }})
+
 <link rel="stylesheet" href="{{ '/assets/tools/tonearm-calculator.css' | relative_url }}">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
 
