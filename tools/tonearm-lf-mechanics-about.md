@@ -7,7 +7,7 @@ nav_exclude: true
 
 This calculator models the low-frequency mechanical behavior of a tonearm-cartridge system. It computes the resonant frequency, damping characteristics, frequency response, transient behavior, and contact force envelope from your cartridge and tonearm specifications.
 
-The physics engine replicates the Luckydog "loafer" spreadsheet, with all outputs verified to match.
+All outputs have been verified against the original spreadsheet implementation.
 
 ---
 
@@ -139,4 +139,4 @@ The simulation solves the equation of motion analytically as the sum of a partic
 
 ## Source
 
-This calculator is based on the Luckydog "loafer" spreadsheet. All formulas have been extracted and verified to match the spreadsheet's outputs.
+All formulas have been extracted from the original spreadsheet implementation and verified to match its outputs.
