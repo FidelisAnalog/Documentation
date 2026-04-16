@@ -7,8 +7,6 @@ nav_exclude: true
 
 This calculator models the low-frequency mechanical behavior of a tonearm-cartridge system. It computes the resonant frequency, damping characteristics, frequency response, transient behavior, and contact force envelope from your cartridge and tonearm specifications.
 
-All outputs have been verified against the original spreadsheet implementation.
-
 ---
 
 ## Input Fields
@@ -134,9 +132,3 @@ where Z = 1000 / dynamic_compliance is the dynamic stiffness and c_critical = 2Â
 The trackability section uses a full transient simulation rather than just steady-state frequency response. This matters because the worst-case contact force occurs during startup â€” the arm is at rest when a modulated groove begins, and the transient overshoot during the first few cycles produces higher peak forces than the eventual steady state.
 
 The simulation solves the equation of motion analytically as the sum of a particular solution (steady-state forced response) and a homogeneous solution (transient decay). Contact force at each timestep includes both the spring force from cantilever deflection and the damping force from cantilever velocity.
-
----
-
-## Source
-
-All formulas have been extracted from the original spreadsheet implementation and verified to match its outputs.
