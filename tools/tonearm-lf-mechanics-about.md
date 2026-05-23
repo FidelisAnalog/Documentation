@@ -5,7 +5,9 @@ nav_exclude: true
 
 # About the Tonearm LF Mechanics Calculator
 
-This calculator models the low-frequency mechanical behavior of a tonearm-cartridge system. It computes the resonant frequency, damping characteristics, frequency response, transient behavior, and contact force envelope from your cartridge and tonearm specifications.
+[← Back to the calculator]({{ '/tools/tonearm-lf-mechanics' | relative_url }})
+
+This calculator models the low-frequency mechanical behavior of a tonearm-cartridge system. It computes the resonant frequency, damping characteristics, transmissibility, transient behavior, and contact force envelope from your cartridge and tonearm specifications.
 
 ---
 
@@ -47,9 +49,9 @@ This calculator models the low-frequency mechanical behavior of a tonearm-cartri
 
 ## Output Panels
 
-### Frequency Response
+### Transmissibility
 
-Cantilever deflection relative to groove excitation, plotted from 1–100 Hz on a log scale, in dB. This shows how much the cantilever deflects for a given amount of groove motion at each frequency.
+Cantilever deflection relative to groove excitation, plotted from 1–100 Hz on a log scale, in dB. This is a **transmissibility** curve — a dimensionless transfer-function gain — not an absolute level. The dB value tells you how much the system *multiplies* a disturbance at each frequency: 0 dB = passes through unchanged, +6 dB = doubled, +20 dB = 10×. Multiply by an actual excitation amplitude to get an absolute deflection.
 
 At low frequencies, the arm tracks the groove and the cantilever barely deflects — the curve is well below 0 dB. At resonance, cantilever deflection is amplified well beyond the groove excitation — this is the peak. Above resonance, the curve approaches 0 dB as the arm mass stays increasingly stationary and the cantilever absorbs the full groove motion.
 

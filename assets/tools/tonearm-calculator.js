@@ -424,7 +424,7 @@
           fixedrange: true,
         },
         yaxis: {
-          title: "dB",
+          title: "Transmissibility (dB)",
           gridcolor: "rgba(255,255,255,0.06)",
           linecolor: "rgba(255,255,255,0.1)",
           zeroline: true,
@@ -607,7 +607,7 @@
       h("div", { className: "tc-outputs" },
 
         h(Panel, {
-          title: "Frequency Response",
+          title: "Transmissibility",
           color: "#00e5ff",
           collapsed: collapsed.freqResp,
           onToggle: function () { togglePanel("freqResp"); },
